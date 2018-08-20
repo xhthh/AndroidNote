@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_okhttp_get"
+        style="@style/btnStyle"
+        android:text="GET" />
+
+
+    <Button
+        android:id="@+id/btn_okhttp_post"
+        style="@style/btnStyle"
+        android:text="POST" />
+
+    <Button
+        android:id="@+id/btn_okhttp_post_string"
+        style="@style/btnStyle"
+        android:text="POST String"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_okhttp_post_file"
+        style="@style/btnStyle"
+        android:text="POST file"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_okhttp_post_upload"
+        style="@style/btnStyle"
+        android:text="POST upload"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_okhttp_download"
+        style="@style/btnStyle"
+        android:text="Download"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_okhttp_download_display_img"
+        style="@style/btnStyle"
+        android:text="Download Display Image"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_okhttp_cache"
+        style="@style/btnStyle"
+        android:text="Cache"
+        android:textAllCaps="false" />
+
+
+    <TextView
+        android:id="@+id/tv_okhttp_get_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_okhttp_post"
+        android:gravity="center"
+        android:text="请求结果" />
+
+    <ImageView
+        android:id="@+id/iv_okhttp_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

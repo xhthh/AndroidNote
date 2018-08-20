@@ -1,0 +1,274 @@
+1、说下你研究最深的东西、你最擅长的东西
+2、okhttp源码、RxJava线程调度原理
+3、热更新、组件化、插件化、长连接、保活、动态代理、http
+4、常用的算法
+5、模块化开发
+
+
+作业帮
+1、各个播放器特点、区别
+2、垃圾回收、内存分配、对象回收（深）
+3、找最大十个数算法
+4、内存优化（深）
+5、反编译，逆向分析
+6、自定义View、三个方法（深）半透明
+7、如何防止过度绘制
+8、LruCache原理
+9、事件分发及实例（深）
+10、混合开发注意点，交互封装
+11、框架源码
+12、http缓存
+
+知乎
+1、64k出现的原因
+2、intent传值为什么会有限度，怎么处理
+3、手写自定义view
+4、动态代理
+5、注解
+6、数字异或计算
+7、view中mesure方法详细介绍
+8、自己实现recyclerview的侧滑删除
+9、tablayout当前标签永远在屏幕中间
+10、垃圾回收
+11、activity跳转时双方的生命周期，A的stop执行吗
+	如果a的主题是dialog
+	他们的生命周期是啥情况
+12、LruCache和DiskLruCache原理
+13、如何实现圆形imageview
+14、eventbus原理
+15、js互调
+16、线程池的参数和工作流程
+17、归并排序
+18、databinding的使用
+
+
+斗鱼
+1、遍历文件目录
+2、人、电梯、大楼的关系和面向对象
+3、电梯的算法
+4、项目架构
+5、手写冒泡排序
+6、ijkPlayer源码
+7、视频播放手势处理
+
+1、ArrayList Vector LinkedList的区别
+2、遇到过哪些关于Fragment的问题
+3、图片的处理和优化
+4、Android实现异步的方法有哪些
+5、Jvm内存回收机制
+6、如何对android应用进行性能分析
+7、介绍一个你比较欣赏的app或开源框架
+
+爱奇艺
+1、自定义view流程
+2、mvp模式好坏
+3、classloader 双亲委派
+4、手写实现单链表的get操作
+5、插件化方案
+6、图片处理、缓存
+7、生产者、消费者模式
+8、性能优化
+9、64k的原因及解决
+10、art的认识
+11、动态代理的作用
+12、retrofit和eventbus的源码，eventbus粘性处理
+13、settext的内部执行流程
+
+
+
+
+
+1.okhttp  retrofit 源码
+2.自定义view
+3.jvm,gc原理
+4.http优化
+5.binder原理
+6、数据结构
+7、算法 链表反转
+
+
+
+
+
+猎聘网
+1.View的绘制流程 画出结构图从window 开始   onMeasure模式父View子View表格对应的模式  
+2.Handler looper内部原理   从looper从哪来的  以及looper内部原理  
+3.图片加载框架  自己设计
+4.glide 
+5.rxjava 自己的理解
+6.事件分发 down move up dispatchTouchevent里做了什么
+7.实现数据库
+8.热修复
+9.ActivityThread的main方法里做了什么 
+10.内存泄漏
+11.布局优化  如何防止过渡绘制  以及如何优化
+
+金山
+1.Rxjava 优劣势
+2.home/student/a/../b/./c所代表的路径   手写代码输出绝对路径
+3.系统相机了解过吗
+4.view绘制流程
+5.glide原理  自己实现图片框架
+6.快排
+7.代理模式
+8.MVC MVP
+9.lint 
+
+人人贷
+1.activity 生命周期 启动模式  实现多个activity同时展示，怎样做
+2.手写单例模式  并分析为什么这样写
+3.过渡绘制
+4.一个handler，在activity 中，解释为什么会发生内存泄露  
+5.阅读过什么源码
+6.磁盘缓存怎么做
+7.垃圾回收的情况
+
+百度外卖
+1.activity任务栈
+2.rxjava原理   以及rxjava同时执行5个任务时是串行还是并行 
+3.activity 启动过程
+4.view的绘制  onmesure方法中两个参数的含义，以及在不同情况下是什么样的
+5.自己做过什么框架  原理
+6. Listview  和recyclerview的优化  区别 以及recyclerview的adapter做监听  怎样才最优  和activity的交互 activity 实现三个方法，但adapter中只有两个方法，要让第三个方法也能监听到，该怎么做
+7.自己做的最满意的东西
+8.自己对源码了解多少
+9.泛型   <？>  如果加入其他类型会怎样
+10.单例  双检锁  如果把类锁换成内部声明的另一个类，效果是怎样的
+
+
+
+好未来
+1、说一下项目中MVP的实现、结构
+2、自定义view流程
+3、性能优化、内存泄漏、内存溢出（项目中遇到的）
+4、本地与h5互调有哪些方式？连接桥的方式用过吗？
+5、事件分发流程
+6、http、https区别，post和get区别
+7、两个单链表相交，找出相交结点
+8、获取单链表倒数第k个元素
+9、153=1的三次方+5的三次方+3的三次方，求出符合上述条件的1000以内的数
+
+360&北京时间
+1、Activity启动模式及应用场景
+2、handler机制、以及和message等之间的关系
+3、与service通信的几种方式，进程间通信和进程内通信的区别
+4、线程死锁、用代码实现
+5、写出两种单例模式，说出优缺点
+6、实现recycleview侧滑删除
+7、http、tcp/ip，get和post区别
+8、内部类为什么会内存泄漏
+9、字符串ab**c*d*ef*，将其变为*****abcdef，并返回*号个数，代码实现，尽量用空间复杂度和时间复杂度最小的方式
+10、给recycleview加header和footer如何加，为什么能加，复杂布局实现等
+11、一个整数数组中，只有两个数出现1次，其他数均出现2次，求这两个数，尽量用空间复杂度和时间复杂度最小的方式
+
+
+
+插件化 热修复 路由 组件化
+
+
+
+
+cookie
+内存管理内存优化
+fragment hide show 重叠问题
+悬浮窗口怎么实现（window、自定义view、onTouchEvent）
+studio分析线程的工具
+list<?>和list<object>的区别
+字符串算法
+
+getMeasuredHeight()和getHeight()的区别
+
+多线程 锁
+synchronized void method1()
+static synchronized void method2() 两者区别
+
+thread1.method1()
+thread2.method2()调用顺序
+
+图片压缩
+listview优化
+图片复用
+
+
+
+支付的具体流程，先请求哪个服务器然后怎样
+
+
+遇到过哪些闪退的问题
+
+
+glide和picasso的区别
+
+内存溢出的情况
+
+机型适配问题
+
+设计模式 什么时候用到了单例
+
+EventBus
+dagger2
+
+图文混排界面 如何优化更流畅
+
+和后台接口的加密方式
+
+AIDL具体实现
+面向对象六大原则
+
+十个线程和两个线程的同步 有什么区别  哪个更容易实现
+
+jni native 怎样调用Java方法
+
+Java怎样传递string给native
+
+虚引用
+
+对象在什么情况下会被垃圾回收掉
+
+自定义view和自定义ViewGroup 分别实现什么方法
+
+
+apk瘦身
+热修复
+省点优化
+省流量
+
+登录 token过期怎么办
+
+webview中怎样打开一个activity
+和js交互方法中传递的参数有什么限制
+
+
+socket TCP http
+
+
+ContentProvider的使用
+activity怎样传递数据到fragment
+fragment之间怎样传递数据
+如何使用缓存、何时使用最新数据  （时间戳）
+
+独立进程service 音乐播放器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

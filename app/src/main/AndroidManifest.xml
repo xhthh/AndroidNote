@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.xht.androidnote">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <uses-permission android:name="com.xht.androidnote.permission.ACCESS_BOOK_SERVICE"/>
+
+    <permission
+        android:name="com.xht.androidnote.PROVIDER"
+        android:protectionLevel="normal" />
+
+    <permission
+        android:name="com.xht.androidnote.permission.ACCESS_BOOK_SERVICE"
+        android:protectionLevel="normal" />
+
+    <application
+        android:name=".base.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".module.okhttp.OkHttpActivity" />
+
+        <!--===============Activity===============-->
+        <activity
+            android:name=".module.activity.ATestActivity"
+            android:launchMode="standard" />
+        <activity
+            android:name=".module.activity.BTestActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".module.activity.CTestActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".module.activity.DTestActivity"
+            android:launchMode="singleInstance" />
+
+        <!--===============Service===============-->
+        <activity android:name=".module.service.ServiceActivity" />
+
+        <service android:name=".module.service.MyService" />
+        <service android:name=".module.handler.MyIntentService" />
+
+        <!--===============BroadCastReceiver===============-->
+        <activity android:name=".module.broadcastreceiver.BroadCastActivity" />
+        <!--<receiver android:name=".module.broadcastreceiver.BroadCastActivity$MyBroadCastReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>-->
+
+        <!--===============ContentProvider===============-->
+        <activity android:name=".module.contentprovider.ContentProviderActivity" />
+        <!--android4.4报错 Caused by: java.lang.SecurityException: Permission Denial:-->
+        <provider
+            android:name=".module.contentprovider.MyProvider"
+            android:authorities="com.xht.androidnote"
+            android:exported="true"
+            android:permission="com.xht.androidnote.PROVIDER" />
+
+
+        <!--===============Fragment===============-->
+        <activity android:name=".module.fragment.FragmentTestActivity" />
+        <activity
+            android:name=".module.fragment.FragmentNavigationActivity"
+            android:configChanges="orientation|screenSize">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+
+        <activity android:name=".module.fragment.FragmentViewPagerActivity" />
+
+        <activity android:name=".module.fragment.FragmentBackStackActivity" />
+
+
+        <activity android:name=".module.asynctask.AsyncTaskActivity" />
+
+
+        <activity android:name=".module.eventdispatch.EventDispatchActivity" />
+
+
+        <activity android:name=".module.retrofit.RetrofitActivity" />
+        <activity android:name=".module.glide.GlideActivity" />
+        <activity android:name=".module.handler.HandlerActivity" />
+        <activity android:name=".module.rxjava.RxJavaActivity" />
+        <activity
+            android:name=".module.ContentReviewActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".module.window.DialogWindowActivity" />
+
+        <!--============================IPC============================-->
+        <activity android:name=".module.ipc.IPCActivity" />
+        <activity
+            android:name=".module.ipc.RemoteOneActivity"
+            android:process=":remote" />
+        <activity
+            android:name=".module.ipc.RemoteTwoActivity"
+            android:process="com.xht.androidnote.module.ipc.remote" />
+        <activity android:name=".module.ipc.BinderActivity" />
+        <activity android:name=".module.ipc.messenger.MessengerActivity" />
+        <activity android:name=".module.ipc.aidl.AIDLActivity" />
+        <activity android:name=".module.ipc.binderpool.BinderPoolActivity" />
+        <activity android:name=".module.bitmap.BitmapActivity" />
+        <activity android:name=".module.animation.AnimationActivity" />
+        <activity android:name=".module.animation.ListViewAnimationActivity" />
+        <activity android:name=".module.animation.PropertyAnimationActivity" />
+        <activity android:name=".module.optimize.MemoryLeakActivity" />
+        <activity android:name=".module.java.JavaTestActivity" />
+
+        <service
+            android:name=".module.ipc.messenger.MessengerService"
+            android:process=":remote" />
+        <service
+            android:name=".module.ipc.aidl.BookManagerService"
+            android:process=":remote" />
+        <service android:name=".module.ipc.binderpool.BinderPoolService" />
+
+
+    </application>
+
+</manifest>

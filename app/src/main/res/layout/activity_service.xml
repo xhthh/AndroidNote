@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_content_review"
+        style="@style/btnStyle"
+        android:text="Content Review" />
+
+    <Button
+        android:id="@+id/btn_start_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="start service"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_stop_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="stop service"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_bind_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="bind service"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_unbind_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="unbind service"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_start_fore_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="启动前台服务"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_stop_fore_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关闭前台服务"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_service_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="模拟下载，先调用bind service"
+        android:textAllCaps="false" />
+
+
+    <ProgressBar
+        android:id="@+id/pb_service_download"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

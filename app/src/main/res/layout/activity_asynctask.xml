@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_execute_serial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="串行执行多个AsyncTask---execute()" />
+
+
+    <Button
+        android:id="@+id/btn_execute_async"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="并行执行多个AsyncTask---executeOnExecutor()" />
+
+    <TextView
+        android:id="@+id/tv_execute_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/btn_async_task_download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="模拟下载" />
+
+    <Button
+        android:id="@+id/btn_async_task_download_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消下载" />
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

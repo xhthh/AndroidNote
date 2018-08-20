@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_property_translation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="改变 translation Y 属性值" />
+
+    <Button
+        android:id="@+id/btn_property_bg_color"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="改变对象的背景色属性" />
+
+    <Button
+        android:id="@+id/btn_property_animation_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="动画合集" />
+
+    <Button
+        android:id="@+id/btn_property_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="重置" />
+
+    <Button
+        android:id="@+id/btn_property_increase_width"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="增加Button宽度"
+        android:textAllCaps="false" />
+
+
+    <TextView
+        android:id="@+id/tv_property_object"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="200dp"
+        android:text="对象"
+        android:textSize="50sp" />
+
+</LinearLayout>

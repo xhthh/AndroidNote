@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_activity"
+            style="@style/btnStyle"
+            android:text="Activity" />
+
+        <Button
+            android:id="@+id/btn_service"
+            style="@style/btnStyle"
+            android:text="Service" />
+
+        <Button
+            android:id="@+id/btn_broadcast_receiver"
+            style="@style/btnStyle"
+            android:text="BroadcastReceiver" />
+
+        <Button
+            android:id="@+id/btn_content_provider"
+            style="@style/btnStyle"
+            android:text="ContentProvider" />
+
+        <Button
+            android:id="@+id/btn_fragment"
+            style="@style/btnStyle"
+            android:text="Fragment" />
+
+        <Button
+            android:id="@+id/btn_handler"
+            style="@style/btnStyle"
+            android:text="Handler + HandlerThread + IntentService" />
+
+        <Button
+            android:id="@+id/btn_async_task"
+            style="@style/btnStyle"
+            android:text="AsyncTask" />
+
+
+        <Button
+            android:id="@+id/btn_event_dispatch"
+            style="@style/btnStyle"
+            android:text="事件分发机制" />
+
+        <Button
+            android:id="@+id/btn_window"
+            style="@style/btnStyle"
+            android:text="Window、Dialog..." />
+
+        <Button
+            android:id="@+id/btn_ipc"
+            style="@style/btnStyle"
+            android:text="多进程通信" />
+
+        <Button
+            android:id="@+id/btn_bitmap"
+            style="@style/btnStyle"
+            android:text="Bitmap" />
+
+        <Button
+            android:id="@+id/btn_animation"
+            style="@style/btnStyle"
+            android:text="Animation" />
+
+        <Button
+            android:id="@+id/btn_okhttp"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="OkHttp" />
+
+        <Button
+            android:id="@+id/btn_retrofit"
+            style="@style/btnStyle"
+            android:text="Retrofit" />
+
+        <Button
+            android:id="@+id/btn_glide"
+            style="@style/btnStyle"
+            android:text="Glide" />
+
+        <Button
+            android:id="@+id/btn_java"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="Java" />
+
+
+    </LinearLayout>
+
+
+</ScrollView>

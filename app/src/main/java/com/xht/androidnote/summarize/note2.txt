@@ -1,0 +1,1412 @@
+1、简单描述android中有哪几种布局方式？
+    常用的五种：
+    分别是：FrameLayout（框架布局），LinearLayout （线性布局），AbsoluteLayout（绝对布局），RelativeLayout（相对布局），TableLayout（表格布局）。
+    LinearLayout，RelativeLayout，FrameLayout，AbsoluteLayout都是ViewGroup的子类
+    TableLayout是LinearLayout的子类
+
+
+2、简单描述android中常用的几种数据存储方式？
+     1）使用SharedPreferences存储数据
+        只能储存boolean,int,string,float,long五种简单的数据类型
+        如果要用 SharedPreferences 存取复杂的数据类型（类，图像等），就需要对这些数据进行编码。通常会将复杂类型的数据转换成Base64编码，
+        然后将转换后的数据以字符串的形式保存在XML文件中。
+     2）文件存储数据（内部存储、外部存储）
+        它不对存储的内容进行任何的格式化处理，所有数据都是原封不动地保存到文件当中，因而它比较适合用于存储一些简单的数据或二进制数据。
+        如果你想使用文件存储的方式来保存一些较为复杂的文本数据，就需要定义一套自己的格式规范，这样可以方便之后将数据从文件中重新解析出来。
+     3）SQLite数据库存储数据
+        存储大量复杂的关系型数据
+        继承SQLiteOpenHelper类，实现两个抽象方法，onCreate()创建、onUpgrade()升级
+        数据类型：
+            integer 整型
+            real    浮点型
+            text    文本类型
+            blob    二进制类型
+     4）使用ContentProvider存储数据
+     5）网络存储数据
+
+3、View、SurfaceView、GLSurfaceView有什么区别？以及各自的应用场景？
+    View和SurfaceView的区别：
+        1、View主要适用于主动更新的情况下，而SurfaceView主要适用于被动更新，例如频繁的刷新。
+        2、View在主线程中对画面进行刷新，而SurfaceView主要适用于被动更新，例如频繁地刷新。
+        3、View在绘图时没有使用双缓冲机制，而SurfaceView在底层实现机制中就已经实现了双缓冲机制。
+        总之，如果你的自定义view需要频繁的刷新，或者刷新时数据处理量比较大，就可以考虑使用SurfaceView来取代View了。
+        SurfaceView在线程中更新画面可能会涉及到线程同步问题。
+    GLSurfaceView是一个视图，继承至SurfaceView，它内嵌的surface专门负责OpenGL渲染。
+
+
+    SurfaceView如何更新UI？
+
+
+4、android中sp、dp、px的含义？以及它们之间的转换？
+        独立比例像素sp---Scale Independent Pixels
+        用此单位设置文字大小，如果设置系统的字体为大、小等，应用程序的字体也会跟随系统变化。
+
+        屏幕密度无关像素dp(dip)---Density Independent Pixels
+
+        像素px---Pixels
+
+5、在项目过程中是否遇到某个API在不同版本上存在差异？
+
+
+6、在android中，线程之间通信一般用什么方式？进程间通信有哪些方式？
+    线程间通信：
+        1）共享变量（内存）
+            多个线程共享同一份内存，就是说，一个变量可以同时被多个线程所访问。这里要特别注意同步和原子操作的问题。
+        2）管道流Pipes
+            “管道”是java.io包的一部分。它是Java的特性，而不是Android特有的。一条“管道”为两个线程建立一个单向的通道。生产者负责写数据，消费者负责读取数据。
+        3）handle机制
+        runOnUiThread(Runnable)
+        view.post(Runnable)
+
+    AsyncTask在什么情况下使用？有什么缺陷，应该怎么解决？
+
+
+
+    线程间的通信目的主要是用于线程同步，所以线程没有像进程通信中的用于数据交换的通信机制。
+
+    子线程间如何通信：
+        在子线程中创建handler
+        public class Thread1 extends Thread{
+            private Handler handler1;
+            public Handler getHandler(){//注意哦，在run执行之前，返回的是null
+                return handler1;
+            }
+            @Override
+            public void run() {
+                Looper.prepare();
+                handler1 = new Handler(){
+                    public void handleMessage(android.os.Message msg) {
+                        //这里处理消息
+                        Log.i("MThread", "收到消息了："+Thread.currentThread().getName()+"----"+msg.obj);
+                    };
+                };
+                Looper.loop();
+            }
+        }
+
+        public class Thread2 extends Thread{
+            @Override
+            public void run() {
+                for(int i=0; i<10; i++){
+                    Message msg = Message.obtain();
+                    msg.what = 1;
+                    msg.obj = System.currentTimeMillis()+"";
+                    handler1.sendMessage(msg);
+                    Log.i("MThread", Thread.currentThread().getName()+"----发送了消息！"+msg.obj);
+                    SystemClock.sleep(1000);
+                }
+
+            }
+        }
+
+    构造HandlerThread类的对象mHandlerThread，这样生成一个子线程可以调用new MyHandler(mHandlerThread.getLooper())来获取子线程的handler，
+    另一个子线程发消息，收到消息的就是子线程而不是主线程了。
+
+    进程间通信：
+        Bundle、文件共享、AIDL、Messenger、ContentProvider、Socket
+
+    AIDL全称？以及用处？
+    Android Interface Define Language
+
+    server端
+        创建aidl文件，gen下自动生成java，其中有抽象内部类Stub，在server端创建service，创建stub实例，在onBind()中返回
+    client端
+        复制aidl文件到相同包名下，在serviceConnection中通过 aidl对应的java类.Stub.asInterface()得到相应的实例，然后调用方法
+
+
+
+7、请简述使用NDK的大致过程？
+    1）下载配置NDK
+    2）创建一个android项目，并声明所需的native方法，loadLibrary
+    3）实现android项目中所声明的native方法
+        在外部创建一个名为jni的目录，然后创建3个文件，c/c++文件、Android.mk、Application.mk
+        可以在gradle中配置所需平台
+    4、切换到jni目录的父目录，通过ndk-build命令编译产生so库
+
+
+
+8、android应用对于内存的大小是有限制的，请简述几种解决方式？
+    使用多进程模式
+    一个Android的应用最多使用16M的内存,如果要突破这个限制,则要使用c/c++编写JNI,即直接调用底层的函数来处理.linux也是用c/c++来编写的,因此有非常非常多的函数库可以调用.
+
+9、简要介绍以下activity、intent、intent filter、service、Broadcase、BroadcastReceiver
+    Activity是一种展示型的组件，用于向用户直接展示一个界面，并且可以接收用户的输入信息从而进行交互。
+    Service是一种计算型组件，用于在后台执行一系列计算任务。
+    BroadcastReceiver是一种消息型组件，用于在不同组件乃至不同的应用之间传递消息。
+    Broadcast是广播机制
+    Intent中文意思是“意图、目的”，是android程序中各组件之间进行交互的重要方式，不仅可以指明当前组件想要执行的动作，还可以在不同组件之间传递数据。一般用于启动活动、
+    启动服务以及发送广播等。
+    IntentFilter类表示Intent过滤器, 大部分情况下, 每一个component都会定义一个或多个IntentFilter,用于表明其可处理的Intent，是在manifest文件中声明的。
+
+10、系统上安装了多种浏览器，能否指定某浏览器访问某浏览页面？
+    能，通过intent，intent.setAction()指定浏览页面，intent.setClassName()指定浏览器
+
+11、 若果有个100M大文件，需要上传至服务器，服务器表单最大上传2Mb，用什么办法？
+    使用http协议上传数据，特别在android下，跟form没什么关系。传统的在web中，在form中写文件上传，其实浏览器所做的就是将我们的数据进行解析组拼成字符串，
+    以流的方式发送到服务器，且上传文件用的都是POST方式，POST方式对大小没什么限制。
+    假设每次真的只能上传2M，那么可能我们只能把文件截断，然后分别上传了。
+    可以采用断点续传的方式来进行传输，可以开启几个线程，进行一次文件传输，然后记录下第一次几个线程传输的文件position，最后也就是把文件截断分别传输。
+
+12、横竖屏切换时Activity的声明周期？
+    横竖屏切换时Activity的生命周期与configChanges的配置相关。
+    android 4.0以上
+        1.如果不配置或者配置后不写ScreenSize，则要先销毁Activity再创建，销毁的过程中会调用onSaveInstanceState，
+            竖屏切横屏：
+            onSaveInstanceState()-->onPause()-->onStop()-->onDestroy()-->onCreate()-->onStart()-->onRestoreInstanceState()-->onResume()
+            切回竖屏：
+            同上
+        2.如果配置configChanges为Orientation和ScreenSize则不销毁，走onConfigurationChanged();
+
+13、如果后台的Activity由于某原因被系统回收了，如何在被系统回收之前保存当前状态？
+    使用onSaveInstanceState()
+
+14、简述Java中overload和override的区别？
+    Override：重写。在子类继承父类的时候子类中可以定义某方法与其父类有相同的名称和参数，当子类在调用这一函数时自动调用子类的方法，而父类相当于被覆盖（重写）了
+    overload：重载。它可以表现类的多态性，可以是函数里面可以有相同的函数名但是参数名、类型不能相同、参数顺序不同，与返回值类型无关
+
+15、运行时异常和一般异常有什么区别？
+    运行时异常我们可以不处理。这样的异常由虚拟机接管。出现运行时异常后，系统会把异常一直往上层抛，一直遇到处理代码。如果不对运行时异常进行处理，
+    那么出现运行时异常之后，要么是线程中止，要么是主程序终止。比如：我们从来没有人去处理过NullPointerException异常，它就是运行时异常。
+    JAVA要求程序员对其进行catch。所以，面对这种异常不管我们是否愿意，只能自己去写一大堆catch块去处理可能的异常。
+
+16、简述抽象类和接口的区别？
+    接口中的方法都是public abstract修饰的，接口中没有构造器，
+    抽象类中可以有非抽象方法，方法可以被private、默认、ptotected、public修饰，
+    抽象类中可以定义成员变量，而接口中定义的成员变量实际上都是常量。有抽象方法的类必须被声明为抽象类，而抽象类未必要有抽象方法。
+    一个类如果继承了某个抽象类或者实现了某个接口都需要对其中的抽象方法全部进行实现，否则该类仍然需要被声明为抽象类。
+    抽象方法可以有main方法并且我们可以运行它，接口没有main方法，因此我们不能运行它。
+
+17、谈谈final、finally、finalize的区别？
+    final：修饰符，被final修饰的类不能被继承，修饰的变量是常量，方法不能被重写
+    finally：在异常处理时提供finally块来执行任何清除操作。如果抛出一个异常，那么相匹配的catch子句就会执行，然后控制就会进入finally块（如果有的话）
+    finalize：方法名。它是在Object类中定义的，因此所有的类都继承了它。Java技术允许使用finalize()方法在垃圾收集器将对象从内存中清除出去之前做必要的清理工作。
+             这个方法是由垃圾收集器在确定这个对象没有被引用时对这个对象调用的。
+
+18、构造器是否可以被重写？
+    可以被重载，重写是建立在继承关系之上的，类的名字都不一样，怎样重写。
+
+19、android程序退出方法，以及怎样实现安全退出？
+    就是自定义一个Application,在该Application中去定义一个List的集合来记录中每一个开启的Activity，在退出的时候去遍历这个List集合，
+    然后挨个的进行mActivity.finish()方法，这要求在每开启一个Activity的时候都加入到List集合中，并且在Activity退出的时候从List集合中将其移除。
+
+    第一种方法：首先获取当前进程的id，然后杀死该进程。建议使用这种方式
+    android.os.Process.killProcess(android.os.Process.myPid())
+
+    第二种方法：终止当前正在运行的Java虚拟机，导致程序终止
+    System.exit(0);或者Runtime.getRuntime().exit(0);
+
+    第三种方法：强制关闭与该包有关联的一切执行
+
+    第四种方式:抛出异常
+
+    第五种方式：用一个集合自己管理activity
+
+    第六种方式：使用遍历的方式
+      这种方式比较繁琐复杂，使用递归的方式，没当打开一个activity的时候都用startActivityForResult(),在onActivityResult()里接收结果关闭当前的activity，不推荐使用，太繁琐麻烦。
+
+    第七种方式：使用intent的flag实现
+
+20、Handler机制？android中Handler、Looper、MessgeQueue的关系？
+    Handler的主要作用是讲一个任务切换到某个指定的线程中去执行。
+    MessageQueue，单链表结构，插入和读取消息。
+    Looper，负责消息循环，会不停的从MessageQueue中查看是否有新消息，有就取出，没有就阻塞。
+        主要有prepare()、loop()方法，在构造器中创建MessageQueue对象，并保存当前线程。
+    Handler负责发送和处理消息，构造方法，会首先得到当前线程中保存的Looper实例，进而与Looper实例中的MessageQueue相关联。
+
+21、线程安全的集合包括哪些？
+
+22、广播注册的方式，及它们的优缺点？
+
+23、Fragment的用法、声明周期，以及和Activity之间的实现关系？
+
+24、assets和raw之间的关系和区别？Asserts目录下存放的文件有大小限制吗？
+
+25、简单介绍以下ReentrantLock和Synchronized各自的优势？
+
+26、描述以下adapter中加载图片的流程，以及解决流畅滑动的方法？listview的优化？复用view后  原来的数据去哪了？
+
+27、解释sleep、wait、join、yidld方法，以及notify和notifyAll是如何控制线程同步的？
+
+28、如何启用和停用Service，让service与程序同时退出或不同时退出如何处理？
+
+29、简单介绍http协议，http协议实现多线程下载并支持断点续传，以及服务器端是怎么支持的？
+
+30、已经有一个c/c++实现的功能库，如何在android程序中调用？
+
+31、android消息推送机制？
+
+32、服务器web端和android端是怎样通信的？
+
+33、怎样实现省流量？
+
+34、线程有几种状态，分别是什么?
+    新建、就绪、运行、阻塞、死亡
+
+35、ScrollView和ListView的互相嵌套需要注意什么？
+    滑动冲突
+    同方向滑动冲突，内部解决和外部解决
+
+
+36、Fragment在替换的过程中如何保持之前的数据不被移除？
+
+37、四大组件是否都需要在功能清单里面注册？
+    广播分动态注册和静态注册，动态注册在代码中，不需要在清单文件中注册。
+
+38、AndroidStudio怎么导库？
+
+39、HTTP、TCP、socket之间的区别？
+
+    网络由下往上分为物理层、数据链路层、网络层、传输层、会话层、表示层和应用层。
+    通过初步的了解，我知道IP协议对应于网络层，TCP协议对应于传输层，而HTTP协议对应于应用层，三者从本质上来说没有可比性，socket则是对TCP/IP协议的封装和应用(程序员层面上)。
+    也可以说，TPC/IP协议是传输层协议，主要解决数据如何在网络中传输，而HTTP是应用层协议，主要解决如何包装数据。
+    关于TCP/IP和HTTP协议的关系，网络有一段比较容易理解的介绍：“我们在传输数据时，可以只使用(传输层)TCP/IP协议，但是那样的话，如果没有应用层，
+    便无法识别数据内容。如果想要使传输的数据有意义，则必须使用到应用层协议。应用层协议有很多，比如HTTP、FTP、TELNET等，也可以自己定义应用层协议。
+    WEB使用HTTP协议作应用层协议，以封装HTTP文本信息，然后使用TCP/IP做传输层协议将它发到网络上。”　　
+    而我们平时说的最多的socket是什么呢，实际上socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口(API)。通过Socket，我们才能使用TCP/IP协议。
+    实际上，Socket跟TCP/IP协议没有必然的联系。Socket编程接口在设计的时候，就希望也能适应其他的网络协议。
+    所以说，Socket的出现只是使得程序员更方便地使用TCP/IP协议栈而已，是对TCP/IP协议的抽象，从而形成了我们知道的一些最基本的函数接口，
+    比如create、listen、connect、accept、send、read和write等等。
+    网络有一段关于socket和TCP/IP协议关系的说法比较容易理解：“TCP/IP只是一个协议栈，就像操作系统的运行机制一样，必须要具体实现，同时还要提供对外的操作接口。
+    这个就像操作系统会提供标准的编程接口，比如win32编程接口一样，TCP/IP也要提供可供程序员做网络开发所用的接口，这就是Socket编程接口。”
+    关于TCP/IP协议的相关只是，用博大精深来讲我想也不为过，单单查一下网上关于此类只是的资料和书籍文献的数量就知道，
+    这个我打算会买一些经典的书籍(比如《TCP/IP详解：卷一、卷二、卷三》)进行学习，今天就先总结一些基于基于TCP/IP协议的应用和编程接口的知识，
+    也就是刚才说了很多的HTTP和Socket。　　
+    CSDN上有个比较形象的描述：HTTP是轿车，提供了封装或者显示数据的具体形式;Socket是发动机，提供了网络通信的能力。
+    实际上，传输层的TCP是基于网络层的IP协议的，而应用层的HTTP协议又是基于传输层的TCP协议的，而Socket本身不算是协议，就像上面所说，
+    它只是提供了一个针对TCP或者UDP编程的接口。
+    下面是一些经常在笔试或者面试中碰到的重要的概念，特在此做摘抄和总结。
+        一、什么是TCP连接的三次握手
+            第一次握手：客户端发送syn包(syn=j)到服务器，并进入SYN_SEND状态，等待服务器确认;
+            第二次握手：服务器收到syn包，必须确认客户的SYN(ack=j+1)，同时自己也发送一个SYN包(syn=k)，即SYN+ACK包，此时服务器进入SYN_RECV状态;
+            第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1)，此包发送完毕，客户端和服务器进入ESTABLISHED状态，完成三次握手。
+            握手过程中传送的包里不包含数据，三次握手完毕后，客户端与服务器才正式开始传送数据。
+            理想状态下，TCP连接一旦建立，在通信双方中的任何一方主动关闭连接之前，TCP 连接都将被一直保持下去。
+            断开连接时服务器和客户端均可以主动发起断开TCP连接的请求，断开过程需要经过“四次挥手”(过程就不细写了，就是服务器和客户端交互，最终确定断开)
+    　　二、利用Socket建立网络连接的步骤
+            建立Socket连接至少需要一对套接字，其中一个运行于客户端，称为ClientSocket ，另一个运行于服务器端，称为ServerSocket 。
+            套接字之间的连接过程分为三个步骤：服务器监听，客户端请求，连接确认。
+            1、服务器监听：服务器端套接字并不定位具体的客户端套接字，而是处于等待连接的状态，实时监控网络状态，等待客户端的连接请求。
+            2、客户端请求：指客户端的套接字提出连接请求，要连接的目标是服务器端的套接字。为此，客户端的套接字必须首先描述它要连接的服务器的套接字，
+               指出服务器端套接字的地址和端口号，然后就向服务器端套接字提出连接请求。　　
+            3、连接确认：当服务器端套接字监听到或者说接收到客户端套接字的连接请求时，就响应客户端套接字的请求，建立一个新的线程，
+               把服务器端套接字的描述发给客户端，一旦客户端确认了此描述，双方就正式建立连接。而服务器端套接字继续处于监听状态，
+               继续接收其他客户端套接字的连接请求。　　
+        三、HTTP链接的特点
+            HTTP协议即超文本传送协议(Hypertext Transfer Protocol )，是Web联网的基础，也是手机联网常用的协议之一，HTTP协议是建立在TCP协议之上的一种应用。
+            HTTP连接最显著的特点是客户端发送的每次请求都需要服务器回送响应，在请求结束后，会主动释放连接。从建立连接到关闭连接的过程称为“一次连接”。
+            1）在HTTP 1.0中，客户端的每次请求都要求建立一次单独的连接，在处理完本次请求后，就自动释放连接。
+
+            2）在HTTP 1.1中则可以在一次连接中处理多个请求，并且多个请求可以重叠进行，不需要等待一个请求结束后再发送下一个请求。
+
+            由于HTTP在每次请求结束后都会主动释放连接，因此HTTP连接是一种“短连接”，要保持客户端程序的在线状态，需要不断地向服务器发起连接请求。
+            通常的做法是即时不需要获得任何数据，客户端也保持每隔一段固定的时间向服务器发送一次“保持连接”的请求，服务器在收到该请求后对客户端进行回复，
+            表明知道客户端“在线”。若服务器长时间无法收到客户端的请求，则认为客户端“下线”，若客户端长时间无法收到服务器的回复，则认为网络已经断开。
+
+        四、TCP和UDP的区别(考得最多。。快被考烂了我觉得- -\\)
+            1、TCP是面向链接的，虽然说网络的不安全不稳定特性决定了多少次握手都不能保证连接的可靠性，但TCP的三次握手在最低限度上(实际上也很大程度上保证了)
+            保证了连接的可靠性;
+            而UDP不是面向连接的，UDP传送数据前并不与对方建立连接，对接收到的数据也不发送确认信号，发送端不知道数据是否会正确接收，
+            当然也不用重发，所以说UDP是无连接的、不可靠的一种数据传输协议。　　
+            2、也正由于1所说的特点，使得UDP的开销更小数据传输速率更高，因为不必进行收发数据的确认，所以UDP的实时性更好。
+            知道了TCP和UDP的区别，就不难理解为何采用TCP传输协议的MSN比采用UDP的QQ传输文件慢了，但并不能说QQ的通信是不安全的，
+            因为程序员可以手动对UDP的数据收发进行验证，比如发送方对每个数据包进行编号然后由接收方进行验证啊什么的，
+            即使是这样，UDP因为在底层协议的封装上没有采用类似TCP的“三次握手”而实现了TCP所无法达到的传输效率。
+
+
+    Socket通信实现步骤
+        1、创建ServerSocket和Socket
+        2、打开连接到Socket的输入/输出流
+        3、按照协议对Socket进行读/写操作
+        4、关闭输入输出流、关闭Socket
+
+        TCP：
+            服务端：
+            1、创建ServerSocket对象，绑定监听端口
+            2、通过accept()方法监听客户端请求
+            3、连接建立后，通过输入流读取客户端发送的请求信息
+            4、通过输出流向客户端发送响应信息
+            5、关闭资源
+            客户端：
+            1、创建Socket对象，指明需要连接的服务器的地址和端口号
+            2、连接建立后，通过输出流向服务器端发送请求信息
+            3、通过输入流获取服务器响应的信息
+            4、关闭相关资源
+
+        多线程服务器
+            1、服务器端创建ServerSocket，循环调用accept()等待客户端连接
+            2、客户端创建一个socket并请求和服务器端连接
+            3、服务器端接受客户端请求，创建socket与该客户建立专线连接
+            4、建立连接的两个socket在一个单独的线程上对话
+            5、服务器端继续等待新的连接
+
+            多线程的优先级，降低优先级
+            是否关闭输出流和输入流，不需要，关闭socket就可
+            使用TCP通信传输对象，使用ObjectOutputStream
+            socket编程传递文件，BufferedOutputStream
+
+        UDP：
+            服务端：
+            1、创建DatagramSocket，指定端口号
+            2、创建DatagramPacket
+            3、接收客户端发送的数据信息
+            4、读取数据
+            客户端
+            1、定义发送信息
+            2、创建DatagramPacket，包含将要发送的信息
+            3、创建DatagramSocket
+            4、发送数据
+
+40、解释一下运行时权限和文件管理权限的区别？
+
+41、怎么做的屏幕适配，代码适配会吗？
+    布局适配
+    dimens适配  比如values-w320dp
+
+
+42、怎么自定义控件（三个重要的方法也详细问了）？
+    为什么要自定义控件？
+        1、特定的显示效果
+        2、处理特有的用户交互
+        3、优化我们的布局
+        4、封装--比如底部的tab
+    1、自定义属性的声明与获取
+        1）分析需要的自定义属性
+        2）在res/values/attrs.xml定义声明
+        3）在layout.xml文件中进行使用
+        4）在View的构造方法中进行获取
+    2、测量onMeasure()
+        1）测量模式
+           EXACTLY、AT_MOST、UNSPECIFIED
+        2）MeasureSpec
+        3）setMeasuredDimension
+        4）requestLayout()
+    3、布局onLayout(ViewGroup)--父控件决定子View显示的位置
+        1）决定子View的位置
+        2）尽可能将onMeasure中的一些耗时操作移动到此方法中
+        3）requestLayout()
+    4、绘制onDraw()
+        1）绘制内容区域
+        2）invalidate()、postInvalidate()--子线程中调用
+        3）Canvas.drawXXX
+        4）translate、rotate、scale、skew
+        5）save()、restore()
+    5、onTouchEvent
+        1）ACTION_DOWN、ACTION_MOVE、ACTION_UP
+        2）ACTION_POINTER_DOWN、ACTION_POINTER_UP---多点触控使用
+        3）parent.requestDisallow、InterceptTouchEvent(true)
+        4）VelocityTracker
+    6、onInterceptTouchEvent(ViewGroup)
+        1）ACTION_DOWN、ACTION_MOVE、ACTION_UP
+        2）ACTION_POINTER_DOWN、ACTION_POINTER_UP---多点触控使用
+        3）是否拦截
+
+43、view的事件传递（最后还问到touch事件都不做处理的话事件交给activity，activity是怎么处理的）？
+
+44、hashmap和list的区别？
+
+45、什么时候会启动多个进程？
+
+46、安卓默认ARGB 1024*1024占多大内存？
+    1M？
+
+47、动画有哪几类？特点和区别？
+
+48、用代码写冒泡顺序排序？
+
+49、简述触摸机制和消息响应机制？
+
+50、写个单例模式，并简述单例在 你项目中的应用？
+    比如退出应用，自定义Application，每打开一个activity添加进入，关闭一个移除一个，退出时，遍历集合activity.finish()然后System.exit(0);
+
+    1.饿汉式1（相较于懒汉式，更好一些。因为没有线程安全问题）
+    class Bank{
+    	//1.私有化类的构造器
+    	private Bank(){
+
+    	}
+
+    	//2.在类的内部提供Bank的一个实例
+    	//4.将此实例声明为static的
+    	private static Bank bank = new Bank();
+
+    	//3.提供公共的方法获取唯一的实例,同时将此方法声明为static的。
+    	public static Bank getInstance(){
+    		return bank;
+    	}
+    }
+
+    //饿汉式2
+    class Bank{
+    	//1.私有化类的构造器
+    	private Bank(){
+
+    	}
+
+    	//2.在类的内部提供Bank的一个实例
+    	//4.将此实例声明为static的
+    	private static Bank bank = null;
+
+    	static{
+    		bank = new Bank();
+    	}
+
+    	//3.提供公共的方法获取唯一的实例,同时将此方法声明为static的。
+    	public static Bank getInstance(){
+    		return bank;
+    	}
+    }
+
+    2.懒汉式(存在线程的安全问题)
+    class Bank1{
+    	//1.私有化类的构造器
+    	private Bank1(){
+
+    	}
+    	//2.在类的内部提供Bank的一个实例的声明
+    	//4.将此实例声明为static的
+    	private static  Bank1 bank = null;
+
+    	//3.提供公共的方法获取唯一的实例,同时将此方法声明为static的。
+    	public static Bank1 getInstance(){
+
+    		if(bank == null){
+
+    			bank = new Bank1();
+    		}
+    		return bank;
+    	}
+    }
+
+    public class Singleton {
+        private volatile static Singleton singleton;
+        private Singleton (){}
+        public static Singleton getSingleton() {
+        if (singleton == null) {
+            synchronized (Singleton.class) {
+            if (singleton == null) {
+                singleton = new Singleton();
+            }
+            }
+        }
+        return singleton;
+        }
+    }
+
+51、Activity之间跳转原理，简述你对Activity Task的理解？Activity启动方式有哪几种？
+
+52、View的生命周期？
+
+53、怎么缓存一个.mp4格式的视频文件？
+
+54、如何处理线程并发的安全情况？
+
+55、静态代码块与类的关系？
+
+56、如何优化内部类，为什么？
+
+57、如何应对加载网络图片的闪动问题？
+
+58、谈一下常用的设计模式，你是怎么理解设计模式的？
+    1）单例模式
+        确保某一个类只有一个实例，而且自行实例化并向整个系统提供这个实例。
+        这样做有以下几个优点：
+        对于那些比较耗内存的类，只实例化一次可以大大提高性能，尤其是在移动开发中。
+        保持程序运行的时候该中始终只有一个实例存在内存中
+    2）Builder模式
+        将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的表示
+        定义一个静态内部类Builder，内部的成员变量和外部类一样
+        Builder类通过一系列的方法用于成员变量的赋值，并返回当前对象本身（this）
+        Builder类提供一个build方法或者create方法用于创建对应的外部类，该方法内部调用了外部类的一个私有构造函数，该构造函数的参数就是内部类Builder
+        外部类提供一个私有构造函数供内部类调用，在该构造函数中完成成员变量的赋值，取值为Builder对象中对应的值
+    3）观察者模式
+        定义对象间的一种一对多的依赖关系，当一个对象的状态发送改变时，所有依赖于它的对象都能得到通知并被自动更新
+    4）工厂方法模式
+        定义一个创建对象的接口，让子类决定实例化哪个类
+        Activity中getSystemService方法中就是用到了工厂模式，他就是根据传入的参数决定创建哪个对象
+    5）适配器模式
+        把一个类的接口变换成客户端所期待的另一个接口，从而使原本因接口不匹配而无法在一起工作的两个类能够在一起工作。
+        比较典型的有ListView和RecyclerView。为什么ListView需要使用适配器呢？
+        主要是，ListView只关心它的每个ItemView，而不关心这个ItemView具体显示的是什么。而我们的数据源存放的是要显示的内容，它保存了每一个ItemView要显示的内容。
+        ListView和数据源之间没有任何关系，这时候，需要通过适配器，适配器提供getView方法给ListView使用，每次ListView只需提供位置信息给getView函数，
+        然后getView函数根据位置信息向数据源获取对应的数据，根据数据返回不同的View。
+
+
+
+59、android中获取图片的方式有哪几种？
+
+60、android中Intent的三个主要应用场景？
+
+61、你是怎样发现程序是运行在低内存或内存不足的情况
+
+62、谈谈android程序的更新和维护策略？
+
+63、描述android中进程的优先级？
+
+64、SQLiteOpenhelper中onCreate()和onUpgrade()的调用时机？
+
+65、什么是IntentService？有什么优点？
+
+66、请介绍ContentProvider是如何实现数据共享的？
+    一个程序可以通过实现一个Content provider的抽象接口将自己的数据完全暴露出去，而且Content providers是以类似数据库中表的方式将数据暴露。
+    Content providers存储和检索数据，通过它可以让所有的应用程序访问到，这也是应用程序之间唯一共享数据的方法。
+    要想使应用程序的数据公开化，可通过2种方法：创建一个属于你自己的Content provider或者将你的数据添加到一个已经存在的Content provider中，
+    前提是有相同数据类型并且有写入Content provider的权限。
+
+    如何通过一套标准及统一的接口获取其他应用程序暴露的数据？
+    Android提供了ContentResolver，外界的程序可以通过ContentResolver接口访问ContentProvider提供的数据。
+
+67、Activity与Task的启动模式有哪些？它们含义具体是什么？
+
+68、Application类的作用？
+    Application和Actovotu,Service一样是android框架的一个系统组件，当android程序启动时系统会创建一个 application对象，用来存储系统的一些信息。
+    通常我们是不需要指定一个Application的，这时系统会自动帮我们创建，如果需要创建自己 的Application，也很简单创建一个类继承Application
+    并在manifest的application标签中进行注册(只需要给Application标签增加个name属性把自己的 Application的名字定入即可)。
+
+    android系统会为每个程序运行时创建一个Application类的对象且仅创建一个，所以Application可以说是单例 (singleton)模式的一个类.
+    且application对象的生命周期是整个程序中最长的，它的生命周期就等于这个程序的生命周期。因为它是全局 的单例的，所以在不同的Activity,
+    Service中获得的对象都是同一个对象。所以通过Application来进行一些，数据传递，数据共享 等,数据缓存等操作。
+
+69、UI中，padding和margin的区别？
+    Padding 为内边框，指该控件内部内容，如文本/图片距离该控件的边距
+    Margin 为外边框，指该控件距离边父控件的边距
+
+70、通过intent传值，从A activity到B activity 再从B activity返回值给A activity期间，都执行了哪些方法（生命周期方法不用说）？
+    onActivityResult()?
+
+71、如果程序中存在大量图片对象，如何尽量避免OOM？
+
+    哪些情况下发生OOM：
+
+
+    避免OOM的一些建议：
+        1）StringBuilder 在有些时候，代码中会需要使用到大量的字符串拼接的操作，这种时候有必要考虑使用StringBuilder来替代频繁的“+”。
+        2）使用更加轻量的数据结构 例如，我们可以考虑使用ArrayMap/SparseArray而不是HashMap等传统数据结构。
+        3）避免在Android里面使用Enum
+        4）减小Bitmap对象的内存占用
+        5）使用更小的图片
+        6）避免对象的内存泄露
+        7）避免在onDraw方法里面执行对象的创建
+
+72、描述android数字签名？
+
+        开发Android的人这么多，完全有可能大家都把类名，包名起成了一个同样的名字，这时候如何区分？签名这时候就是起区分作用的。
+        由于开发商可能通过使用相同的Package Name来混淆替换已经安装的程序，签名可以保证相当名字，但是签名不同的包不被替换。
+       APK如果使用一个key签名，发布时另一个key签名的文件将无法安装或覆盖老的版本，这样可以防止你已安装的应用被恶意的第三方覆盖或替换掉。
+       这样签名其实也是开发者的身份标识。交易中抵赖等事情发生时，签名可以防止抵赖的发生。
+    1） 所有的应用程序都必须有数字证书。Android系统不会安装一个没有数字证书的应用程序。
+    （2） Android程序包使用的数字证书可以是自签名的，不需要一个权威的数字证书机构签名认证。
+    （3） 如果要正式发布一个Android，必须使用一个合适的私钥生成的数字证书来给程序签名，而不能使用adt插件或者ant工具生成的调试证书来发布。
+    （4）数字证书都是有有效期，Android只是在应用程序安装的时候才会检查证书的有效期。如果程序已经安装在系统中，即使证书过期也不会影响程序的正常功能
+
+    总结
+    1）Android应用程序签名只是用来解决发布的应用不被别人篡改的，其并不会对应用程序本身进行加密，这点不同于Windows Phone和iOS。
+    2）Android并不要求所有应用程序的签名证书都由可信任CA的根证书签名，通过这点保证了其生态系统的开放性，所有人都可以用自己生成的证书对应用程序签名。
+    3）如果想修改一个已经发布的应用程序，哪怕是修改一张图片，都必须对其进行重新签名。但是，签原始应用的私钥一般是拿不到的（肯定在原始应用程序开发者的手上，
+    且不可能公布出去），所以只能用另外一组公私钥对，生成一个新的证书，对重打包的应用进行签名。所以重打包的apk中所带证书的公钥肯定和原始应用不一样。
+    同时，在手机上如果想安装一个应用程序，应用程序安装器会先检查相同包名的应用是否已经被安装过，如果已经安装过，会继续判断已经安装的应用和将要安装的应用，
+    其所携带的数字证书中的公钥是否一致。如果相同，则继续安装；而如果不同，则会提示用户先卸载前面已安装的应用。通过这种方式来提示用户，
+    前后两个应用是不同开发者签名的，可能有一个是李鬼。
+
+73、列出你所知的android性能优化或你熟悉的工具？
+    布局优化
+    绘制优化
+        避免在View的onDraw()中做大量的工作
+    内存泄漏优化
+    响应速度优化(ANR)
+        发生ANR后系统会在/data/anr下创建一个traces.txt，分析此日志，得到ANR的原因
+    Bitmap优化
+    线程优化
+        使用线程池
+    MAT分析内存泄漏
+
+74、不同工程中的方法是否可以互调，举例说明？
+    现在已经有了一个Android工程A。我们想扩展A的功能，但是不想在A的基础上做开发，于是新建了另外一个Android工程B，想在B中引用A。
+    一个思路是把工程A做成纯Jar包，这样其他的工程就可以直接引用了。
+
+    但是，如果在工程A中用了R.Java中的引用，则无法打成jar包了。原因是R.java是自动生成的，是动态的，每次编译都是不相同的。如果一定要做成jar包，
+    就不能使用自动生成的R文件，用到资源时候就要写代码去获取。
+
+    另一个思路就是将工程A做成android library project。
+
+75、android系统中GC什么情况会出现内存泄漏？
+    导致内存泄漏主要的原因是，先前申请了内存空间而忘记了释放。如果程序中存在对无用对象的引用，那么这些对象就会驻留内存，消耗内存，
+    因为无法让垃圾回收器GC验证这些对象是否不再需要。如果存在对象的引用，这个对象就被定义为"有效的活动"，同时不会被释放。要确定对象所占内存将被回收，
+    我们就要务必确认该对象不再会被使用。典型的做法就是把对象数据成员设为null或者从集合中移除该对象。但当局部变量不需要时，不需明显的设为null，
+    因为一个方法执行完毕时，这些引用会自动被清理。
+    Java带垃圾回收的机制,为什么还会内存泄露呢?
+
+    Vector v = new Vector(10);
+     for (int i = 1; i < 100; i++)      {
+    　Object o = new Object();      　
+    v.add(o);      　
+    o = null;
+    }//此时，所有的Object对象都没有被释放，因为变量v引用这些对象。
+
+    Java 内存泄露的根本原因就是 保存了不可能再被访问的变量类型的引用
+
+
+
+    内存泄漏的情况：
+        一、单例造成的内存泄漏
+            因为单例的静态特性使得单例的生命周期和应用的生命周期一样长，这就说明了如果一个对象已经不需要使用了，而单例对象还持有该对象的引用，
+            那么这个对象将不能被正常回收，这就导致了内存泄漏。
+            public class AppManager {
+                private static AppManager instance;
+                private Context context;
+                private AppManager(Context context) {
+                    this.context = context;
+                }
+                public static AppManager getInstance(Context context) {
+                    if (instance != null) {
+                        instance = new AppManager(context);
+                    }
+                    return instance;
+                }
+            }
+            当创建这个单例的时候，由于需要传入一个Context，所以这个Context的生命周期的长短至关重要：
+            1、传入的是Application的Context：这将没有任何问题，因为单例的生命周期和Application的一样长 ；
+            2、传入的是Activity的Context：当这个Context所对应的Activity退出时，由于该Context和Activity的生命周期一样长（Activity间接继承于Context），
+               所以当前Activity退出时它的内存并不会被回收，因为单例对象持有该Activity的引用。
+            修改如下：
+                private AppManager(Context context) {
+                    this.context = context.getApplicationContext();
+                }
+        二、非静态内部类创建静态实例造成的内存泄漏
+            有的时候我们可能会在启动频繁的Activity中，为了避免重复创建相同的数据资源，会出现这种写法：
+            public class MainActivity extends AppCompatActivity {
+                private static TestResource mResource = null;
+                @Override
+                protected void onCreate(Bundle savedInstanceState) {
+                    super.onCreate(savedInstanceState);
+                    setContentView(R.layout.activity_main);
+                    if(mManager == null){
+                        mManager = new TestResource();
+                    }
+                    //...
+                }
+                class TestResource {
+                    //...
+                }
+            }
+            这样就在Activity内部创建了一个非静态内部类的单例，每次启动Activity时都会使用该单例的数据，这样虽然避免了资源的重复创建，
+            不过这种写法却会造成内存泄漏，因为非静态内部类默认会持有外部类的引用，而又使用了该非静态内部类创建了一个静态的实例，
+            该实例的生命周期和应用的一样长，这就导致了该静态实例一直会持有该Activity的引用，导致Activity的内存资源不能正常回收。
+            正确的做法为：
+            将该内部类设为静态内部类或将该内部类抽取出来封装成一个单例，如果需要使用Context，请使用ApplicationContext 。
+
+        三、Handler造成的内存泄漏
+            private Handler mHandler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    //...
+                }
+            };
+            由于mHandler是Handler的非静态匿名内部类的实例，所以它持有外部类Activity的引用，我们知道消息队列是在一个Looper线程中不断轮询处理消息，
+            那么当这个Activity退出时消息队列中还有未处理的消息或者正在处理消息，而消息队列中的Message持有mHandler实例的引用，mHandler又持有Activity的引用，
+            所以导致该Activity的内存资源无法及时回收，引发内存泄漏
+            正确做法：
+            创建一个静态Handler内部类，然后对Handler持有的对象使用弱引用，这样在回收时也可以回收Handler持有的对象，这样虽然避免了Activity泄漏，
+            不过Looper线程的消息队列中还是可能会有待处理的消息，所以我们在Activity的Destroy时或者Stop时应该移除消息队列中的消息，更准确的做法如下：
+            public class MainActivity extends AppCompatActivity {
+                private MyHandler mHandler = new MyHandler(this);
+                private TextView mTextView ;
+                private static class MyHandler extends Handler {
+                    private WeakReference<Context> reference;
+                    public MyHandler(Context context) {
+                        reference = new WeakReference<>(context);
+                    }
+                    @Override
+                    public void handleMessage(Message msg) {
+                        MainActivity activity = (MainActivity) reference.get();
+                        if(activity != null){
+                            activity.mTextView.setText("");
+                        }
+                    }
+                }
+
+                @Override
+                protected void onCreate(Bundle savedInstanceState) {
+                    super.onCreate(savedInstanceState);
+                    setContentView(R.layout.activity_main);
+                    mTextView = (TextView)findViewById(R.id.textview);
+                    loadData();
+                }
+
+                private void loadData() {
+                    //...request
+                    Message message = Message.obtain();
+                    mHandler.sendMessage(message);
+                }
+
+                @Override
+                protected void onDestroy() {
+                    super.onDestroy();
+                    //当然也可以使用mHandler.removeCallbacks();或mHandler.removeMessages();来移除指定的Runnable和Message。
+                    mHandler.removeCallbacksAndMessages(null);
+                }
+            }
+        四、线程造成的内存泄漏
+            //——————test1
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... params) {
+                            SystemClock.sleep(10000);
+                            return null;
+                        }
+                    }.execute();
+            //——————test2
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SystemClock.sleep(10000);
+                        }
+                    }).start();
+
+            上面的异步任务和Runnable都是一个匿名内部类，因此它们对当前Activity都有一个隐式引用。如果Activity在销毁之前，任务还未完成，
+            那么将导致Activity的内存资源无法回收，造成内存泄漏。
+            正确的做法还是使用静态内部类的方式，如下：
+                static class MyAsyncTask extends AsyncTask<Void, Void, Void> {
+                    private WeakReference<Context> weakReference;
+
+                    public MyAsyncTask(Context context) {
+                        weakReference = new WeakReference<>(context);
+                    }
+
+                    @Override
+                    protected Void doInBackground(Void... params) {
+                        SystemClock.sleep(10000);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        MainActivity activity = (MainActivity) weakReference.get();
+                        if (activity != null) {
+                            //...
+                        }
+                    }
+                }
+
+                static class MyRunnable implements Runnable{
+                    @Override
+                    public void run() {
+                        SystemClock.sleep(10000);
+                    }
+                }
+                new Thread(new MyRunnable()).start();
+                new MyAsyncTask(this).execute();
+
+            这样就避免了Activity的内存资源泄漏，当然在Activity销毁时候也应该取消相应的任务AsyncTask::cancel()，避免任务在后台执行浪费资源。
+
+        五、资源未关闭造成的内存泄漏
+
+        另外：
+            构造Adapter时，没有使用缓存的convertView
+            集合中对象没清理造成的内存泄漏
+            均会造成内存泄漏
+
+76、MVC原理在android中的应用？
+    ? 视图层（view）：一般采用xml文件进行界面的描述，使用的时候可以非常方便的引入，当然，如何你对android了解的比较的多了话，就一定可以想到在android中也可以使用JavaScript+html等的方式作为view层，当然这里需要进行Java和javascript之间的通信，幸运的是，android提供了它们之间非常方便的通信实现。
+
+    ? 控制层（controller）：android的控制层的重 任通常落在了众多的acitvity的肩上，这句话也就暗含了不要在acitivity中写代码，要通过activity交割model业务逻辑层处理， 这样做的另外一个原因是android中的acitivity的响应时间是5s，如果耗时的操作放在这里，程序就很容易被回收掉。
+
+    ? 模型层（model）：对数据库的操作、对网络等的操作都应该在model里面处理，当然对业务计算等操作也是必须放在的该层的。
+
+
+77、列出你所知道的Java线程同步的方法？
+    为何要使用同步？
+        java允许多线程并发控制，当多个线程同时操作一个可共享的资源变量时（如数据的增删改查），
+        将会导致数据不准确，相互之间产生冲突，因此加入同步锁以避免在该线程没有完成操作之前，被其他线程的调用，
+        从而保证了该变量的唯一性和准确性。
+    方法：
+        同步方法
+        同步代码块
+        wait/notify
+        ThreadLocal
+            如果使用ThreadLocal管理变量，则每一个使用该变量的线程都获得该变量的副本，副本之间相互独立，这样每一个线程都可以随意修改自己的变量副本，
+            而不会对其他线程产生影响。
+        使用原子变量实现线程同步
+        使用阻塞队列实现线程同步
+        使用重入锁实现线程同步
+        使用特殊域变量(volatile)实现线程同步
+
+78、android屏幕适配原理？
+
+79、简述单例的优缺点，写出一个线程安全的单例。
+
+80、用java代码写出一个内存泄漏的例子。
+    静态变量持有当前Activity
+    private static View view;
+
+    onCreate() {
+        view = new view(this);
+    }
+
+
+81、ArrayList、TreeMap、HashSet的数据结构？
+
+    ArrayList---数组
+    TreeMap---红黑树
+    HashSet---散列表数据结构
+
+82、如何讲一个Activity设置成窗口模式？
+    一种是利用系统提供的theme在清单配置文件中设置当前Activity的theme属性。另一种就是根据项目的需求自定义主题。
+
+83、简述android程序应用结构是那些？
+    1，Android应用程序层
+    2，应用程序框架层
+    3，系统运行库层
+    4，Linux核心层
+
+84、什么情况下你会用哈希表，而不是数组？
+
+85、什么是ANR，如何避免它？
+    ANR分析：
+    ANR产生时, 系统会生成一个traces.txt的文件放在/data/anr/下. 可以通过adb命令将其导出到本地:
+    1）普通阻塞导致的ANR
+    2）CPU满负荷
+    3）内存原因
+    针对三种不同的情况, 一般的处理情况如下：
+        主线程阻塞的
+        开辟单独的子线程来处理耗时阻塞事务.
+
+        CPU满负荷, I/O阻塞的
+        I/O阻塞一般来说就是文件读写或数据库操作执行在主线程了, 也可以通过开辟子线程的方式异步执行.
+
+        内存不够用的
+        增大VM内存, 使用largeHeap属性, 排查内存泄露(这个在内存优化那篇细说吧)等.
+
+    哪些地方是执行在主线程的：
+        Activity的所有生命周期回调都是执行在主线程的.
+        Service默认是执行在主线程的.
+        BroadcastReceiver的onReceive回调是执行在主线程的.
+        没有使用子线程的looper的Handler的handleMessage, post(Runnable)是执行在主线程的.
+        AsyncTask的回调中除了doInBackground, 其他都是执行在主线程的.
+        View的post(Runnable)是执行在主线程的.
+
+86、Activity之间传递数据
+    1）intent传递
+    2）静态变量
+    3）剪切板
+    4）全局变量 application
+
+87、简述自定义控件的设计？
+
+
+88、异步和同步任务的区别：
+   同步交互：指发送一个请求,需要等待返回,然后才能够发送下一个请求，有个等待过程；
+   异步交互：指发送一个请求,不需要等待返回,随时可以再发送下一个请求，即不需要等待。
+   区别：一个需要等待，一个不需要等待，在部分情况下，我们的项目开发中都会优先选择不需要等待的异步交互方式。
+   哪些情况建议使用同步交互呢？比如银行的转账系统，对数据库的保存操作等等，都会使用同步交互操作，其余情况都优先使用异步交互。
+
+89、服务器返回状态
+    200 OK
+      请求已成功，请求所希望的响应头或数据体将随此响应返回。
+    301 Movied Permanently
+      永久性重定向。该状态码表示请求的资源已经被分配了新的URI，并且以后使用资源现在所指的URI。
+    302 Found
+      临时性重定向。该状态码表示请求的资源已被分配了新的URI，希望用户本次能使用新的URI访问。
+    404 Not Found
+      无法找到指定位置的资源
+    500 Internal Server Error
+      服务器遇到了意料不到的情况，不能完成客户的请求
+    503 Service Unavailable
+      该状态码表明服务器暂时处于超负载或正在进行停机维护，现在无法处理请求。
+
+90、android API对应版本号
+    android 7.0     24
+    android 6.0     23
+    android 5.1     22
+    android 5.0     21
+    android 4.4W    20
+    android 4.4     19
+    android 4.3     18
+    android 4.2     17
+    android 4.1     16
+    android 2.3.2
+            2.3.1
+            2.3     9
+
+
+    API兼容性：
+        随着安卓版本的不断更新，新的API不断涌出，有时候高版本的API会在低版本crash的。
+        如果minSdkVersion设置过低，在build的时候，就会报错（Call requires API level 17 (current min is 9)）；
+        这时候为了编译可以通过，可以添加@SuppressLint("NewApi")或者@TargeApi(9)注解。
+        这样只是编译通过，运行时依然会crash的。
+
+        正确的做法：
+        为了运行时不报错, 需要:
+        判断运行时版本，在低版本系统不调用此方法
+        同时为了保证功能的完整性，需要提供低版本功能实现
+
+        小结：在使用高于minSdkVersionAPI level的方法需要:
+        如果用@TargeApi($API_LEVEL)可以编译通过, 那就不使用@SuppressLint("NewApi");
+        运行时判断API level; 仅在足够高，有此方法的API level系统中，才调用此方法;
+        保证功能完整性，保证低API版本通过其他方法提供功能实现。
+91、java.util.Collection的实现类
+    Set
+    List
+    BlockingQueue
+
+92、序列化
+    序列化就是一种用来处理对象流的机制，所谓对象流也就是将对象的内容进行流化。可以对流化后的对象进行读写操作，也可将流化后的对象传输于网络之间。
+    序列化是为了解决在对对象流进行读写操作时所引发的问题。
+    简单来说 序列化就是把Java对象储存在某一地方（硬盘、网络），以便于传输
+
+93、android登录后，对所有页面进行刷新，如何实现?
+    这就涉及到了 消息的传递 通知等，你可以使用开源库 EventBus 也可使用 接口回调，方法很多。
+
+94、代码混淆
+    代码混淆（Obfuscated code）亦称花指令，是将计算机程序的代码，转换成一种功能上等价，但是难于阅读和理解的形式的行为。
+    混淆的目的是为了加大反编译的成本,但是并不能彻底防止反编译.
+
+
+95、android注册密码传输怎样加密
+    一个可行的方法是，客户端提交 md5(password) 密码（如上所述，此方法只是简单保护了密码，是可能被查表获取密码的）。服务端数据库通过 md5(salt+md5(password))
+    的规则存储密码，该 salt 仅存储在服务端，且在每次存储密码时都随机生成。这样即使被拖库，制作字典的成本也非常高。
+    密码被 md5() 提交到服务端之后，可通过 md5(salt + form['password']) 与数据库密码比对。此方法可以在避免明文存储密码的前提下，实现密码加密提交与验证。
+    这里还有防止 replay 攻击（请求被重新发出一次即可能通过验证）的问题，由服务端颁发并验证一个带有时间戳的可信 token （或一次性的）即可。
+    当然，传输过程再有 HTTPS 加持那就更好了。
+
+    第一类：密码类的数据，为了让用户放心注册，密码类的数据的加密一般都是经过双重加密的，第一重加密使用不可逆的MD5算法加密，第二重加密是可逆的加密，
+    常见的可逆加密有对称加密和非对称加密。上述不可逆的意思就是一旦加密就不能反向得到密码原文，一般用来加密用户密码，app的服务器端一般存储的也都是密文密码，
+    不然用户就太危险了，app的运营商也承担不起这么大的责任。虽然现在MD5加密生成的密文也可以破解了，但是我们不需要担心，因为我们可以采用多重加密方式来应对。
+    在数据传输的过程中，首先把密码类数据经过MD5加密算法加密，然后再在外面使用可逆的加密方式加密一次，这样在数据传输的过程中，
+    即便数据被截获了，但是想要完全破解，还是很难的（本来就不存在完全不能解密的加密）。
+
+    第二类数据：非密码类的数据，虽然这些数据也很重要，但是一般其他人截获了这些数据对他们意义不太大，这些数据我们一般采用可逆的加密方式加密，
+    因为我们在服务器端还是需要这些数据的明文的，常用的可逆加密方法有：对称加密和非对称加密。何为对称加密？在对称加密算法中，
+    数据发信方将明文和加密密钥一起经过特殊的加密算法处理后，使其变成复杂的加密密文发送出去，收信方收到密文后，若想解读出原文，
+    则需要使用加密时用的密钥以及相同加密算法的逆算法对密文进行解密，才能使其回复成可读明文。在对称加密算法中，使用的密钥只有一个，
+    收发双方都使用这个密钥，这就需要解密方事先知道加密密钥。非对称加密算法是一种密钥的保密方法。
+    非对称加密算法需要两个密钥：公开密钥（publickey）和私有密钥（privatekey）。公开密钥与私有密钥是一对，如果用公开密钥对数据进行加密，
+    只有用对应的私有密钥才能解密；如果用私有密钥对数据进行加密，那么只有用对应的公开密钥才能解密。因为加密和解密使用的是两个不同的密钥，
+    所以这种算法叫作非对称加密算法。 非对称加密算法实现机密信息交换的基本过程是：甲方生成一对密钥并将其中的一把作为公用密钥向其它方公开；
+    得到该公用密钥的乙方使用该密钥对机密信息进行加密后再发送给甲方；甲方再用自己保存的另一把专用密钥对加密后的信息进行解密。
+
+
+96、res和asserts、raw的区别
+    res/raw和assets的相同点：
+        1.两者目录下的文件在打包后会原封不动的保存在apk包中，不会被编译成二进制。
+    res/raw和assets的不同点：
+        1.res/raw中的文件会被映射到R.java文件中，访问的时候直接使用资源ID即R.id.filename；assets文件夹下的文件不会被映射到R.java中，
+          访问的时候需要AssetManager类。
+        2.res/raw不可以有目录结构，而assets则可以有目录结构，也就是assets目录下可以再建立文件夹
+    读取文件资源：
+    1.读取res/raw下的文件资源，通过以下方式获取输入流来进行写操作
+            InputStream is =getResources().openRawResource(R.id.filename);
+    2.读取assets下的文件资源，通过以下方式获取输入流来进行写操作
+            AssetManager am = null;
+            am = getAssets();
+            InputStream is = am.open("filename");
+    注意1：Google的Android系统处理Assert有个bug，在AssertManager中不能处理单个超过1MB的文件，不然会报异常，raw没这个限制可以放个4MB的Mp3文件没问题。
+    注意2：assets 文件夹是存放不进行编译加工的原生文件，即该文件夹里面的文件不会像 xml， java 文件被预编译，可以存放一些图片，html，js, css 等文件。
+
+
+97、直播
+
+
+98、编写指定功能的单元测试
+
+
+99、Git的使用
+
+100、ListView的优化
+    1）利用convertView重用view
+    2）利用好ViewType，例如你的 ListView 中有几个类型的 Item，需要给每个类型创建不同的 View，这样有利于 ListView 的回收，当然类型不能太多；
+    3）尽量让 ItemView 的 Layout 层次结构简单，这是所有 Layout 都必须遵循的；
+       善用自定义 View，自定义 View 可以有效的减小 Layout 的层级，而且对绘制过程可以很好的控制；
+    4）使用 ViewHolder 的原因是 findViewById() 方法耗时较大，如果控件个数过多，会严重影响性能，而使用ViewHolder主要是为了可以省去这个时间。
+    5）自定义布局有个好处就是可以省略 ViewHolder。说出来可能你不会信， ViewHolder 首先会占用 setTag() ，其次每次取出后都需要转换一下类的类型。
+       如果是自定义布局的话，findViewById() 这个过程可以在构造函数中进行：
+    6）尽量能保证 Adapter 的 hasStableIds() 返回 true，这样在 notifyDataSetChanged() 的时候，如果 id 不变，ListView 将不会重新绘制这个 View，达到优化的目的；
+    7）每个 Item 不能太高
+       特别是不要超过屏幕的高度，最好在3/4以下，以便View的回收。这部分可以查看 facebook 的做法。
+    8）getView() 中要做尽量少的事情
+        停下来再加载
+    9）监听器设置一个就OK了
+       不要在 getView() 中不断的去设置监听器，因为 View 是复用的，当 convertView 不为 null 时是已经设置了监听器的。
+       if (convertView == null) {
+           	//blablabla......
+               convertView.setOnClickListener(mOnClickListener);
+        }else{
+                //blablabla......
+        }
+       如果这样写，所有 button 只能通过 id 区分逻辑，无法传入每个 item 的数据，我们可以将数据通过 View 的 tag 带进来：
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            //blablabla......
+            convertView.setTag(key, getItem(position));
+            //blablabla......
+        }
+        然后在 mOnClickListener 中通过 v.getTag(key) 将数据取出。
+    10）ListView 中元素避免半透明
+    11）尽量开启硬件加速
+    12）分页加载
+    13）
+
+101、6.0权限，手机适配，拒绝后不会再次弹出的问题（小米、华为）
+
+
+102、 描述一下android的系统架构
+
+    android系统架构分从下往上为linux 内核层、运行库、应用程序框架层、和应用程序层。
+
+    linuxkernel：负责硬件的驱动程序、网络、电源、系统安全以及内存管理等功能。
+
+    libraries和 android runtime：libraries：即c/c++函数库部分，大多数都是开放源代码的函数库，例如webkit（引擎），该函数库负责 android网页浏览器的运行，
+    例如标准的c函数库libc、openssl、sqlite等，当然也包括支持游戏开发2dsgl和 3dopengles，在多媒体方面有mediaframework框架来支持各种影音和图形文件的播放
+    与显示，例如mpeg4、h.264、mp3、 aac、amr、jpg和png等众多的多媒体文件格式。android的runtime负责解释和执行生成的dalvik格式的字节码。
+
+    applicationframework（应用软件架构），java应用程序开发人员主要是使用该层封装好的api进行快速开发。
+
+    applications:该层是java的应用程序层，android内置的googlemaps、e-mail、即时通信工具、浏览器、mp3播放器等处于该层，java开发人员开发的程序也处于该层，
+    而且和内置的应用程序具有平等的位置，可以调用内置的应用程序，也可以替换内置的应用程序。
+
+    上面的四个层次，下层为上层服务，上层需要下层的支持，调用下层的服务，这种严格分层的方式带来的极大的稳定性、灵活性和可扩展性，使得不同层的开发人员可以按照
+    规范专心特定层的开发。
+
+    android应用程序使用框架的api并在框架下运行，这就带来了程序开发的高度一致性，另一方面也告诉我们，要想写出优质高效的程序就必须对整个
+    applicationframework进行非常深入的理解。精通applicationframework，你就可以真正的理解android的设计和运行机制，也就更能够驾驭整个应用层的开发。
+
+103、 sim卡的EF文件是什么？有何作用
+
+    答：sim卡的文件系统有自己规范，主要是为了和手机通讯，sim本 身可以有自己的操作系统，EF就是作存储并和手机通讯用的
+
+104、 一条最长的短信息约占多少byte?
+
+    　　中文70(包括标点)，英文160，160个字节。　
+105、如何将SQLite数据库(dictionary.db文件)与apk文件一起发布
+
+    可以将dictionary.db文件复制到Eclipse Android工程中的res aw目录中。所有在res aw目录中的文件不会被压缩，这样可以直接提取该目录中的文件。
+
+106、dvm的进程和Linux的进程, 应用程序的进程是否为同一个？
+    DVM指dalivk的虚拟机。每一个Android应用程序都在它自己的进程中运行，都拥有一个独立的Dalvik虚拟机实例。而每一个DVM都是在Linux 中的一个进程，所以说可以认为是同一个概念。
+
+107、如何防止重复发送网络请求？
+    点击activity上的一个按钮，发送网络请求，在网络比较慢的情况下，用户可能会继续去点击按钮，这个时候，发送其他无谓的请求，不知道大家是怎么处理这类问题来拦截？
+    HTTP header中加入max-age，这样某个固定的时间内都将返回empty body，当然这个方法是死的，把时间完全限制了，这个方法回掉也会同样要执行多次。
+    还有个晕招，就是直接设置按钮的clickable为false，或者使用progressbar，类似于楼主的方法，比如点赞的场景。
+    使用Map的话，在回掉的时候，还是需要回收HashMap的，维护Map还不如只维护一个boolean呢。
+
+108、使用JNI的流程?
+
+    JAVA中声明native 方法如private native String printJNI(String inputStr);
+    使用javah工具生成.h头文件这时候头文件中就会自动生成对应的函数JNIEXPORT jstring JNICALL Java_com_wenming_HelloWorld_printJNI
+    实现JNI原生函数源文件，新建HelloWorld.c文件，对刚才自动生成的函数进行具体的逻辑书写，例如返回一个java叫做HelloWorld的字符串等
+    编译生成动态链接so文件**
+    Java中调用Sysytem.load方法把刚才的so库加载进来，就可以调用native方法了
+
+109、自定义View执行invalidate()方法,为什么有时候不会回调onDraw()
+
+    自定义一个view时，重写onDraw。调用view.invalidate(),会触发onDraw和computeScroll()。前提是该view被附加在当前窗口.
+    view.postInvalidate(); //是在非UI线程上调用的
+
+    自定义一个ViewGroup，重写onDraw。onDraw可能不会被调用，原因是需要先设置一个背景(颜色或图)。表示这个group有东西需要绘制了，
+    才会触发draw，之后是onDraw。因此，一般直接重写dispatchDraw来绘制viewGroup.自定义一个ViewGroup,dispatchDraw会调用drawChild.
+
+110、Fragment的重叠问题
+    系统帮我们保存的Fragment其实最终是以FragmentState形式存在的。
+    FragmentState里没有Hidden状态的字段！而Hidden状态对应Fragment中的mHidden，该值默认false。
+    在以add方式加载Fragment的场景下，系统在恢复Fragment时，mHidden＝false，即show状态，这样在页面重启后，Activity内的Fragment都是以show状态显示的，
+    而如果你不进行处理，那么就会发生Fragment重叠现象！
+
+111、RESTful
+    一种软件架构风格，设计风格而不是标准，只是提供了一组设计原则和约束条件。它主要用于客户端和服务器交互类的软件。
+    基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。
+
+
+112、OOM的场景？
+    内存占有量超过了VM所分配的最大
+    出现OOM的原因：
+        加载对象过大
+        相应资源过多，来不及释放
+    如何解决：
+        在内存引用上做些处理，常用的有软引用、强化引用、弱引用
+        在内存中加载图片时直接在内存中作处理，如边界压缩
+        动态回收内存
+        优化Dalvik虚拟机的堆内存分配
+        自定义堆内存大小
+
+113、内存泄漏的场景？
+    android中常见的原因主要有以下几个：
+    1.数据库的cursor没有关闭。
+    2.构造adapter没有使用缓存contentview。
+    3.调用registerReceiver()后未调用unregisterReceiver().
+    4.未关闭InputStream/OutputStream。
+    5.Bitmap使用后未调用recycle()。
+    6.Context泄漏。
+    7.static关键字等。
+
+114、微信支付流程
+
+
+115、Glide和picasso的区别？
+    第一、Gif的支持
+    Fresco  支持
+    Glide     支持
+    Picasso 不支持
+    ImageLoader 不支持
+
+    第二、内存与性能
+    1、Fresco：
+    FaceBook出品，
+    优点：（1）支持图像渐进式呈现
+          （2）大公司出品，后期维护有保障
+    缺点：（1）框架体积较大3M左右会增大apk的大小
+          （2）操作方式不是特别简单，有一定学习成本
+    特点：有两级内存一级文件的缓存机制，并且有自己特别的内存区域来处理缓存，避免oom
+    2、Glide：
+    谷歌员工出品，Google推荐的图片加载库，专注于流畅的滚动
+    优点：（1）加载速度极快
+       （2）框架体积小  四五百KB
+    缺点：（1）因为机制的选择不同，速度快了，但是图片质量低了 RGB565
+    特点：根据ImageView大小来进行缓存，也就是说一张图片可能根据展示情况来缓存不同尺寸的几份
+    3、Picasso：
+    Square出品，
+    优点：（1）图片质量高
+    缺点：（1）加载速度一般
+    特点：只缓存一个全尺寸的图片，根据需求的大小在压缩转换
+    4、Universal-Imager-Loader
+    sergey Tarasevice出品,
+    优点：（1）丰富的配置选项
+    缺点：（1）最近一次维护在15年底，后期有不维护的趋势，可能被当前图片框架替代
+    特点：三级缓存的策略
+
+116、面向对象六大原则
+    单一职责原则：就一个类而言，应该仅有一个引起它变化的原因。---代码优化的第一步
+    开闭原则：软件中的对象(类、模块、函数等)应该对于扩展是开放的，但是对于修改是封闭的。---让程序更稳定、更灵活
+    里氏替换原则：所有引用基类的地方必须能透明地使用其子类的对象。---构建扩展性更好的系统
+    依赖倒置原则：指代了一种特定的解耦形式，使得高层次的模块不依赖于低层次的模块的实现细节的目的，依赖模块被颠倒了。---让项目拥有变化的能力
+    接口隔离原则：客户端不应该依赖它不需要的接口。---系统有更高的灵活性
+    迪米特原则：一个对象应该对其它对象有最少的了解。---更好的可扩展性
+
+
+117、抽象方法和接口的区别
+
+118、jni
+    JNI调用Java方法的流程：
+            先通过类名找到类，再根据方法名找到方法的id，最后就可以调用这个方法了。
+            如果是调用Java中的非静态方法，需要构造出该类的对象后才能调用。
+
+119、apk瘦身
+
+120、性能优化
+    工具：
+        StrictMode：
+            主要用来限制应用做一些不符合性能规范的事情. 一般用来检测主线程中的耗 时操作和阻塞. 开启StrictMode后, 如果线程中做一些诸如读写文件,
+            网络访问等操作, 将会在Log console输出一些警告, 警告信息包含Stack Trace来显示哪个地方出了问题.
+        Systrace：
+            一个收集和检测时间信息的工具, 它能显示CPU和时间被消耗在哪儿了, 每个进程和线程都在其CPU时间片内做了什么事儿. 而且会指示哪个地方出了问题,
+            以及给出Fix建议.其以trace文件(html)的方式记录. 可以直接用Chrome浏览器打开查看.
+        Hierarchy Viewer：
+            Hierarchy Viewer提供了一个可视化的界面来观测布局的层级, 让我们可以优化布局层级, 删除多余的不必要的View层级, 提升布局速度.
+            Hierarchy Viewer需要Root的机器(产品机没有开启ViewServer)才可以执行.可以使用第三方的开源的ViewServer来协助我们在未Root的机器上使用Hierarchy Viewer分析.
+        TraceView：
+            一个图形化的工具, 用来展示和分析方法的执行时间.
+        Memory Monitor：
+            内存使用检测器, 可以实时检测当前Application的内存使用和释放等信息, 并以图形化界面展示.
+        Google的Battery Historian：
+            通过Android系统的bugreport文件来做电量使用分析的工具.
+        网易Emmagee：
+            针对Android App的CPU, 内存, 网络, 电量等多项综合的测试分析.
+        leakcanary：
+            类似与App探针的内存泄露监测工具.
+        AndroidDevMetrics：
+            一个library, 用来检测Activity生命周期执行性能, Dagger2注入性能以及帧率性能的工具.
+
+121、登录问题
+    可以在一次请求成功后将类似于user_id的东西保存在本地，以后每次请求的时候用user_id进行操作，这样不是就降低了服务器的负担，
+    但是这样的话存在一个问题，就是user_id一旦存储在本地的时候，不是太有可能会自动回收掉，这样一来的话就会导致一个问题，
+    就是app无论何时打开都是验证通过的状态，这样一来安全性降低。
+
+    Token的定义：Token是服务端生成的一串字符串，以作客户端进行请求的一个令牌，当第一次登录后，服务器生成一个Token便将此Token返回给客户端，
+    以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码。
+
+        用设备号/设备mac地址作为Token（推荐）
+        客户端：客户端在登录的时候获取设备的设备号/mac地址，并将其作为参数传递到服务端。
+
+        服务端：服务端接收到该参数后，便用一个变量来接收同时将其作为Token保存在数据库，并将该Token设置到session中，客户端每次请求的时候都要统一拦截，
+        并将客户端传递的token和服务器端session中的token进行对比，如果相同则放行，不同则拒绝。
+
+        分析：此刻客户端和服务器端就统一了一个唯一的标识Token，而且保证了每一个设备拥有了一个唯一的会话。该方法的缺点是客户端需要带设备号/mac地址作为参数传递，
+        而且服务器端还需要保存；优点是客户端不需重新登录，只要登录一次以后一直可以使用，至于超时的问题是有服务器这边来处理，如何处理？
+        若服务器的Token超时后，服务器只需将客户端传递的Token向数据库中查询，同时并赋值给变量Token，如此，Token的超时又重新计时。
+
+    在用户登陆的时候，服务器会返回一个Token信息给我，说是每个请求都要携带Token
+    持久化token，登录的时候会有token回来，保存在了本地。每次调用接口回传这个token过去，
+    假如token过期，服务器会有个状态status回来，我会跳回登录界面，重新请求token。
+
+
+122、EventBus的机制是什么？和Handler的区别怎样？
+    EventBus是采用观察者模式实现的事件订阅总线，可以用在应用程序中，组件之间，线程之间的通信，并且由于事件可以是任意类型的对象，所以使用起来更加的方便快捷。
+    Handler是 Android 的消息机制，集中解决线程间通信问题。
+
+
+133、Post 和 Get 的区别
+
+    先引入副作用和幂等的概念。
+
+    副作用指对服务器上的资源做改变，搜索是无副作用的，注册是副作用的。
+
+    幂等指发送 M 和 N 次请求（两者不相同且都大于1），服务器上资源的状态一致。注册10个和11个帐号是不幂等的，对文章进行更改10次和11次是幂等的。
+
+    在规范的应用场景上说，Get 多用于无副作用，幂等的场景，例如搜索关键字。Post 多用于副作用，不幂等的场景，例如注册。
+
+    在技术上说：
+        Get 请求能缓存，Post 不能
+        Post 相对 Get 安全一点点，因为Get 请求都包含在 URL 里，且会被浏览器保存历史纪录，Post 不会，但是在抓包的情况下都是一样的。
+        Post 可以通过 request body来传输比 Get 更多的数据，Get 没有这个技术
+        URL有长度限制，会影响 Get 请求，但是这个长度限制是浏览器规定的，不是 RFC 规定的
+        Post 支持更多的编码类型且不对数据类型限制
+
+
+134、热修复：Andfix为例子
+
+    1.大致原理：apkpatch将两个apk做一次对比，然后找出不同的部分。可以看到生成的apatch了文件，后缀改成zip再解压开，里面有一个dex文件。
+    通过jadx查看一下源码，里面就是被修复的代码所在的类文件,这些更改过的类都加上了一个_CF的后缀，并且变动的方法都被加上了一个叫@MethodReplace的annotation，
+    通过clazz和method指定了需要替换的方法。然后客户端sdk得到补丁文件后就会根据annotation来寻找需要替换的方法。最后由JNI层完成方法的替换。
+    2.无法添加新类和新的字段、补丁文件很容易被反编译、加固平台可能会使热补丁功能失效
+
+
+135、Android开发——性能优化之如何防止过度绘制
+
+    太多重叠的背景(overdraw)
+    这个问题其实最容易解决，建议就是检查你在布局和代码中设置的背景，有些背景是隐藏在底下的，它永远不可能显示出来，这种没必要的背景一定要移除，
+    因为它很可能会严重影响到app的性能。如果采用的是selector的背景，将normal状态的color设置为”@android:color/transparent”,也同样可以解决问题。
+
+    太多重叠的View
+    第一个建议是 ：是哟过ViewStub来加载一些不常用的布局，它是一个轻量级且默认是不可见的视图，可以动态的加载一个布局，只要你用到这个重叠着的View的时候才加载，
+    推迟加载的时间。
+
+    第二个建议是：如果使用了类似Viewpager＋Fragment这样的组合或者有多个Fragment在一个界面上，需要控制Fragment的显示和隐藏，尽量使用动态的Inflation view，
+    它的性能要比SetVisibility好。
+
+    复杂的Layout层级
+    这里的建议比较多一些，首先推荐使用Android提供的布局工具Hierarchy Viewer来检查和优化布局。第一个建议是：如果嵌套的线性布局加深了布局层次，
+    可以使用相对布局来取代。第二个建议是：用标签来合并布局。第三个建议是：用标签来重用布局，抽取通用的布局可以让布局的逻辑更清晰明了。
+    记住，这些建议的最终目的都是使得你的Layout在Hierarchy Viewer里变得宽而浅，而不是窄而深。
+
+
+136、android下通信机制，移动网络特点
+
+137、Fragment与Activity之间的传递数据
+    1）第一种方式，也是最常用的方式，就是使用Bundle来传递参数
+          MyFragment myFragment = new MyFragment();
+          Bundle bundle = new Bundle();
+          bundle.putString("DATA",values);//这里的values就是我们要传的值
+          myFragment.setArguments(bundle);
+          然后在Fragment中的onCreatView方法中，通过getArgments()方法，获取到bundle对象，然后通过getString的key值拿到我们传递过来的值。
+
+    2）第二种方式，是在宿主Activity中定义方法，将要传递的值传递到Fragment中，在Fragment中的onAttach方法中，获取到这个值。
+
+          //宿主activity中的getTitles()方法
+          public String getTitles(){
+              return "hello";
+          }
+
+          //Fragment中的onAttach方法
+              @Override
+              public void onAttach(Activity activity) {
+                  super.onAttach(activity);
+                  titles = ((MainActivity) activity).getTitles();
+              }
+          //通过强转成宿主activity，就可以获取到传递过来的数据
+
+    3）下面在扩展一下创建Fragment和传递数值
+
+        如果我们不需要传递数值，那就直接可以在宿主activity中，跟平常一样创建fragment，但是如果我们需要传递数据的话，
+        可以使用newInstance（数据）方法来传递，这个方法是自己定义的，但是是定义在Fragment中的一个静态方法。
+        static MyFragment newInstance(String s){
+                MyFragment myFragment = new MyFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("DATA",s);
+                myFragment.setArguments(bundle);
+                return myFragment;
+            }
+
+        //同样，在onCreatView中直接获取这个值
+         @Nullable
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+                View view = inflater.inflate(R.layout.layout_fragment,container,false);
+                Bundle bundle = getArguments();
+                String data = bundle.getString("DATA");
+                tv = (TextView) view.findViewById(R.id.id_fm_tv);
+                if(data != null){
+                    tv.setText(data);
+                }
+                return view;
+            }
+
+         在宿主activity中，创建Fragment
+          FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out);
+                 fragment1 = MyFragment.newInstance("这是第一个fragment");//这里只需要直接调用这个方法，就创建了一个fragment
+                 fragment2 = MyFragment.newInstance("这是第二个fragment");
+
+138、怎样和服务器交互 何时使用缓存，何时使用最新数据
+    时间戳
+
+139、事件分发中，父控件dispatchTouchEvent()方法，return true后，不会执行下面的方法。
+
+
+140、常用的框架
+    Retrofit、Okhttp
+    Gson、FastJson
+    Glide、Picasso
+    ButterKnife、Dagger2
+    EventBus
+    GreenDao、OrmLite
+    RxJava
+    LeakCanary
+
+
+141、Fragment与Activity之间的关系与区别？
+        Fragment的生命周期：
+        onAttach(Activity)
+        当Fragment与Activity发生关联时调用。
+        onCreateView(LayoutInflater, ViewGroup,Bundle)
+        创建该Fragment的视图
+        onActivityCreated(Bundle)
+        当Activity的onCreate方法返回时调用
+        onDestoryView()
+        与onCreateView想对应，当该Fragment的视图被移除时调用
+        onDetach()
+        与onAttach相对应，当Fragment与Activity关联被取消时调用
+        注意：除了onCreateView，其他的所有方法如果你重写了，必须调用父类对于该方法的实现
+
+        1.fragment显得更加灵活。可以直接在XML文件中添加<fragment/>,Activity则不能
+        2.fragment可以在一个界面上灵活的替换一部分页面，活动不可以，做不到。
+        3、
+
+142、Activity的onNewIntent()方法何时会被调用
+
+    前提:ActivityA已经启动过,处于当前应用的Activity堆栈中;
+
+    当ActivityA的LaunchMode为SingleTop时，如果ActivityA在栈顶,且现在要再启动ActivityA，这时会调用onNewIntent()方法
+    当ActivityA的LaunchMode为SingleInstance,SingleTask时,如果已经ActivityA已经在堆栈中，那么此时会调用onNewIntent()方法
+    当ActivityA的LaunchMode为Standard时，由于每次启动ActivityA都是启动新的实例，和原来启动的没关系，所以不会调用原来ActivityA的onNewIntent方法
+
+算法：
+    1、计算一个数组中出现次数最多的值
+    2、不用第三方变量交换两个int值
+        int a = 2;
+        int b = 3;
+        方法一：
+        a = a + b;
+        b = a - b;
+        a = a - b;
+        方法二：
+        a = a * b；
+        b = a / b;
+        a = a / b;
+        方法三：
+        a = a ^ b;
+        b = a ^ b;
+        a = a ^ b;
+
+
+

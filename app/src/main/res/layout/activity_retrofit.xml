@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_retrofit_get"
+            style="@style/btnStyle"
+            android:text="GET" />
+
+
+        <Button
+            android:id="@+id/btn_retrofit_post"
+            style="@style/btnStyle"
+            android:text="POST" />
+
+        <Button
+            android:id="@+id/btn_retrofit_post_string"
+            style="@style/btnStyle"
+            android:text="POST String"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_retrofit_post_upload"
+            style="@style/btnStyle"
+            android:text="POST upload"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_retrofit_download_display_img"
+            style="@style/btnStyle"
+            android:text="Download Display Image"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btn_retrofit_cache"
+            style="@style/btnStyle"
+            android:text="Cache"
+            android:textAllCaps="false" />
+
+
+        <TextView
+            android:id="@+id/tv_retrofit_get_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_retrofit_post"
+            android:gravity="center"
+            android:text="请求结果" />
+
+        <ImageView
+            android:id="@+id/iv_retrofit_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center_horizontal" />
+
+    </LinearLayout>
+</ScrollView>

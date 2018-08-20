@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_handler"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Handler"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_handler_and_thread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Handler + Thread"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_handler_thread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="HandlerThread"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_handler_intent_service"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="IntentService"
+        android:textAllCaps="false" />
+</LinearLayout>

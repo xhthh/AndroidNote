@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <Button
+        android:id="@+id/btn_aidl_bind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="绑定" />
+    <Button
+        android:id="@+id/btn_aidl_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="调用远程方法" />
+
+
+    <Button
+        android:id="@+id/btn_aidl_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="解注册" />
+
+</LinearLayout>

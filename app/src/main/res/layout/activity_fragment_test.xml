@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btn_fragment_navigation"
+        style="@style/btnStyle"
+        android:text="底部导航" />
+
+    <Button
+        android:id="@+id/btn_fragment_viewpager"
+        style="@style/btnStyle"
+        android:text="ViewPager" />
+
+    <Button
+        android:id="@+id/btn_fragment_back_stack"
+        style="@style/btnStyle"
+        android:text="回退栈" />
+
+</LinearLayout>

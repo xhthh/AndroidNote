@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:id="@+id/ll_tab_home"
+        style="@style/bottom_navigation_ll">
+
+        <ImageView
+            android:id="@+id/iv_tab_home"
+            style="@style/bottom_navigation_iv"
+            android:src="@mipmap/h_tab_selected" />
+
+        <TextView
+            android:id="@+id/tv_tab_home"
+            style="@style/bottom_navigation_tv"
+            android:text="首页" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tab_classify"
+        style="@style/bottom_navigation_ll">
+
+        <ImageView
+            android:id="@+id/iv_tab_classify"
+            style="@style/bottom_navigation_iv"
+            android:src="@mipmap/c_tab_normal" />
+
+        <TextView
+            android:id="@+id/tv_tab_classify"
+            style="@style/bottom_navigation_tv"
+            android:text="分类" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tab_shop_cart"
+        style="@style/bottom_navigation_ll">
+
+        <ImageView
+            android:id="@+id/iv_tab_shop_cart"
+            style="@style/bottom_navigation_iv"
+            android:src="@mipmap/s_tab_normal" />
+
+        <TextView
+            android:id="@+id/tv_tab_shop_cart"
+            style="@style/bottom_navigation_tv"
+            android:layout_width="wrap_content"
+            android:text="购物车" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_tab_mine"
+        style="@style/bottom_navigation_ll">
+
+        <ImageView
+            android:id="@+id/iv_tab_mine"
+            style="@style/bottom_navigation_iv"
+            android:src="@mipmap/m_tab_normal" />
+
+        <TextView
+            android:id="@+id/tv_tab_mine"
+            style="@style/bottom_navigation_tv"
+            android:text="我的" />
+    </LinearLayout>
+
+</LinearLayout>
