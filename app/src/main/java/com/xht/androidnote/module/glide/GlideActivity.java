@@ -2,6 +2,7 @@ package com.xht.androidnote.module.glide;
 
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -35,6 +36,9 @@ public class GlideActivity extends BaseActivity {
 
     @OnClick(R.id.btn_load)
     public void onViewClicked() {
+
+        Glide.with(this).load(url).into(mIvGlideTest1);
+
 
         GlideApp.with(mContext)
                 .load(gif)

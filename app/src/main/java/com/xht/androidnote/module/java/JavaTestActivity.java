@@ -2,6 +2,7 @@ package com.xht.androidnote.module.java;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
+import com.xht.androidnote.utils.L;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,13 +40,76 @@ public class JavaTestActivity extends BaseActivity {
         BubbleSort2(array2);*/
 
 
-//        arrayListTest();
+        //        arrayListTest();
 
 
-//        linkedListTest();
+        //        linkedListTest();
 
-        hashMapTest();
+        //        hashMapTest();
+
+        //test();
+
+        threadTest();
     }
+
+    /**
+     * t.join()方法阻塞调用此方法的线程(calling thread)，直到线程t完成
+     */
+    private void threadTest() {
+        final Thread thread1 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println("t1 begin");
+            }
+        }, "t1");
+
+        final Thread thread2 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    thread1.join(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("t2 begin");
+            }
+        }, "t2");
+
+        Thread thread3 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    thread2.join(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("t3 begin");
+            }
+        }, "t3");
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
+    }
+
+    private void test() {
+        Integer a = 3;
+        int b = 3;
+
+        Integer c = 223;
+        Integer d = 223;
+
+        L.i("1---a==b：" + (a == b));
+        L.i("2---c==d：" + (c == d));
+
+        /**
+         * Integer.Java 类，有一个内部私有类，IntegerCache.java，它缓存了从-128到127之间的所有的整数对象。
+         */
+    }
+
 
     private void hashMapTest() {
         HashMap<String, Integer> map = new HashMap<>();
@@ -57,16 +121,9 @@ public class JavaTestActivity extends BaseActivity {
         map.put("地理", 6);
         map.put("生物", 7);
         map.put("化学", 8);
-        for(Map.Entry<String, Integer> entry : map.entrySet()) {
+        for (Map.Entry<String, Integer> entry : map.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
-
-        /*
-
-
-
-
-         */
     }
 
     /**
@@ -82,7 +139,7 @@ public class JavaTestActivity extends BaseActivity {
         list.add("英语: 100");
         list.remove(0);
 
-        list.set(0,"92");
+        list.set(0, "92");
         list.get(0);
     }
 
@@ -96,7 +153,7 @@ public class JavaTestActivity extends BaseActivity {
         list.add("数学: 2");
         list.add("英语: 3");
 
-        list.set(0,"历史");
+        list.set(0, "历史");
         list.get(0);
     }
 
@@ -104,7 +161,7 @@ public class JavaTestActivity extends BaseActivity {
     public void mapTest() {
         Day day1 = new Day(1, 2, 3);
         Day day2 = new Day(2, 3, 4);
-        Map<String,Day> map = new HashMap<String,Day>();
+        Map<String, Day> map = new HashMap<String, Day>();
         //成对放入key-value对
         map.put("第一个", day1);
         map.put("第二个", day2);
@@ -124,6 +181,7 @@ public class JavaTestActivity extends BaseActivity {
         map.remove("第一个");
         System.out.println(map);
     }
+
     class Day {
 
         public Day(int i, int j, int k) {
@@ -134,7 +192,7 @@ public class JavaTestActivity extends BaseActivity {
 
     /**
      * [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-     *
+     * <p>
      * [99, 99, 99, 99, 99, 99, 99, 99, 99, 99]
      */
     public void iteratorTest() {
@@ -170,7 +228,7 @@ public class JavaTestActivity extends BaseActivity {
 
     /**
      * 快速排序
-     *
+     * <p>
      * 先从数列中取出一个数作为key值；
      * 将比这个数小的数全部放在它的左边，大于或等于它的数全部放在它的右边；
      * 对左右两个小数列重复第二步，直至各区间只有1个数。
@@ -179,40 +237,41 @@ public class JavaTestActivity extends BaseActivity {
      * @param l
      * @param r
      */
-    public static void quickSort(int a[],int l,int r){
-        if(l>=r)
+    public static void quickSort(int a[], int l, int r) {
+        if (l >= r)
             return;
 
-        int i = l; int j = r; int key = a[l];//选择第一个数为key
+        int i = l;
+        int j = r;
+        int key = a[l];//选择第一个数为key
 
-        while(i<j){
+        while (i < j) {
 
-            while(i<j && a[j]>=key)//从右向左找第一个小于key的值
+            while (i < j && a[j] >= key)//从右向左找第一个小于key的值
                 j--;
-            if(i<j){
+            if (i < j) {
                 a[i] = a[j];
                 i++;
             }
 
-            while(i<j && a[i]<key)//从左向右找第一个大于key的值
+            while (i < j && a[i] < key)//从左向右找第一个大于key的值
                 i++;
 
-            if(i<j){
+            if (i < j) {
                 a[j] = a[i];
                 j--;
             }
         }
         //i == j
         a[i] = key;
-        quickSort(a, l, i-1);//递归调用
-        quickSort(a, i+1, r);//递归调用
+        quickSort(a, l, i - 1);//递归调用
+        quickSort(a, i + 1, r);//递归调用
     }
-
 
 
     /**
      * 选择排序
-     *
+     * <p>
      * 在长度为N的无序数组中，第一次遍历n-1个数，找到最小的数值与第一个元素交换；
      * 第二次遍历n-2个数，找到最小的数值与第二个元素交换；
      * 。。。
