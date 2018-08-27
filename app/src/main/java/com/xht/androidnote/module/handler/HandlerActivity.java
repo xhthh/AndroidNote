@@ -21,6 +21,9 @@ import butterknife.OnClick;
  * 1、Handler源码
  * 2、子线程之间的通信
  * 3、HandlerThread
+ *
+ * 4、Handler的延迟消息原理
+ * 5、Looper的无限循环为何不会阻塞主线程
  */
 
 public class HandlerActivity extends BaseActivity {
