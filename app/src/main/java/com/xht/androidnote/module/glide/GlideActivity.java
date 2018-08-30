@@ -40,12 +40,12 @@ public class GlideActivity extends BaseActivity {
         Glide.with(this).load(url).into(mIvGlideTest1);
 
 
-        GlideApp.with(mContext)
+        /*GlideApp.with(mContext)
                 .load(gif)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.error)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//禁用缓存功能（杀死进程后会重新加载占位图，否则再次点击还是会直接加载图片）
                 .override(500,500)
-                .into(mIvGlideTest1);
+                .into(mIvGlideTest1);*/
     }
 }

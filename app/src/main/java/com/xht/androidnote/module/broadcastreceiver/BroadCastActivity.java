@@ -7,10 +7,16 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.content.LocalBroadcastManager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.xht.androidnote.MainActivity;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by xht on 2018/6/11.
@@ -36,7 +42,10 @@ public class BroadCastActivity extends BaseActivity {
 
     private MyBroadCastReceiver mReceiver;
 
-    private LocalBroadcastManager mLocalBroadcastManager;
+    private LocalBroadcastManager mLocalBroadcastManager;//本地广播
+
+    @BindView(R.id.btn_receiver_register)
+    Button mBtnReceiverRegister;
 
     @Override
     protected int getLayoutId() {
@@ -53,16 +62,14 @@ public class BroadCastActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        //动态注册
+        /*//动态注册
         mReceiver = new MyBroadCastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(mReceiver, intentFilter);
+        registerReceiver(mReceiver, intentFilter);*/
 
         // 本地广播
         //mLocalBroadcastManager.registerReceiver(mReceiver, intentFilter);
-
-
     }
 
     @Override
@@ -72,25 +79,21 @@ public class BroadCastActivity extends BaseActivity {
             unregisterReceiver(mReceiver);
         }
 
-        if(mLocalBroadcastManager != null && mReceiver != null) {
+        if (mLocalBroadcastManager != null && mReceiver != null) {
             mLocalBroadcastManager.unregisterReceiver(mReceiver);
         }
     }
 
-    public class MyBroadCastReceiver extends BroadcastReceiver {
-        //接收到广播后自动调用该方法
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            //写入接收广播后的操作
-            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService
-                    (Context.CONNECTIVITY_SERVICE);
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-            if (networkInfo != null && networkInfo.isAvailable()) {
-                Toast.makeText(mContext, "network is available", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mContext, "network is unavailable", Toast.LENGTH_SHORT).show();
-            }
+    @OnClick({R.id.btn_receiver_register})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_receiver_register:
+                //动态注册
+                mReceiver = new MyBroadCastReceiver();
+                IntentFilter intentFilter = new IntentFilter();
+                intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+                registerReceiver(mReceiver, intentFilter);
+                break;
         }
     }
 }

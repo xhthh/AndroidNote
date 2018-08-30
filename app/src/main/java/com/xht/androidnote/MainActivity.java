@@ -1,5 +1,6 @@
 package com.xht.androidnote;
 
+import android.util.Log;
 import android.view.View;
 
 import com.xht.androidnote.base.BaseActivity;
@@ -19,6 +20,7 @@ import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
+import com.xht.androidnote.utils.L;
 
 import butterknife.OnClick;
 
@@ -35,10 +37,7 @@ public class MainActivity extends BaseActivity {
         /*Singleton instance = Singleton.getInstance();
         instance.doSomething();*/
 
-
     }
-
-
 
     @OnClick({R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver, R.id
             .btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit, R.id
@@ -90,7 +89,8 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_animation:
                 skip2Activity(AnimationActivity.class);
-                break;case R.id.btn_java:
+                break;
+            case R.id.btn_java:
                 skip2Activity(JavaTestActivity.class);
                 break;
 
