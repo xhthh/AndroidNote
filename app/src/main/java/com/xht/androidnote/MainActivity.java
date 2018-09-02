@@ -29,6 +29,9 @@ import butterknife.OnClick;
  *
  * 创建feature1分支 合并 解决冲突
  *
+ *
+ * 创建dev 推送dev到远程
+ *
  */
 public class MainActivity extends BaseActivity {
 
