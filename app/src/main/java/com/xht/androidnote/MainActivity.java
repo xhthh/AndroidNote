@@ -26,6 +26,8 @@ import butterknife.OnClick;
  * 创建dev分支
  * git merge dev 在master分支上合并dev
  * git branch -d dev 删除dev分支
+ *
+ * 修改注释
  */
 public class MainActivity extends BaseActivity {
 
