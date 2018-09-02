@@ -24,6 +24,7 @@ import butterknife.OnClick;
 
 /**
  * 创建dev分支
+ * 创建feature1分支
  */
 public class MainActivity extends BaseActivity {
 
