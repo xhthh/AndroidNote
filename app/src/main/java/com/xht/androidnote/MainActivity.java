@@ -1,6 +1,7 @@
 package com.xht.androidnote;
 
-import android.util.Log;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.xht.androidnote.base.BaseActivity;
@@ -20,7 +21,6 @@ import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
-import com.xht.androidnote.utils.L;
 
 import butterknife.OnClick;
 
@@ -36,6 +36,12 @@ public class MainActivity extends BaseActivity {
 
         /*Singleton instance = Singleton.getInstance();
         instance.doSomething();*/
+
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
     }
 
