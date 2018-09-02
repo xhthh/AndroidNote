@@ -22,6 +22,9 @@ import com.xht.androidnote.module.window.DialogWindowActivity;
 
 import butterknife.OnClick;
 
+/**
+ * 创建dev分支
+ */
 public class MainActivity extends BaseActivity {
 
     @Override
