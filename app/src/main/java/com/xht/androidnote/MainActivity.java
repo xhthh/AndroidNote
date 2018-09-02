@@ -27,11 +27,10 @@ import butterknife.OnClick;
  * git merge dev 在master分支上合并dev
  * git branch -d dev 删除dev分支
  *
- * 修改注释
+ * 创建feature1分支 合并 解决冲突
+ *
  */
 public class MainActivity extends BaseActivity {
-
-    // 创建feature1分支，开发某个功能
 
     @Override
     protected int getLayoutId() {
