@@ -29,6 +29,8 @@ import butterknife.OnClick;
  */
 public class MainActivity extends BaseActivity {
 
+    // 创建feature1分支，开发某个功能
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
