@@ -1,4 +1,4 @@
-package com.xht.androidnote;
+﻿package com.xht.androidnote;
 
 import android.view.View;
 
@@ -32,7 +32,7 @@ import butterknife.OnClick;
  *
  * 创建dev 推送dev到远程
  *
- * 修改dev，pull 远程分支
+ * 修改dev，pull 远程分支---hh
  *
  */
 public class MainActivity extends BaseActivity {
