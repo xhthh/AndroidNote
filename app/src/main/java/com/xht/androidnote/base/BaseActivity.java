@@ -7,6 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.view.Window;
 
+import com.xht.androidnote.module.eventbus.Event;
+import com.xht.androidnote.module.eventbus.TestEvent;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
@@ -55,4 +61,9 @@ public abstract class BaseActivity extends FragmentActivity {
             mBind.unbind();
         }
     }
+
+    /*@Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(Class<?> event) {
+
+    }*/
 }

@@ -128,6 +128,7 @@
         <activity android:name=".module.animation.PropertyAnimationActivity" />
         <activity android:name=".module.optimize.MemoryLeakActivity" />
         <activity android:name=".module.java.JavaTestActivity" />
+        <activity android:name=".TestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

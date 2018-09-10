@@ -9,6 +9,11 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btn_test"
+            style="@style/btnStyle"
+            android:text="Test" />
+
+        <Button
             android:id="@+id/btn_activity"
             style="@style/btnStyle"
             android:text="Activity" />

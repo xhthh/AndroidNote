@@ -1,4 +1,4 @@
-﻿package com.xht.androidnote;
+package com.xht.androidnote;
 
 import android.view.View;
 
@@ -9,6 +9,8 @@ import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
+import com.xht.androidnote.module.eventbus.EventBusHelper;
+import com.xht.androidnote.module.eventbus.TestEvent;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
 import com.xht.androidnote.module.fragment.FragmentTestActivity;
 import com.xht.androidnote.module.glide.GlideActivity;
@@ -19,6 +21,10 @@ import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
+import com.xht.androidnote.utils.L;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.OnClick;
 
@@ -26,16 +32,15 @@ import butterknife.OnClick;
  * 创建dev分支
  * git merge dev 在master分支上合并dev
  * git branch -d dev 删除dev分支
- *
+ * <p>
  * 创建feature1分支 合并 解决冲突
- *
- *
+ * <p>
+ * <p>
  * 创建dev 推送dev到远程
- *
+ * <p>
  * 修改dev，pull 远程分支---hh
- *
+ * <p>
  * 修改ssh测试
- *
  */
 public class MainActivity extends BaseActivity {
 
@@ -47,17 +52,22 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
 
+        EventBusHelper.getInstance().register(this);
+
         /*Singleton instance = Singleton.getInstance();
         instance.doSomething();*/
 
     }
 
-    @OnClick({R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver, R.id
+    @OnClick({R.id.btn_test, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver, R.id
             .btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit, R.id
             .btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch, R.id
             .btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_test:
+                skip2Activity(TestActivity.class);
+                break;
             case R.id.btn_activity:
                 skip2Activity(ATestActivity.class);
                 break;
@@ -110,4 +120,14 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(TestEvent event) {
+        L.i("MainActivity---onEventMainThread()---event==" + event.getFlag());
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBusHelper.getInstance().unregister(this);
+        super.onDestroy();
+    }
 }

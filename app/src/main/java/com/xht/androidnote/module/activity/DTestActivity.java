@@ -21,7 +21,7 @@ public class DTestActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_test;
+        return R.layout.activity_launch_mode_test;
     }
 
     @Override
