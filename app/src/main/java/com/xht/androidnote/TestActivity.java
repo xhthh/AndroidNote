@@ -30,7 +30,7 @@ public class TestActivity extends BaseActivity {
     /**
      * 如果不写接收的方法会报错，可以想办法封装到基类当中
      * Caused by: org.greenrobot.eventbus.EventBusException: Subscriber class com.xht.androidnote.TestActivity and its super classes have no public methods with the @Subscribe annotation
-     *
+     * 接收的方法必须为public
      * @param event
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
