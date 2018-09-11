@@ -20,8 +20,22 @@ public class TestActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
         eventBusTest();
+        aCacheTest();
     }
 
+    /**
+     * 缓存测试
+     */
+    private void aCacheTest() {
+
+    }
+
+
+
+
+    /**
+     * EventBus测试
+     */
     private void eventBusTest() {
         EventBusHelper.getInstance().register(this);
         EventBusHelper.getInstance().post(new TestEvent("卡米哈米哈"));
