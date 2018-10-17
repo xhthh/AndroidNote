@@ -41,7 +41,6 @@ git push origin --delete <BranchName>
 
 
 1、创建develop分支
-2、测试远程推送
 
 
 
