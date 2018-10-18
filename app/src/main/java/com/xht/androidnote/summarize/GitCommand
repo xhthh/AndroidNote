@@ -43,7 +43,7 @@ git push origin --delete <BranchName>
 1、创建develop分支
 2、测试GitFlow，xxxxx
 3、修复bug1
-
+4、修复bug2
 
 
 
