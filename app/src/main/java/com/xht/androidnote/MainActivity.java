@@ -1,5 +1,9 @@
 package com.xht.androidnote;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.util.Log;
 import android.view.View;
 
 import com.xht.androidnote.base.BaseActivity;
@@ -44,6 +48,9 @@ import butterknife.OnClick;
  */
 public class MainActivity extends BaseActivity {
 
+    private static final String ACTIVITY_ALIAS_1 = "com.xht.androidnote.MainActivity_rect";
+    private static final String ACTIVITY_ALIAS_2 = "com.xht.androidnote.MainActivity_circle";
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
@@ -62,7 +69,7 @@ public class MainActivity extends BaseActivity {
     @OnClick({R.id.btn_test, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver, R.id
             .btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit, R.id
             .btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch, R.id
-            .btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java})
+            .btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java, R.id.btn_icon_replace})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test:
@@ -116,8 +123,44 @@ public class MainActivity extends BaseActivity {
             case R.id.btn_java:
                 skip2Activity(JavaTestActivity.class);
                 break;
-
+            case R.id.btn_icon_replace:
+                if(getComponentName().getClassName().equals(ACTIVITY_ALIAS_1)) {
+                    setIcon(ACTIVITY_ALIAS_2);
+                } else {
+                    setIcon(ACTIVITY_ALIAS_1);
+                }
+                break;
         }
+    }
+
+    private void setIcon(String activity_alias) {
+        Context ctx = getApplication();
+        PackageManager pm = ctx.getPackageManager();
+        // 使ACTIVITY_ALIAS_1失效
+        pm.setComponentEnabledSetting(
+                new ComponentName(ctx, ACTIVITY_ALIAS_1),
+                ACTIVITY_ALIAS_1.equals(activity_alias) ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+        // 使ACTIVITY_ALIAS_2生效
+        pm.setComponentEnabledSetting(
+                new ComponentName(ctx, ACTIVITY_ALIAS_2),
+                ACTIVITY_ALIAS_2.equals(activity_alias) ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                        : PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                PackageManager.DONT_KILL_APP);
+        Log.e("xht", "setIcon----success!!-------alias==" + activity_alias);
+
+        //重启桌面（有问题，图标会消失）
+        /*ActivityManager am = (ActivityManager) ctx.getSystemService(Activity.ACTIVITY_SERVICE);
+        Intent i = new Intent(Intent.ACTION_MAIN);
+        i.addCategory(Intent.CATEGORY_HOME);
+        i.addCategory(Intent.CATEGORY_DEFAULT);
+        List<ResolveInfo> resolves = pm.queryIntentActivities(i, 0);
+        for (ResolveInfo res : resolves) {
+            if (res.activityInfo != null) {
+                am.killBackgroundProcesses(res.activityInfo.packageName);
+            }
+        }*/
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

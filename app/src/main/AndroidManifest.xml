@@ -4,12 +4,13 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-    <uses-permission android:name="com.xht.androidnote.permission.ACCESS_BOOK_SERVICE"/>
+    <uses-permission android:name="com.xht.androidnote.permission.ACCESS_BOOK_SERVICE" />
 
     <permission
         android:name="com.xht.androidnote.PROVIDER"
@@ -32,10 +33,34 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+                <!--注释掉这里的LAUNCHER，会显示别名中enabled为true的icon-->
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".MainActivity_rect"
+            android:enabled="true"
+            android:icon="@mipmap/ic_launcher_rect"
+            android:label="双11啦"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".MainActivity_circle"
+            android:enabled="false"
+            android:icon="@mipmap/ic_launcher_circle"
+            android:label="双12啦"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <activity android:name=".module.okhttp.OkHttpActivity" />
 
