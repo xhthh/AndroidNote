@@ -78,6 +78,12 @@
             android:id="@+id/btn_icon_replace"
             style="@style/btnStyle"
             android:text="动态替换图标" />
+
+        <Button
+            android:id="@+id/btn_icon_hot_fix"
+            style="@style/btnStyle"
+            android:text="热修复原理" />
+
         <Button
             android:id="@+id/btn_okhttp"
             style="@style/btnStyle"

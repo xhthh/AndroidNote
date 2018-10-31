@@ -154,6 +154,7 @@
         <activity android:name=".module.optimize.MemoryLeakActivity" />
         <activity android:name=".module.java.JavaTestActivity" />
         <activity android:name=".TestActivity" />
+        <activity android:name=".module.hotfix.HotFixTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

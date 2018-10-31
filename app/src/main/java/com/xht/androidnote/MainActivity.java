@@ -19,6 +19,7 @@ import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
 import com.xht.androidnote.module.fragment.FragmentTestActivity;
 import com.xht.androidnote.module.glide.GlideActivity;
 import com.xht.androidnote.module.handler.HandlerActivity;
+import com.xht.androidnote.module.hotfix.HotFixTestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
@@ -66,10 +67,11 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_test, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver, R.id
-            .btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit, R.id
-            .btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch, R.id
-            .btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java, R.id.btn_icon_replace})
+    @OnClick({R.id.btn_test, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver,
+            R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit,
+            R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
+            R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
+            R.id.btn_icon_replace, R.id.btn_icon_hot_fix})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test:
@@ -129,6 +131,9 @@ public class MainActivity extends BaseActivity {
                 } else {
                     setIcon(ACTIVITY_ALIAS_1);
                 }
+                break;
+            case R.id.btn_icon_hot_fix:
+                skip2Activity(HotFixTestActivity.class);
                 break;
         }
     }

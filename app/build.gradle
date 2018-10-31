@@ -4,10 +4,17 @@ ext {
     SUPPORT_LIBRARY_VERSION = '27.1.1'
 }
 
+def javaVersion = JavaVersion.VERSION_1_8
+
 //android{}是Android插件提供的一个扩展类型，可以让我们自定义Android Gradle工程，是Android Gradle工程配置的唯一入口。
 android {
     compileSdkVersion 27        //是编译所依赖的Android SDK的版本，这里是API Level。
     buildToolsVersion '27.0.3'  //是构建该Android工程所用构建工具的版本。
+
+    compileOptions {
+        sourceCompatibility javaVersion
+        targetCompatibility javaVersion
+    }
 
     //默认的配置，它是一个ProductFlavor。ProductFlavor允许我们根据不同的情况同时生成多个不同的apk包。
     defaultConfig {
@@ -59,4 +66,7 @@ dependencies {
 
     // EventBus
     implementation 'org.greenrobot:eventbus:3.0.0'
+
+    // 权限
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
