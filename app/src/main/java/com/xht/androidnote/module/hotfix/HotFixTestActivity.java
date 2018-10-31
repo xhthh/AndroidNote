@@ -18,6 +18,9 @@ import butterknife.OnClick;
 
 /**
  * Created by xht on 2018/10/31.
+ * 1、修改bug，rebuild Project，得到class文件，通过AndroidSdk中的build-tools下的dex.bat，生成dex文件
+ * 2、获取应用程序的dex文件与要修复的dex文件，获取相应的pathList和dexElements，合并为一个Element[]
+ * 3、通过反射设置最终的dexElements
  */
 
 public class HotFixTestActivity extends BaseActivity {
