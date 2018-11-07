@@ -14,12 +14,49 @@ import org.greenrobot.eventbus.ThreadMode;
 public class TestActivity extends BaseActivity {
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_test;
+        return R.layout.activity_test;//尾部注释
     }
 
     @Override
     protected void initEventAndData() {
         eventBusTest();
+
+
+    /*
+    int s = 233;
+    if(s < 23) {
+        test();
+    }
+    */
+        //无用代码
+
+    //Alibaba Java Coding Guidelines
+
+
+
+
+
+
+
+
+
+    }
+
+    int a = 2;
+    int b = 3;
+    int c;
+
+    private void test() {
+        if (a > b)
+            c = a + b;
+
+        if (a < b)
+            c = b - a;
+
+
+
+
+
     }
 
     /**
