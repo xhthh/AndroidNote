@@ -48,8 +48,6 @@ import butterknife.OnClick;
  * 修改ssh测试
  *
  * 撤销测试
- *
- * 撤销test
  */
 public class MainActivity extends BaseActivity {
 
