@@ -27,6 +27,7 @@ android {
 
         //multiDexEnabled true
 
+        flavorDimensions "default"
     }
 
     signingConfigs {
@@ -45,12 +46,18 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    signingConfigs {
-
-    }
 
     productFlavors {
+        yingyongbao {}
+        oppo {}
+    }
 
+    //修改生成的apk名字
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = defaultConfig.applicationId + "-" + buildType.name + "-v" +
+                    defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
+        }
     }
 
     lintOptions {
