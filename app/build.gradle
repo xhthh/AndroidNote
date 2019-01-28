@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'AndResGuard'
+apply plugin: 'walle'
 
 ext {
     SUPPORT_LIBRARY_VERSION = '27.1.1'
@@ -27,7 +28,7 @@ android {
 
         //multiDexEnabled true
 
-        flavorDimensions "default"
+        //flavorDimensions "default"
     }
 
     signingConfigs {
@@ -47,7 +48,7 @@ android {
         }
     }
 
-    productFlavors {
+    /*productFlavors {
         yingyongbao {}
         oppo {}
     }
@@ -58,12 +59,22 @@ android {
             outputFileName = defaultConfig.applicationId + "-" + buildType.name + "-v" +
                     defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk"
         }
-    }
+    }*/
 
     lintOptions {
         abortOnError false
     }
 }
+
+walle {
+    // 指定渠道包的输出路径
+    apkOutputFolder = new File("${project.buildDir}/outputs/channels");
+    // 定制渠道包的APK的文件名称
+    apkFileNameFormat = '${appName}-${packageName}-${channel}-${buildType}-v${versionName}-${versionCode}-${buildTime}.apk';
+    // 渠道配置文件
+    channelFile = new File("${project.getProjectDir()}/channel")
+}
+
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -92,6 +103,13 @@ dependencies {
 
     // 权限
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+
+
+    implementation 'com.meituan.android.walle:library:1.1.6'
+
+    //leakcanary
+//    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.3'
+//    implementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.3'
 }
 
 andResGuard {
