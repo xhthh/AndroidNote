@@ -1,5 +1,7 @@
 package com.xht.androidnote;
 
+import android.widget.EditText;
+
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.eventbus.EventBusHelper;
 import com.xht.androidnote.module.eventbus.TestEvent;
@@ -19,7 +21,14 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
-        eventBusTest();
+
+
+        EditText et_content = findViewById(R.id.et_content);
+        et_content.setError("请输入发动机号");
+        et_content.requestFocus();
+
+
+        //eventBusTest();
 
 
     /*

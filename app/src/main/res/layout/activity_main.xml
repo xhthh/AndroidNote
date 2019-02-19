@@ -85,6 +85,11 @@
             android:text="热修复原理" />
 
         <Button
+            android:id="@+id/btn_android_o"
+            style="@style/btnStyle"
+            android:text="8.0相关" />
+
+        <Button
             android:id="@+id/btn_okhttp"
             style="@style/btnStyle"
             android:layout_marginTop="20dp"

@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
+import com.xht.androidnote.module.androido.OreoAdaptActivity;
 import com.xht.androidnote.module.animation.AnimationActivity;
 import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
@@ -67,13 +68,17 @@ public class MainActivity extends BaseActivity {
         /*Singleton instance = Singleton.getInstance();
         instance.doSomething();*/
 
+        /*
+
+         */
+
     }
 
     @OnClick({R.id.btn_test, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver,
             R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit,
             R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
-            R.id.btn_icon_replace, R.id.btn_icon_hot_fix})
+            R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_android_o})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test:
@@ -136,6 +141,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_icon_hot_fix:
                 skip2Activity(HotFixTestActivity.class);
+                break;
+            case R.id.btn_android_o:
+                skip2Activity(OreoAdaptActivity.class);
                 break;
         }
     }

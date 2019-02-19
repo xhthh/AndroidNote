@@ -155,6 +155,7 @@
         <activity android:name=".module.java.JavaTestActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".module.hotfix.HotFixTestActivity" />
+        <activity android:name=".module.androido.OreoAdaptActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
