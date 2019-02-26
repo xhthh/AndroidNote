@@ -26,9 +26,18 @@ android {
         versionCode 1
         versionName "1.0"
 
-        //multiDexEnabled true
+        multiDexEnabled true
+        multiDexKeepProguard file('multiDexKeep.pro') // keep specific classes using proguard syntax
+        multiDexKeepFile file('maindexlist.txt') // keep specific classes
 
         //flavorDimensions "default"
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+        additionalParameters = ['--multi-dex', '--main-dex-list=' + project.rootDir.absolutePath + '/app/maindexlist.txt', '--minimal-main-dex',
+                                '--set-max-idx-number=1000']
     }
 
     signingConfigs {
@@ -81,7 +90,7 @@ dependencies {
     implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
     implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
 
-    //implementation 'com.android.support:multidex:1.0.1'
+    implementation 'com.android.support:multidex:1.0.1'
 
     //butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
