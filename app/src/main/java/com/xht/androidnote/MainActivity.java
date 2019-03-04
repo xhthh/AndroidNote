@@ -68,9 +68,12 @@ public class MainActivity extends BaseActivity {
         /*Singleton instance = Singleton.getInstance();
         instance.doSomething();*/
 
-        /*
+        ClassLoader classLoader = getClassLoader();
+        while (classLoader != null) {
+            Log.i("xht","classloader===" + classLoader);
+            classLoader = classLoader.getParent();
+        }
 
-         */
 
     }
 

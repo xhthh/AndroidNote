@@ -1,6 +1,8 @@
 package com.xht.androidnote.module.eventdispatch;
 
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -19,6 +21,21 @@ public class EventDispatchActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
+
+        MyView view = findViewById(R.id.view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("xht","EventDispatchActivity-------view--onClick()");
+            }
+        });
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
 
     }
 

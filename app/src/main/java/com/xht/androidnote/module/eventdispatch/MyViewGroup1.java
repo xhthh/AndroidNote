@@ -52,10 +52,12 @@ public class MyViewGroup1 extends RelativeLayout {
                 break;
             case MotionEvent.ACTION_MOVE:
                 L.i("ViewGroup1---onInterceptTouchEvent()---MOVE");
-                break;
+//                break;
+                return true;
             case MotionEvent.ACTION_UP:
                 L.i("ViewGroup1---onInterceptTouchEvent()---UP");
-                break;
+//                break;
+                return true;
         }
         return super.onInterceptTouchEvent(ev);
 //        return true;
@@ -71,15 +73,15 @@ public class MyViewGroup1 extends RelativeLayout {
             case MotionEvent.ACTION_MOVE:
                 L.i("ViewGroup1---onTouchEvent()---MOVE");
                 // 反拦截
-                //requestDisallowInterceptTouchEvent(false);
+//                requestDisallowInterceptTouchEvent(false);
                 break;
             case MotionEvent.ACTION_UP:
                 L.i("ViewGroup1---onTouchEvent()---UP");
                 break;
         }
-//        return super.onTouchEvent(event);
-        return true;
-        //        return false;
+        return super.onTouchEvent(event);
+//        return true;
+//                return false;
     }
 
 

@@ -2,6 +2,7 @@ package com.xht.androidnote.module.eventdispatch;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -35,8 +36,8 @@ public class MyView extends View {
                 L.i("View---dispatchTouchEvent()---UP");
                 break;
         }
-//        return super.dispatchTouchEvent(event);
-                return false;
+        return super.dispatchTouchEvent(event);
+        //                return false;
         //        return true;
     }
 
@@ -46,6 +47,7 @@ public class MyView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 L.i("View---onTouchEvent()---DOWN");
+                performClick();
                 break;
             case MotionEvent.ACTION_MOVE:
                 L.i("View---onTouchEvent()---MOVE");
@@ -55,20 +57,20 @@ public class MyView extends View {
                 break;
         }
         return super.onTouchEvent(event);
-//        return true;
-//        return false;
+//                return true;
+        //        return false;
     }
 
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        L.i("MyView---onMeasure()");
+        //        L.i("MyView---onMeasure()");
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        L.i("MyView---onLayout()");
+        //        L.i("MyView---onLayout()");
     }
 }
