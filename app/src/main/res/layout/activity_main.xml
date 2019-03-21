@@ -14,6 +14,28 @@
             android:text="Test" />
 
         <Button
+            android:id="@+id/btn_okhttp"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="OkHttp" />
+
+        <Button
+            android:id="@+id/btn_retrofit"
+            style="@style/btnStyle"
+            android:text="Retrofit" />
+
+        <Button
+            android:id="@+id/btn_glide"
+            style="@style/btnStyle"
+            android:text="Glide" />
+
+        <Button
+            android:id="@+id/btn_rxjava"
+            style="@style/btnStyle"
+            android:layout_marginBottom="20dp"
+            android:text="RxJava" />
+
+        <Button
             android:id="@+id/btn_activity"
             style="@style/btnStyle"
             android:text="Activity" />
@@ -89,21 +111,6 @@
             style="@style/btnStyle"
             android:text="8.0相关" />
 
-        <Button
-            android:id="@+id/btn_okhttp"
-            style="@style/btnStyle"
-            android:layout_marginTop="20dp"
-            android:text="OkHttp" />
-
-        <Button
-            android:id="@+id/btn_retrofit"
-            style="@style/btnStyle"
-            android:text="Retrofit" />
-
-        <Button
-            android:id="@+id/btn_glide"
-            style="@style/btnStyle"
-            android:text="Glide" />
 
         <Button
             android:id="@+id/btn_java"

@@ -25,6 +25,7 @@ import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
+import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 import com.xht.androidnote.utils.L;
@@ -47,7 +48,7 @@ import butterknife.OnClick;
  * 修改dev，pull 远程分支---hh
  * <p>
  * 修改ssh测试
- *
+ * <p>
  * 撤销测试
  */
 public class MainActivity extends BaseActivity {
@@ -70,7 +71,7 @@ public class MainActivity extends BaseActivity {
 
         ClassLoader classLoader = getClassLoader();
         while (classLoader != null) {
-            Log.i("xht","classloader===" + classLoader);
+            Log.i("xht", "classloader===" + classLoader);
             classLoader = classLoader.getParent();
         }
 
@@ -81,7 +82,7 @@ public class MainActivity extends BaseActivity {
             R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit,
             R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
-            R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_android_o})
+            R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_android_o, R.id.btn_rxjava})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_test:
@@ -136,7 +137,7 @@ public class MainActivity extends BaseActivity {
                 skip2Activity(JavaTestActivity.class);
                 break;
             case R.id.btn_icon_replace:
-                if(getComponentName().getClassName().equals(ACTIVITY_ALIAS_1)) {
+                if (getComponentName().getClassName().equals(ACTIVITY_ALIAS_1)) {
                     setIcon(ACTIVITY_ALIAS_2);
                 } else {
                     setIcon(ACTIVITY_ALIAS_1);
@@ -147,6 +148,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_android_o:
                 skip2Activity(OreoAdaptActivity.class);
+                break;
+            case R.id.btn_rxjava:
+                skip2Activity(RxJavaActivity.class);
                 break;
         }
     }
