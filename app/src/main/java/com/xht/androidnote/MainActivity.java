@@ -23,10 +23,13 @@ import com.xht.androidnote.module.handler.HandlerActivity;
 import com.xht.androidnote.module.hotfix.HotFixTestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
+import com.xht.androidnote.module.listview.ListViewActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
+import com.xht.androidnote.module.recyclerview.RecyclerViewActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
+import com.xht.androidnote.module.webview.WebViewActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 import com.xht.androidnote.utils.L;
 
@@ -82,9 +85,16 @@ public class MainActivity extends BaseActivity {
             R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit,
             R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
-            R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_android_o, R.id.btn_rxjava})
+            R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_android_o, R.id.btn_rxjava,
+            R.id.btn_webview, R.id.btn_listview, R.id.btn_recyclerview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_listview:
+                skip2Activity(ListViewActivity.class);
+                break;
+            case R.id.btn_recyclerview:
+                skip2Activity(RecyclerViewActivity.class);
+                break;
             case R.id.btn_test:
                 skip2Activity(TestActivity.class);
                 break;
@@ -151,6 +161,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_rxjava:
                 skip2Activity(RxJavaActivity.class);
+                break;
+            case R.id.btn_webview:
+                skip2Activity(WebViewActivity.class);
                 break;
         }
     }

@@ -156,6 +156,9 @@
         <activity android:name=".TestActivity" />
         <activity android:name=".module.hotfix.HotFixTestActivity" />
         <activity android:name=".module.androido.OreoAdaptActivity" />
+        <activity android:name=".module.webview.WebViewActivity" />
+        <activity android:name=".module.listview.ListViewActivity" />
+        <activity android:name=".module.recyclerview.RecyclerViewActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

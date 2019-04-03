@@ -13,6 +13,25 @@
             style="@style/btnStyle"
             android:text="Test" />
 
+
+        <Button
+            android:id="@+id/btn_webview"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="WebView" />
+
+        <Button
+            android:id="@+id/btn_listview"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="ListView" />
+
+        <Button
+            android:id="@+id/btn_recyclerview"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="RecyclerView" />
+
         <Button
             android:id="@+id/btn_okhttp"
             style="@style/btnStyle"
