@@ -159,6 +159,7 @@
         <activity android:name=".module.webview.WebViewActivity" />
         <activity android:name=".module.listview.ListViewActivity" />
         <activity android:name=".module.recyclerview.RecyclerViewActivity" />
+        <activity android:name=".module.customview.CustomViewActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

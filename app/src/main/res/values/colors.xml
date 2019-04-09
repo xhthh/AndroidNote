@@ -12,4 +12,9 @@
     <color name="gray">#9cffffff</color>
 
 
+    <color name="wzui_c_e5004d_a1">#E5004D</color><!--标准-->
+    <color name="wzui_c_f9712c_a2">#F9712C</color><!--对比-->
+
+
+
 </resources>
