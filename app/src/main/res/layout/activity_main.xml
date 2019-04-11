@@ -27,6 +27,12 @@
             android:text="自定义view" />
 
         <Button
+            android:id="@+id/btn_dsa"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="数据结构与算法" />
+
+        <Button
             android:id="@+id/btn_listview"
             style="@style/btnStyle"
             android:layout_marginTop="20dp"

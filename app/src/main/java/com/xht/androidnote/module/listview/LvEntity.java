@@ -6,5 +6,5 @@ package com.xht.androidnote.module.listview;
 
 public class LvEntity {
     public String title;
-    public String imgUrl;
+    public int imgId;
 }

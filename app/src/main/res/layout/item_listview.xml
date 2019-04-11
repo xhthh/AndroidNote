@@ -18,6 +18,7 @@
         android:id="@+id/iv_pic"
         android:layout_width="match_parent"
         android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher"
         android:layout_height="150dp" />
 
 </LinearLayout>

@@ -15,6 +15,7 @@ import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
 import com.xht.androidnote.module.customview.CustomViewActivity;
+import com.xht.androidnote.module.dsa.DsaActivity;
 import com.xht.androidnote.module.eventbus.EventBusHelper;
 import com.xht.androidnote.module.eventbus.TestEvent;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
@@ -87,11 +88,14 @@ public class MainActivity extends BaseActivity {
             R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_android_o, R.id.btn_rxjava,
-            R.id.btn_webview, R.id.btn_listview, R.id.btn_recyclerview, R.id.btn_customview})
+            R.id.btn_webview, R.id.btn_listview, R.id.btn_recyclerview, R.id.btn_customview, R.id.btn_dsa})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_customview:
                 skip2Activity(CustomViewActivity.class);
+                break;
+            case R.id.btn_dsa:
+                skip2Activity(DsaActivity.class);
                 break;
             case R.id.btn_listview:
                 skip2Activity(ListViewActivity.class);
