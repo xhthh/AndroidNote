@@ -1,10 +1,9 @@
-package com.xht.androidnote.module.recyclerview;
+package com.xht.androidnote.module.recyclerview.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import java.util.List;
 public class RvAdapter extends RecyclerView.Adapter<RvAdapter.PicViewHolder> {
 
     private Context mContext;
-    private List<LvEntity> mList = new ArrayList<>();
+    private List<LvEntity> mList;
 
     public RvAdapter(Context context, List<LvEntity> list) {
         mContext = context;

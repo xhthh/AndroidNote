@@ -161,6 +161,7 @@
         <activity android:name=".module.recyclerview.RecyclerViewActivity" />
         <activity android:name=".module.customview.CustomViewActivity" />
         <activity android:name=".module.dsa.DsaActivity" />
+        <activity android:name=".module.recyclerview.PagerRecyclerViewActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

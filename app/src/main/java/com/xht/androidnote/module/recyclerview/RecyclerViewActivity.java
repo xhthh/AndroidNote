@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.listview.LvEntity;
+import com.xht.androidnote.module.recyclerview.adapter.RvAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,8 @@ public class RecyclerViewActivity extends BaseActivity {
     Button mBtnDiff;
     @BindView(R.id.ll_button)
     LinearLayout mLlButton;
+    @BindView(R.id.btn_skip)
+    Button mBtnSkip;
     private List<LvEntity> mList = new ArrayList<>();
     private RvAdapter mAdapter;
     private int lastPosition;
@@ -91,9 +94,12 @@ public class RecyclerViewActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_reset, R.id.btn_update0, R.id.btn_update1, R.id.btn_update2, R.id.btn_update3,
-            R.id.btn_update4, R.id.btn_update5, R.id.btn_update6, R.id.btn_diff})
+            R.id.btn_update4, R.id.btn_update5, R.id.btn_update6, R.id.btn_diff, R.id.btn_skip})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_skip:
+                skip2Activity(PagerRecyclerViewActivity.class);
+                break;
             case R.id.btn_diff:
                 diff();
                 break;
