@@ -1,5 +1,6 @@
 package com.xht.androidnote;
 
+import android.os.Build;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -10,6 +11,7 @@ import com.xht.androidnote.module.eventbus.TestEvent;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -57,26 +59,35 @@ public class TestActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
-        EditText et_content = findViewById(R.id.et_content);
-        et_content.setError("请输入发动机号");
-        et_content.requestFocus();
+//        EditText et_content = findViewById(R.id.et_content);
+//        et_content.setError("请输入发动机号");
+//        et_content.requestFocus();
+//
+//        execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                for (int i = 0; i < 100; i++) {
+//                    try {
+//                        Thread.sleep(2000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    Log.i("xht", "run()------i=" + i);
+//                }
+//            }
+//        });
+//
+//        Log.i("xht","执行结束");
 
-        execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 100; i++) {
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Log.i("xht", "run()------i=" + i);
-                }
-            }
-        });
 
-        Log.i("xht","执行结束");
+        File cacheDir = getCacheDir();
+        Log.i("xht","cacheDir.path=" + cacheDir.getAbsolutePath());
 
+        File externalCacheDir = getExternalCacheDir();
+        Log.i("xht","externalCacheDir.path=" + externalCacheDir.getAbsolutePath());
+
+
+        Log.i("xht","Build.VERSION.SDK_INT==" + Build.VERSION.SDK_INT);
 
     }
 

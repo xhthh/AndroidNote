@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 
 import com.xht.androidnote.R;
@@ -21,7 +22,7 @@ import butterknife.OnClick;
  * 1、Handler源码
  * 2、子线程之间的通信
  * 3、HandlerThread
- *
+ * <p>
  * 4、Handler的延迟消息原理
  * 5、Looper的无限循环为何不会阻塞主线程
  */
@@ -35,6 +36,12 @@ public class HandlerActivity extends BaseActivity {
         public MyHandler(HandlerActivity activity) {
             this.mActivity = new WeakReference<HandlerActivity>(activity);
         }
+
+        public MyHandler(HandlerActivity activity, Callback callback) {
+            super(callback);
+            this.mActivity = new WeakReference<HandlerActivity>(activity);
+        }
+
 
         @Override
         public void handleMessage(Message msg) {
@@ -83,12 +90,45 @@ public class HandlerActivity extends BaseActivity {
 
         handlerThreadTest();*/
 
-        /*new Handler(new Handler.Callback() {
+        /*Handler handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
+                if (msg.what == 1) {
+                    Log.i("xht", "1111111111111");
+                }
                 return false;
             }
-        });*/
+        });
+
+
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.i("xht", "2222222222222222");
+            }
+        });
+
+
+        */
+
+
+        MyHandler myHandler = new MyHandler(this, new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                if (msg.what == 1) {
+                    Log.i("xht", "myHandler---1111111111111");
+                }
+                return false;
+            }
+        });
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                myHandler.sendEmptyMessage(1);
+            }
+        }).start();
 
     }
 
@@ -161,17 +201,19 @@ public class HandlerActivity extends BaseActivity {
             //做一些执行前的初始化工作
             @Override
             protected void onLooperPrepared() {
+                Log.i("xht","handlerThread ------在loop执行前做一些初始化工作");
                 super.onLooperPrepared();
             }
         };
         mHandlerThread.start();
+
 
         handler2 = new Handler(mHandlerThread.getLooper()) {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
 
-                // 当前为子线程---WorkThread
+                // 当前为子线程---WorkThread，可以执行异步耗时操作
                 L.i("handler2---当前线程===" + Thread.currentThread().getName());
                 // 执行耗时操作
                 timeConsuming();
