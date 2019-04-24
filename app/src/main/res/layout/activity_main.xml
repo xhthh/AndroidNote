@@ -25,6 +25,11 @@
             style="@style/btnStyle"
             android:layout_marginTop="20dp"
             android:text="自定义view" />
+        <Button
+            android:id="@+id/btn_drawerlayout"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="drawerlayout" />
 
         <Button
             android:id="@+id/btn_dsa"
