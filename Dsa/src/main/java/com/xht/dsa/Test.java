@@ -6,7 +6,13 @@ package com.xht.dsa;
 
 public class Test {
 
-    static {
+    public static void main(String[] args) {
+        //二维数组
+
+
+    }
+
+    /*static {
         System.out.println("这是静态代码块");
     }
 
@@ -30,6 +36,6 @@ public class Test {
         Test.show();
         Test test = new Test();
         test.fun();
-    }
+    }*/
 
 }

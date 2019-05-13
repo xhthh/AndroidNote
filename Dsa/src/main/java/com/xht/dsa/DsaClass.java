@@ -54,6 +54,12 @@ public class DsaClass {
     }
 
 
+    /**
+     * 快排
+     * @param array
+     * @param low
+     * @param high
+     */
     public static void quickSort(int[] array, int low, int high) {
         if (low >= high) {
             return;

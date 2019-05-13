@@ -1,5 +1,7 @@
 package com.xht.androidnote;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 import android.widget.EditText;
@@ -80,14 +82,20 @@ public class TestActivity extends BaseActivity {
 //        Log.i("xht","执行结束");
 
 
-        File cacheDir = getCacheDir();
+        /*File cacheDir = getCacheDir();
         Log.i("xht","cacheDir.path=" + cacheDir.getAbsolutePath());
 
         File externalCacheDir = getExternalCacheDir();
         Log.i("xht","externalCacheDir.path=" + externalCacheDir.getAbsolutePath());
 
 
-        Log.i("xht","Build.VERSION.SDK_INT==" + Build.VERSION.SDK_INT);
+        Log.i("xht","Build.VERSION.SDK_INT==" + Build.VERSION.SDK_INT);*/
+
+        Application application = getApplication();
+        Application context = (Application) getApplicationContext();
+
+        Log.i("xht","application=" + application);
+        Log.i("xht","context=" + context);
 
     }
 

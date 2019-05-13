@@ -58,7 +58,6 @@ public class DialogWindowActivity extends BaseActivity implements View.OnTouchLi
     protected void initEventAndData() {
 
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-
     }
 
     @Override

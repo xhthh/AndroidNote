@@ -1,6 +1,5 @@
 package com.xht.androidnote.module.okhttp;
 
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,7 +11,6 @@ import com.xht.androidnote.base.BaseActivity;
 import java.io.IOException;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -60,9 +58,10 @@ public class OkhttpTestActivity extends BaseActivity {
 
     private String getRequest() {
         String url = "";
-        OkHttpClient client = new OkHttpClient();
 
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new TestInterceptor())
+                .build();
 
 
         Request request = new Request.Builder()
