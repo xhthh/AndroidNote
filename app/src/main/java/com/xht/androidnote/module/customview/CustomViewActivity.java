@@ -13,6 +13,7 @@ import java.util.List;
 
 /**
  * Created by xht on 2019/4/4.
+ * 自定义view
  */
 
 public class CustomViewActivity extends BaseActivity {
