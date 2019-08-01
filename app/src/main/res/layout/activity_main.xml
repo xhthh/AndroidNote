@@ -106,7 +106,10 @@
             android:layout_marginTop="20dp"
             android:text="Java" />
 
-
+        <Button
+            android:id="@+id/btn_java_dynamic_proxy"
+            style="@style/btnStyle"
+            android:text="Java动态代理" />
     </LinearLayout>
 
 

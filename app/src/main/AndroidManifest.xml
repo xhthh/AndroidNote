@@ -33,12 +33,12 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+                <category android:name="android.intent.category.LAUNCHER"/>
                 <!--注释掉这里的LAUNCHER，会显示别名中enabled为true的icon-->
             </intent-filter>
         </activity>
 
-        <activity-alias
+       <!-- <activity-alias
             android:name=".MainActivity_rect"
             android:enabled="true"
             android:icon="@mipmap/ic_launcher_rect"
@@ -60,7 +60,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity-alias>
+        </activity-alias>-->
 
         <activity android:name=".module.okhttp.OkHttpActivity" />
 
@@ -155,6 +155,7 @@
         <activity android:name=".module.java.JavaTestActivity" />
         <activity android:name=".TestActivity" />
         <activity android:name=".module.hotfix.HotFixTestActivity" />
+        <activity android:name=".module.proxy.ProxyActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
