@@ -182,4 +182,6 @@ public class MainActivity extends BaseActivity {
         EventBusHelper.getInstance().unregister(this);
         super.onDestroy();
     }
+
+
 }

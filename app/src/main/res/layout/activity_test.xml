@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLength="6"
+        android:singleLine="true" />
+
+    <Button
+        android:id="@+id/btn_commit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="提交" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_time_picker1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="在售时间" />
+
+        <TextView
+            android:id="@+id/tv_time1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自在售之日起" />
+
+
+        <Button
+            android:id="@+id/btn_time_picker2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="消费码有效期" />
+
+        <TextView
+            android:id="@+id/tv_time2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自在售之日起" />
+    </LinearLayout>
+
 
 </LinearLayout>
