@@ -47,6 +47,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="自在售之日起" />
+
+
+        <Button
+            android:id="@+id/btn_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="日期" />
     </LinearLayout>
 
 

@@ -46,7 +46,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 
         Button btnTime1 = findViewById(R.id.btn_time_picker1);
         Button btnTime2 = findViewById(R.id.btn_time_picker2);
+        Button btnTime = findViewById(R.id.btn_time);
 
+        btnTime.setOnClickListener(this);
         btnTime1.setOnClickListener(this);
         btnTime2.setOnClickListener(this);
 
@@ -156,6 +158,19 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             case R.id.btn_time_picker2:
                 showDateDialog(mTvTime2, false);
                 break;
+
+            case R.id.btn_time:
+                Log.i("xht", "saleTime=" + saleStartTime);
+                Log.i("xht", "saleEndTime=" + saleEndTime);
+
+                Log.i("xht", "consumeStartTime=" + consumeStartTime);
+                Log.i("xht", "consumeEndTime=" + consumeEndTime);
+
+                if (!TextUtils.isEmpty(saleEndTime) && !TextUtils.isEmpty(consumeEndTime) &&
+                        TimeUtils.compareDate(saleEndTime, consumeEndTime)) {
+                    Toast.makeText(mContext, "消费码有效期不得早于商品在售结束时间", Toast.LENGTH_SHORT).show();
+                }
+                break;
         }
     }
 
@@ -179,11 +194,11 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 
         if (isSaleTime) {
             startDate = Calendar.getInstance();
-            int currentYear = startDate.get(Calendar.YEAR);
+            /*int currentYear = startDate.get(Calendar.YEAR);
             int currentMonth = startDate.get(Calendar.MONTH);
-            int currentDay = startDate.get(Calendar.DAY_OF_MONTH);
+            int currentDay = startDate.get(Calendar.DAY_OF_MONTH);*/
 
-            startDate.set(currentYear, currentMonth, currentDay);
+            startDate.setTime(TimeUtils.getTomorrow());
 
             endDate = Calendar.getInstance();
             Date laterDate = TimeUtils.convertStrToDate(TimeUtils.getBeforeOrLaterDate(330));
@@ -228,22 +243,31 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
             public void onTimeSelect(Date date, View v) {//选中事件回调
                 // 这里回调过来的v,就是show()方法里面所添加的 View 参数，如果show的时候没有添加参数，v则为null
                 if (isSaleTime) {
+                    String oldSaleTime = saleEndTime;
+
                     saleEndTime = TimeUtils.getSimpleTime(date);
+
 
                     if (!TextUtils.isEmpty(saleEndTime) && !TextUtils.isEmpty(consumeEndTime) &&
                             TimeUtils.compareDate(saleEndTime, consumeEndTime)) {
                         Toast.makeText(mContext, "消费码有效期不得早于商品在售结束时间", Toast.LENGTH_SHORT).show();
+                        saleEndTime = oldSaleTime;
                     } else {
                         textView.setText("自上线之日起 至 " + saleEndTime);
+
                     }
                 } else {
                     //消费码有效期不得早于商品在售结束时间
                     consumeEndTime = TimeUtils.getSimpleTime(date);
-                    if (TimeUtils.compareDate(saleEndTime, consumeEndTime)) {
+
+
+                    if (!TextUtils.isEmpty(saleEndTime) && !TextUtils.isEmpty(consumeEndTime) &&
+                            TimeUtils.compareDate(saleEndTime, consumeEndTime)) {
                         Toast.makeText(mContext, "消费码有效期不得早于商品在售结束时间", Toast.LENGTH_SHORT).show();
 
                     } else {
                         textView.setText("自上线之日起 至 " + consumeEndTime);
+
                     }
                 }
             }
