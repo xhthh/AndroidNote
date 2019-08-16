@@ -187,28 +187,28 @@ public class MainActivity extends BaseActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING)
-    private void test1(TestEvent event) {
-        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "POSTING---message=" + event.getFlag());
+    public void test1(TestEvent event) {
+        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "MainActivity---POSTING---message=" + event.getFlag());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    private void test2(TestEvent event) {
-        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "MAIN---message=" + event.getFlag());
+    public void test2(TestEvent event) {
+        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "MainActivity---MAIN---message=" + event.getFlag());
 
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    private void test3(TestEvent event) {
-        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "MAIN---BACKGROUND=" + event.getFlag());
+    public void test3(TestEvent event) {
+        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "MainActivity---BACKGROUND---BACKGROUND=" + event.getFlag());
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
-    private void test4(TestEvent event) {
-        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "ASYNC---message=" + event.getFlag());
+    public void test4(TestEvent event) {
+        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "MainActivity---ASYNC---message=" + event.getFlag());
     }
 
     @Override
