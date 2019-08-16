@@ -8,7 +8,7 @@ def javaVersion = JavaVersion.VERSION_1_8
 
 //android{}是Android插件提供的一个扩展类型，可以让我们自定义Android Gradle工程，是Android Gradle工程配置的唯一入口。
 android {
-    compileSdkVersion 27        //是编译所依赖的Android SDK的版本，这里是API Level。
+    compileSdkVersion 28        //是编译所依赖的Android SDK的版本，这里是API Level。
     buildToolsVersion '27.0.3'  //是构建该Android工程所用构建工具的版本。
 
     compileOptions {
@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.xht.androidnote"
         minSdkVersion 15
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 

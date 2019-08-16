@@ -9,6 +9,12 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btn_recyclerview"
+            style="@style/btnStyle"
+            android:layout_marginBottom="20dp"
+            android:text="RecyclerView" />
+
+        <Button
             android:id="@+id/btn_test"
             style="@style/btnStyle"
             android:text="Test" />
