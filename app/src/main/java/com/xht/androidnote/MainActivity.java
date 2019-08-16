@@ -3,7 +3,6 @@ package com.xht.androidnote;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -15,8 +14,6 @@ import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
 import com.xht.androidnote.module.eventbus.EventBusActivity;
-import com.xht.androidnote.module.eventbus.EventBusHelper;
-import com.xht.androidnote.module.eventbus.TestEvent;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
 import com.xht.androidnote.module.fragment.FragmentTestActivity;
 import com.xht.androidnote.module.glide.GlideActivity;
@@ -30,10 +27,6 @@ import com.xht.androidnote.module.proxy.ProxyActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
-import com.xht.androidnote.utils.L;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.OnClick;
 
@@ -63,11 +56,6 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
-
-        EventBusHelper.getInstance().register(this);
-
-        /*Singleton instance = Singleton.getInstance();
-        instance.doSomething();*/
 
     }
 
@@ -181,39 +169,9 @@ public class MainActivity extends BaseActivity {
         }*/
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TestEvent event) {
-        L.i("MainActivity---onEventMainThread()---event==" + event.getFlag());
-    }
-
-    @Subscribe(threadMode = ThreadMode.POSTING)
-    public void test1(TestEvent event) {
-        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "MainActivity---POSTING---message=" + event.getFlag());
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void test2(TestEvent event) {
-        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "MainActivity---MAIN---message=" + event.getFlag());
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void test3(TestEvent event) {
-        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "MainActivity---BACKGROUND---BACKGROUND=" + event.getFlag());
-    }
-
-    @Subscribe(threadMode = ThreadMode.ASYNC)
-    public void test4(TestEvent event) {
-        Log.i("xht", "MainActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
-        Log.i("xht", "MainActivity---ASYNC---message=" + event.getFlag());
-    }
 
     @Override
     protected void onDestroy() {
-        EventBusHelper.getInstance().unregister(this);
         super.onDestroy();
     }
 

@@ -158,6 +158,7 @@
         <activity android:name=".module.proxy.ProxyActivity" />
         <activity android:name=".module.recyclerview.RecyclerViewActivity" />
         <activity android:name=".module.eventbus.EventBusActivity" />
+        <activity android:name=".module.eventbus.EventBusAnotherActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

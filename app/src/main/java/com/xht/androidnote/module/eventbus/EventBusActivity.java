@@ -1,10 +1,10 @@
 package com.xht.androidnote.module.eventbus;
 
+import android.content.Intent;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -17,8 +17,8 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 public class EventBusActivity extends BaseActivity implements View.OnClickListener {
 
-    private TextView mTvReceive;
-    private Button mBtnSendMessage;
+    private Button mBtnSkip;
+    private Button mBtnRegist;
 
     @Override
     protected int getLayoutId() {
@@ -27,27 +27,28 @@ public class EventBusActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     protected void initEventAndData() {
-        EventBusHelper.getInstance().register(this);
+        mBtnRegist = findViewById(R.id.btn_regist_eventbus);
+        mBtnSkip = findViewById(R.id.btn_to_another);
 
-        mBtnSendMessage = findViewById(R.id.btn_send_message);
-        mTvReceive = findViewById(R.id.tv_receive_message);
-
-
-        mBtnSendMessage.setOnClickListener(this);
+        mBtnRegist.setOnClickListener(this);
+        mBtnSkip.setOnClickListener(this);
     }
 
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_send_message:
-                sendMessage();
+            case R.id.btn_regist_eventbus:
+                regist();
+                break;
+            case R.id.btn_to_another:
+                startActivity(new Intent(EventBusActivity.this, EventBusAnotherActivity.class));
                 break;
         }
     }
 
-    private void sendMessage() {
-        EventBusHelper.getInstance().post(new TestEvent("fuck"));
+    private void regist() {
+        EventBusHelper.getInstance().register(this);
     }
 
     @Subscribe(threadMode = ThreadMode.POSTING)
@@ -56,7 +57,7 @@ public class EventBusActivity extends BaseActivity implements View.OnClickListen
         Log.i("xht", "EventBusActivity---POSTING---message=" + event.getFlag());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void test2(TestEvent event) {
         Log.i("xht", "EventBusActivity---当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
         Log.i("xht", "EventBusActivity---MAIN---message=" + event.getFlag());

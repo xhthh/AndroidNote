@@ -6,17 +6,15 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/btn_regist_eventbus"
+        android:id="@+id/btn_send_sticky"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="注册Eventbus"
-        android:textAllCaps="false" />
+        android:text="发送粘性消息" />
 
     <Button
-        android:id="@+id/btn_to_another"
+        android:id="@+id/btn_send_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="跳转页面" />
+        android:text="发送消息" />
 
 </LinearLayout>
