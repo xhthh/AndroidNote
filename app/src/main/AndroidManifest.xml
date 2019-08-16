@@ -153,7 +153,7 @@
         <activity android:name=".module.animation.PropertyAnimationActivity" />
         <activity android:name=".module.optimize.MemoryLeakActivity" />
         <activity android:name=".module.java.JavaTestActivity" />
-        <activity android:name=".TestActivity" />
+        <activity android:name=".module.pickerview.PickerViewActivity" />
         <activity android:name=".module.hotfix.HotFixTestActivity" />
         <activity android:name=".module.proxy.ProxyActivity" />
         <activity android:name=".module.recyclerview.RecyclerViewActivity" />

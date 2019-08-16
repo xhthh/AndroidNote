@@ -14,6 +14,7 @@ import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
 import com.xht.androidnote.module.eventbus.EventBusHelper;
+import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.eventbus.TestEvent;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
 import com.xht.androidnote.module.fragment.FragmentTestActivity;
@@ -76,10 +77,10 @@ public class MainActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_recyclerview:
-                skip2Activity(TestActivity.class);
+                skip2Activity(PickerViewActivity.class);
                 break;
             case R.id.btn_test:
-                skip2Activity(TestActivity.class);
+                skip2Activity(PickerViewActivity.class);
                 break;
             case R.id.btn_activity:
                 skip2Activity(ATestActivity.class);

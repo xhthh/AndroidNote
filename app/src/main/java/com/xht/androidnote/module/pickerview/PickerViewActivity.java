@@ -1,4 +1,4 @@
-package com.xht.androidnote;
+package com.xht.androidnote.module.pickerview;
 
 import android.graphics.Color;
 import android.text.Editable;
@@ -11,14 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
-import com.xht.androidnote.module.eventbus.EventBusHelper;
-import com.xht.androidnote.module.eventbus.TestEvent;
-import com.xht.androidnote.module.pickerview.TimePickerView;
 import com.xht.androidnote.utils.TimeUtils;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -28,7 +23,7 @@ import java.util.Date;
  * Created by xht on 2018/9/10.
  */
 
-public class TestActivity extends BaseActivity implements View.OnClickListener {
+public class PickerViewActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText editText;
     private int digits = 1;
@@ -37,7 +32,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_test;
+        return R.layout.activity_time_picker;
     }
 
     @Override
@@ -124,28 +119,9 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         figureSaleTime();
     }
 
-    /**
-     * EventBus测试
-     */
-    private void eventBusTest() {
-        EventBusHelper.getInstance().register(this);
-        EventBusHelper.getInstance().post(new TestEvent("卡米哈米哈"));
-    }
-
-    /**
-     * 如果不写接收的方法会报错，可以想办法封装到基类当中
-     * Caused by: org.greenrobot.eventbus.EventBusException: Subscriber class com.xht.androidnote.TestActivity and its super classes have no public methods with the @Subscribe annotation
-     * 接收的方法必须为public
-     *
-     * @param event
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(TestEvent event) {
-    }
 
     @Override
     protected void onDestroy() {
-        EventBusHelper.getInstance().unregister(this);
         super.onDestroy();
     }
 
