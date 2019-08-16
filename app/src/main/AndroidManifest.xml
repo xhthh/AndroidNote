@@ -157,6 +157,7 @@
         <activity android:name=".module.hotfix.HotFixTestActivity" />
         <activity android:name=".module.proxy.ProxyActivity" />
         <activity android:name=".module.recyclerview.RecyclerViewActivity" />
+        <activity android:name=".module.eventbus.EventBusActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

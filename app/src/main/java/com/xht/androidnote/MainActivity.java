@@ -3,6 +3,7 @@ package com.xht.androidnote;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -13,8 +14,8 @@ import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
+import com.xht.androidnote.module.eventbus.EventBusActivity;
 import com.xht.androidnote.module.eventbus.EventBusHelper;
-import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.eventbus.TestEvent;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
 import com.xht.androidnote.module.fragment.FragmentTestActivity;
@@ -24,6 +25,7 @@ import com.xht.androidnote.module.hotfix.HotFixTestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
+import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.proxy.ProxyActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
@@ -69,17 +71,20 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_test, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver,
+    @OnClick({R.id.btn_test_pickerview, R.id.btn_activity, R.id.btn_service, R.id.btn_broadcast_receiver,
             R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit,
             R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
-            R.id.btn_icon_replace, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy, R.id.btn_recyclerview})
+            R.id.btn_icon_replace, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy, R.id.btn_recyclerview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_eventbus:
+                skip2Activity(EventBusActivity.class);
+                break;
             case R.id.btn_recyclerview:
                 skip2Activity(PickerViewActivity.class);
                 break;
-            case R.id.btn_test:
+            case R.id.btn_test_pickerview:
                 skip2Activity(PickerViewActivity.class);
                 break;
             case R.id.btn_activity:
@@ -179,6 +184,31 @@ public class MainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(TestEvent event) {
         L.i("MainActivity---onEventMainThread()---event==" + event.getFlag());
+    }
+
+    @Subscribe(threadMode = ThreadMode.POSTING)
+    private void test1(TestEvent event) {
+        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "POSTING---message=" + event.getFlag());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    private void test2(TestEvent event) {
+        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "MAIN---message=" + event.getFlag());
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    private void test3(TestEvent event) {
+        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "MAIN---BACKGROUND=" + event.getFlag());
+    }
+
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    private void test4(TestEvent event) {
+        Log.i("xht", "当前线程 " + Thread.currentThread().getName() + " 是否为主线程 = " + (Looper.getMainLooper() == Looper.myLooper()));
+        Log.i("xht", "ASYNC---message=" + event.getFlag());
     }
 
     @Override
