@@ -159,6 +159,7 @@
         <activity android:name=".module.recyclerview.RecyclerViewActivity" />
         <activity android:name=".module.eventbus.EventBusActivity" />
         <activity android:name=".module.eventbus.EventBusAnotherActivity" />
+        <activity android:name=".module.thread.ThreadTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
