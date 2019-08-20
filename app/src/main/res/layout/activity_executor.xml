@@ -5,22 +5,18 @@
     android:orientation="vertical">
 
     <Button
-        android:id="@+id/btn_executor"
+        android:id="@+id/btn_extcutor_submit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Executor"
+        android:text="submit"
         android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btn_start1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="启动线程1" />
 
     <Button
-        android:id="@+id/btn_start2"
+        android:id="@+id/btn_test_execute"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="启动线程2" />
+        android:text="模仿Retrofit切换线程"
+        android:textAllCaps="false" />
 
 </LinearLayout>

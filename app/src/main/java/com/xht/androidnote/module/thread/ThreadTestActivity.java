@@ -6,6 +6,7 @@ import android.widget.Button;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
+import com.xht.androidnote.module.thread.executor.ExecutorActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,6 +20,8 @@ public class ThreadTestActivity extends BaseActivity {
     Button btnStart1;
     @BindView(R.id.btn_start2)
     Button btnStart2;
+    @BindView(R.id.btn_executor)
+    Button btnExecutor;
 
     @Override
     protected int getLayoutId() {
@@ -29,9 +32,12 @@ public class ThreadTestActivity extends BaseActivity {
     protected void initEventAndData() {
     }
 
-    @OnClick({R.id.btn_start1, R.id.btn_start2})
+    @OnClick({R.id.btn_executor,R.id.btn_start1, R.id.btn_start2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_executor:
+                skip2Activity(ExecutorActivity.class);
+                break;
             case R.id.btn_start1:
                 test1();
                 break;
@@ -40,6 +46,8 @@ public class ThreadTestActivity extends BaseActivity {
                 break;
         }
     }
+
+
 
     class MyThread extends Thread {
         public MyThread(String name) {
