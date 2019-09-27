@@ -113,6 +113,11 @@
             android:text="EventBus" />
 
         <Button
+            android:id="@+id/btn_rxjava"
+            style="@style/btnStyle"
+            android:text="RxJava" />
+
+        <Button
             android:id="@+id/btn_java"
             style="@style/btnStyle"
             android:layout_marginTop="20dp"
