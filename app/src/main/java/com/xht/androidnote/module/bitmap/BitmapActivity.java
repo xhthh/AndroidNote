@@ -1,7 +1,11 @@
 package com.xht.androidnote.module.bitmap;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.LruCache;
+import android.widget.ImageView;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -10,11 +14,16 @@ import com.xht.androidnote.utils.L;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import butterknife.BindView;
+
 /**
  * Created by xht on 2018/7/10.
  */
 
 public class BitmapActivity extends BaseActivity {
+    @BindView(R.id.iv_bitmap_round_test)
+    ImageView ivBitmapRoundTest;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bitmap;
@@ -24,6 +33,20 @@ public class BitmapActivity extends BaseActivity {
     protected void initEventAndData() {
 
 
+        test();
+
+        testRoundCorner();
+    }
+
+    private void testRoundCorner() {
+        RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(getResources(), BitmapFactory.decodeResource(getResources(), R.mipmap.video_cover));
+
+        roundedDrawable.getPaint().setAntiAlias(true);
+        roundedDrawable.setCornerRadius(30);
+        ivBitmapRoundTest.setImageDrawable(roundedDrawable);
+    }
+
+    private void test() {
         int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
         int cacheSize = maxMemory / 8;
         LruCache<String, Bitmap> memoryCache = new LruCache<String, Bitmap>(cacheSize) {
@@ -53,4 +76,5 @@ public class BitmapActivity extends BaseActivity {
             L.i(entry.getKey() + "：" + entry.getValue());
         }
     }
+
 }
