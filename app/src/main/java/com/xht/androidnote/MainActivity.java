@@ -9,6 +9,7 @@ import android.view.View;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
 import com.xht.androidnote.module.animation.AnimationActivity;
+import com.xht.androidnote.module.annotation.AnnotationActivity;
 import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
@@ -65,9 +66,12 @@ public class MainActivity extends BaseActivity {
             R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit,
             R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
-            R.id.btn_icon_replace, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy, R.id.btn_recyclerview})
+            R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy, R.id.btn_recyclerview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_annotation:
+                skip2Activity(AnnotationActivity.class);
+                break;
             case R.id.btn_rxjava:
                 skip2Activity(RxJavaActivity.class);
                 break;

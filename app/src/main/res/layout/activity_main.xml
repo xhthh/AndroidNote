@@ -124,6 +124,12 @@
             android:text="Java" />
 
         <Button
+            android:id="@+id/btn_annotation"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="Annotation" />
+
+        <Button
             android:id="@+id/btn_thread"
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"

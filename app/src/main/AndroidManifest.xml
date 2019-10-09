@@ -161,6 +161,7 @@
         <activity android:name=".module.eventbus.EventBusAnotherActivity" />
         <activity android:name=".module.thread.ThreadTestActivity" />
         <activity android:name=".module.thread.executor.ExecutorActivity" />
+        <activity android:name=".module.annotation.AnnotationActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
