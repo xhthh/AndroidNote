@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.annotation;
 
+import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Button;
@@ -34,6 +35,9 @@ public class AnnotationActivity extends BaseActivity {
         //testMethod();
 
         test(null);
+
+
+        test2("foo bar");
     }
 
     /**
@@ -49,6 +53,11 @@ public class AnnotationActivity extends BaseActivity {
                 Log.i("xht", "testMethod()---id==" + id);
             }
         }
+    }
+
+    @CheckResult
+    private String test2(@NonNull String parameter) {
+        return parameter.replace(" ","-");
     }
 
     private void test(@NonNull String str) {
