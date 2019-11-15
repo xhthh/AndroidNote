@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.MessageQueue;
+import android.util.Log;
 import android.view.View;
 
 import com.xht.androidnote.R;
@@ -244,6 +246,21 @@ public class HandlerActivity extends BaseActivity {
                 break;
 
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i("xht","HandlerActivity---onResume()");
+
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                Log.i("xht","HandlerActivity---queueIdle()");
+                return false;
+            }
+        });
     }
 
 
