@@ -7,7 +7,7 @@ import java.util.Stack;
 /**
  * Created by xht on 2019/12/30.
  */
-public class MyBinaryTreeTraversal {
+public class MyTraversal {
 
     public static void main(String[] args) {
         LinkedList<Integer> inputList = new LinkedList<>(Arrays.asList(new Integer[]{3, 2, 9,
@@ -15,15 +15,34 @@ public class MyBinaryTreeTraversal {
 
         TreeNode node = createBinaryTree(inputList);
 
-        preOrderTraversalWithStack(node);
+        //        preOrderTraversalWithStack(node);
+        //
+        //        System.out.println("\n");
+        //
+        //        preOrderTraversal(node);
+        //        System.out.println("\n");
+        //
+        //
+        //        inOrderTraversal(node);
+        //        System.out.println("\n");
+        //
+        //
+        //
+        //
+        //        postOrderTraversal(node);
+
+        //        inOrderTraversal(node);
+        //
+        //        System.out.println("\n");
+        //
+        //        inOrderTraversalWithStack(node);
+
+        postOrderTraversal(node);
 
         System.out.println("\n");
 
-        preOrderTraveral(node);
-        System.out.println("\n");
-        inOrderTraveral(node);
-        System.out.println("\n");
-        postOrderTraveral(node);
+        postOrderTraversalWithStack(node);
+
     }
 
 
@@ -65,22 +84,61 @@ public class MyBinaryTreeTraversal {
      * <p>
      * 输出顺序是，左子树、右子树、根节点
      * <p>
-     *                  3
-     *              2			8
-     *          9	    10			4
+     * 3
+     * 2			8
+     * 9	    10			4
      * <p>
      * 9 10 2 4 8 3
      *
      * @param node
      */
-    public static void postOrderTraveral(TreeNode node) {
+    public static void postOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
         }
 
-        postOrderTraveral(node.leftChild);
-        postOrderTraveral(node.rightChild);
+        postOrderTraversal(node.leftChild);
+        postOrderTraversal(node.rightChild);
         System.out.print(node.data + " ");
+    }
+
+
+    /**
+     *
+     *                  3
+     *           2			8
+     *       9	    10			4
+     * @param root
+     */
+    public static void postOrderTraversalWithStack(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+
+        Stack<TreeNode> output = new Stack<>();
+
+        TreeNode treeNode = root;
+
+        //3     3、8     3、8、4       3、8         3          2            2、10                2                   9
+        //3     3、8     3、8、4       3、8、4      3、8、4    3、8、4、2     3、8、4、2、10      3、8、4、2、10       3、8、4、2、10、9
+
+        //
+        //3、8、4、2、10、9  跳出循环
+
+        while (treeNode != null || !stack.isEmpty()) {
+            if (treeNode != null) {
+                output.push(treeNode);
+                stack.push(treeNode);
+                treeNode = treeNode.rightChild;
+            } else {
+                treeNode = stack.pop();
+                treeNode = treeNode.leftChild;
+            }
+        }
+
+        while (!output.isEmpty()) {
+            System.out.print(output.pop().data + " ");
+        }
+
+
     }
 
 
@@ -96,16 +154,50 @@ public class MyBinaryTreeTraversal {
      *
      * @param node
      */
-    public static void inOrderTraveral(TreeNode node) {
+    public static void inOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
         }
 
-        inOrderTraveral(node.leftChild);
+        inOrderTraversal(node.leftChild);
 
         System.out.print(node.data + " ");
 
-        inOrderTraveral(node.rightChild);
+        inOrderTraversal(node.rightChild);
+    }
+
+    /**
+     * 3
+     * 2			8
+     * 9	    10			4
+     *
+     * @param root
+     */
+    public static void inOrderTraversalWithStack(TreeNode root) {
+
+        Stack<TreeNode> stack = new Stack<>();
+
+        TreeNode treeNode = root;
+
+        while (treeNode != null || !stack.isEmpty()) {
+
+            //3
+            //3、2
+            //3、2、9
+
+            while (treeNode != null) {
+                stack.push(treeNode);
+                treeNode = treeNode.leftChild;
+            }
+
+            if (!stack.isEmpty()) {
+                treeNode = stack.pop();
+                System.out.print(treeNode.data + " ");
+                treeNode = treeNode.rightChild;
+            }
+        }
+
+
     }
 
 
@@ -122,22 +214,25 @@ public class MyBinaryTreeTraversal {
      *
      * @param node
      */
-    public static void preOrderTraveral(TreeNode node) {
+    public static void preOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
         }
 
         System.out.print(node.data + " ");
 
-        preOrderTraveral(node.leftChild);
-        preOrderTraveral(node.rightChild);
+        preOrderTraversal(node.leftChild);
+        preOrderTraversal(node.rightChild);
     }
 
 
     /**
-     *                3
-     *           2			8
-     *       9	    10			4
+     * 3
+     * 2			8
+     * 9	    10			4
+     * <p>
+     * 3、2、9、10、8、4
+     *
      * @param root
      */
     public static void preOrderTraversalWithStack(TreeNode root) {
