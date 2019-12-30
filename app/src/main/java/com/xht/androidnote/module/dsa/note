@@ -1,0 +1,92 @@
+
+
+				3
+          2			8
+      9	    10			4
+
+
+1、data = 3			node = 3	执行递归left1
+
+2、data = 2			node = 2	执行递归left2
+
+3、data = 9			node = 9	执行递归left3
+
+4、data = null		return node.data = null
+
+5、递归left3的返回值	null，		node.data=9  ←  leftChild=null
+
+6、执行node.rightChild	执行递归right4	此时 inputList = {null, 10, null, null, 8, null, 4}
+
+7、data = null		return node.data = null
+
+8、递归right4的返回值	node.data=9  →  rightChild=null		return node.data = 9
+
+9、递归left2的返回值	node.data=2  ←  leftChild=9
+
+10、执行递归right5	此时｛10, null, null, 8, null, 4｝
+
+11、data = 10	node = 10
+
+12、执行递归left6	｛null, null, 8, null, 4｝
+
+13、data = null	return node.data = null
+
+14、递归left6的返回值	node.data=10  ←  leftChild=null
+
+15、执行递归right7	｛null, 8, null, 4｝
+
+16、data = null return node.data = null
+
+17、node.data=10  →  rightChild=null	return node.data = 10
+
+18、递归left7的返回值	node.data=2  →  rightChild=10
+
+19、递归left1的返回值	return node.data = 2
+
+20、node.data=3  ←  leftChild=2
+
+
+21、执行递归right8		｛8, null, 4｝
+
+22、data = 8	node = 8
+
+23、｛null, 4｝	执行递归left9
+
+24、data = null，return node.data = null
+
+25、递归left9返回值	node.data=8  ←  leftChild=null
+
+26、｛4｝	执行递归right10
+
+27、data = 4	node = 4
+
+28、此时inputList为｛｝	return null
+	node.data=4  ←  leftChild=null
+	node.data=4  →  rightChild=null
+	return node.data = 4
+
+
+29、递归right8返回值	node.data=8  →  rightChild=4
+	return node.data = 8
+
+30、递归left1的返回值
+	node.data=3  →  rightChild=8
+	return node.data = 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

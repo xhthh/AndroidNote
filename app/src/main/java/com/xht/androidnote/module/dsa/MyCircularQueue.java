@@ -1,5 +1,10 @@
 package com.xht.androidnote.module.dsa;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+
+import java.util.Objects;
+
 /**
  * Created by xht on 2019/12/26.
  * 循环队列
@@ -49,8 +54,9 @@ public class MyCircularQueue {
         System.out.println("\n");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static void main(String[] args) throws Exception {
-        MyCircularQueue myQueue = new MyCircularQueue(6);
+        /*MyCircularQueue myQueue = new MyCircularQueue(6);
 
         myQueue.enQueue(3);
         myQueue.enQueue(5);
@@ -71,7 +77,11 @@ public class MyCircularQueue {
 
         myQueue.enQueue(4);
         myQueue.enQueue(9);
-        myQueue.output();
+        myQueue.output();*/
+
+        int key = Objects.hashCode("this");
+
+        System.out.println("key=" + key);
     }
 
 }
