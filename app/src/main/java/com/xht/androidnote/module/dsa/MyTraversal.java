@@ -79,20 +79,17 @@ public class MyTraversal {
     }
 
 
-    /**
-     * 后序遍历
-     * <p>
-     * 输出顺序是，左子树、右子树、根节点
-     * <p>
-     * 3
-     * 2			8
-     * 9	    10			4
-     * <p>
-     * 9 10 2 4 8 3
-     *
-     * @param node
-     */
+    /*
+        后序遍历
+        输出顺序是，左子树、右子树、根节点
+               3
+           2		8
+        9	  10		4
+
+        9 10 2 4 8 3
+    */
     public static void postOrderTraversal(TreeNode node) {
+
         if (node == null) {
             return;
         }
@@ -103,13 +100,15 @@ public class MyTraversal {
     }
 
 
-    /**
-     *
-     *                  3
-     *           2			8
-     *       9	    10			4
-     * @param root
-     */
+    /*
+        后序遍历
+        输出顺序是，左子树、右子树、根节点
+               3
+           2		8
+        9	  10		4
+
+        9 10 2 4 8 3
+    */
     public static void postOrderTraversalWithStack(TreeNode root) {
         Stack<TreeNode> stack = new Stack<>();
 
@@ -117,8 +116,10 @@ public class MyTraversal {
 
         TreeNode treeNode = root;
 
-        //3  3、8     3、8、4       3、8      3          2            2、10               2                   9
-        //3  3、8     3、8、4       3、8、4   3、8、4    3、8、4、2    3、8、4、2、10      3、8、4、2、10       3、8、4、2、10、9
+        //3  3、8     3、8、4       3、8      3          2            2、10               2
+        // 9
+        //3  3、8     3、8、4       3、8、4   3、8、4    3、8、4、2    3、8、4、2、10      3、8、4、2、10
+        // 3、8、4、2、10、9
 
         //null
         //3、8、4、2、10、9  跳出循环
@@ -142,18 +143,15 @@ public class MyTraversal {
     }
 
 
-    /**
-     * 中序遍历
-     * 输出顺序为左子树、根节点、右子树
-     * <p>
-     * 3
-     * 2			8
-     * 9	    10			4
-     * <p>
-     * 9 2 10 3 8 4
-     *
-     * @param node
-     */
+    /*
+        中序遍历
+        输出顺序是：左子树、根节点、右子树
+               3
+           2		8
+        9	  10		4
+
+        9 2 10 3 8 4
+    */
     public static void inOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
@@ -166,13 +164,15 @@ public class MyTraversal {
         inOrderTraversal(node.rightChild);
     }
 
-    /**
-     * 3
-     * 2			8
-     * 9	    10			4
-     *
-     * @param root
-     */
+    /*
+        中序遍历
+        输出顺序是：左子树、根节点、右子树
+               3
+           2		8
+        9	  10		4
+
+        9 2 10 3 8 4
+    */
     public static void inOrderTraversalWithStack(TreeNode root) {
 
         Stack<TreeNode> stack = new Stack<>();
@@ -200,20 +200,15 @@ public class MyTraversal {
 
     }
 
+    /*
+        前序遍历
+        输出顺序是：根节点、左子树、右子树
+               3
+           2		8
+        9	  10		4
 
-    /**
-     * 前序遍历
-     * 输出顺序为根节点、左子树、右子树
-     * <p>
-     * 3
-     * 2			8
-     * 9	    10			4
-     *
-     * <p>
-     * 3、2、9、10、8、4
-     *
-     * @param node
-     */
+        3、2、9、10、8、4
+    */
     public static void preOrderTraversal(TreeNode node) {
         if (node == null) {
             return;
@@ -226,15 +221,15 @@ public class MyTraversal {
     }
 
 
-    /**
-     * 3
-     * 2			8
-     * 9	    10			4
-     * <p>
-     * 3、2、9、10、8、4
-     *
-     * @param root
-     */
+    /*
+        前序遍历
+        输出顺序是：根节点、左子树、右子树
+               3
+           2		8
+        9	  10		4
+
+        3、2、9、10、8、4
+    */
     public static void preOrderTraversalWithStack(TreeNode root) {
         Stack<TreeNode> stack = new Stack<>();
 
