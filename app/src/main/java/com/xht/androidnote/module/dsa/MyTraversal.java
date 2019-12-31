@@ -2,6 +2,7 @@ package com.xht.androidnote.module.dsa;
 
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Stack;
 
 /**
@@ -250,6 +251,37 @@ public class MyTraversal {
                 treeNode = treeNode.rightChild;
             }
         }
+    }
+
+    /*
+        层序遍历
+               3
+           2		8
+        9	  10		4
+
+        3、2、8、9、10、4
+    */
+    public static void levelOrderTraversal(TreeNode root) {
+        //3     2、8     8、9、10      9、10、4
+
+        Queue<TreeNode> queue = new LinkedList<>();
+
+        queue.offer(root);
+
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            System.out.println(node.data + " ");
+
+            if (node.leftChild != null) {
+                queue.offer(node.leftChild);
+            }
+
+            if (node.rightChild != null) {
+                queue.offer(node.rightChild);
+            }
+        }
+
+
     }
 
 
