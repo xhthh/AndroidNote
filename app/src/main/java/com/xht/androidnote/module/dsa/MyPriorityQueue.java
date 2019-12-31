@@ -14,19 +14,36 @@ public class MyPriorityQueue {
 
     public MyPriorityQueue() {
         //队列初始长度为32
-        array = new int[32];
+        array = new int[8];
     }
 
 
     /*
-                             1
-                       3             2
-                  6        5     7        8
-                9   10  0
+        [3，5，10，2，7]
+
+        3                                        [3]
+
+
+                    3               5
+        3、5      5      =>       3              [5, 3]
+
+                        5               10
+        5、3、10      3   10     =》   3   5     [10, 3, 5]
+
+
+                            10
+        10、3、5、2       3     5                [10, 3, 5, 2]
+                       2
+
+
+                                    10                              10
+        10、3、5、2、7           3        5     =》          7               5
+                              2    7                    2       3
+
      */
     public void upAdjust() {
         int childIndex = size - 1;
-        int parentIndex = 2 * childIndex + 1;
+        int parentIndex = (childIndex - 1) / 2;
 
         // temp 保存插入的叶子节点值，用于最后的赋值
         int temp = array[childIndex];
@@ -105,12 +122,17 @@ public class MyPriorityQueue {
         MyPriorityQueue priorityQueue = new MyPriorityQueue();
 
         priorityQueue.enQueue(3);
+        System.out.println(Arrays.toString(priorityQueue.array));
         priorityQueue.enQueue(5);
+        System.out.println(Arrays.toString(priorityQueue.array));
         priorityQueue.enQueue(10);
+        System.out.println(Arrays.toString(priorityQueue.array));
         priorityQueue.enQueue(2);
+        System.out.println(Arrays.toString(priorityQueue.array));
         priorityQueue.enQueue(7);
+        System.out.println(Arrays.toString(priorityQueue.array));
 
-
+        System.out.println();
 
         System.out.println(" 出队元素：" + priorityQueue.deQueue());
         System.out.println(" 出队元素：" + priorityQueue.deQueue());
