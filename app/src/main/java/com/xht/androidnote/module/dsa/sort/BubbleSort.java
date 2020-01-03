@@ -5,17 +5,17 @@ import java.util.Arrays;
 /**
  * Created by xht on 2020/1/2.
  */
-public class Test {
+public class BubbleSort {
 
 
     public static void main(String[] args) {
-        Test test = new Test();
+        BubbleSort bubbleSort = new BubbleSort();
 
         /*int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
 
         System.out.println(Arrays.toString(array) + "\n");
 
-        test.test1(array);
+        bubbleSort.test1(array);
 
         System.out.println(Arrays.toString(array));*/
 
@@ -23,7 +23,7 @@ public class Test {
         int[] array = new int[]{2, 3, 4, 5, 6, 7, 8, 1};
 
         System.out.println(Arrays.toString(array) + "\n");
-        test.tes4(array);
+        bubbleSort.tes4(array);
         System.out.println(Arrays.toString(array) + "\n");
 
 
@@ -156,17 +156,12 @@ public class Test {
                     //因为有元素进行交换，所以不是有序的，标记变为false
                     isSorted = false;
                 }
-
             }
 
             if (isSorted) {
                 break;
             }
         }
-
     }
-    //测试stash
-
-
 
 }
