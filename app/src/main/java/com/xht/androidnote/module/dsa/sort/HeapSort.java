@@ -5,16 +5,16 @@ import java.util.Arrays;
 /**
  * Created by xht on 2020/1/7.
  */
-public class Test {
+public class HeapSort {
 
     public static void main(String[] args) {
-        Test test = new Test();
+        HeapSort heapSort = new HeapSort();
         int[] arr = new int[]{1, 3, 2, 6, 5, 7, 8, 9, 10, 0};
 
         System.out.println(Arrays.toString(arr) + "\n");
 
         //        test.test1(arr);
-        test.test2(arr);
+        heapSort.test2(arr);
 
         System.out.println(Arrays.toString(arr));
     }
