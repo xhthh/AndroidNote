@@ -8,18 +8,18 @@ import java.util.Stack;
 /**
  * Created by xht on 2020/1/3.
  */
-public class Test {
+public class QuickSort {
 
 
     public static void main(String[] args) {
-        Test test = new Test();
+        QuickSort quickSort = new QuickSort();
 
         int[] arr = new int[]{4, 4, 6, 5, 3, 2, 8, 1};
 
         System.out.println(Arrays.toString(arr) + "\n");
-        //        test.test1(arr, 0, arr.length - 1);
-        //        test.test2(arr, 0, arr.length - 1);
-        test.test3(arr, 0, arr.length - 1);
+        //        quickSort.test1(arr, 0, arr.length - 1);
+        //        quickSort.test2(arr, 0, arr.length - 1);
+        quickSort.test3(arr, 0, arr.length - 1);
         System.out.println(Arrays.toString(arr));
 
     }
@@ -38,7 +38,7 @@ public class Test {
         }
 
         //得到基准元素位置
-        int pivotIndex = partition(array, startIndex, endIndex);
+        int pivotIndex = partition1(array, startIndex, endIndex);
 
         System.out.println("pivotIndex=" + pivotIndex + "  " + Arrays.toString(array) + "\n");
 
@@ -56,7 +56,7 @@ public class Test {
 
 
      */
-    private int partition(int[] array, int startIndex, int endIndex) {
+    private int partition1(int[] array, int startIndex, int endIndex) {
         //取第1个位置（也可以选择随机位置）的元素作为基准元素
         int pivot = array[startIndex];
 
@@ -123,6 +123,12 @@ public class Test {
     }
 
 
+    /**
+     * 非递归实现
+     * @param array
+     * @param startIndex
+     * @param endIndex
+     */
     public void test3(int[] array, int startIndex, int endIndex) {
         //用一个集合栈来代替递归的函数栈
         Stack<Map<String, Integer>> quickSortStack = new Stack<>();
