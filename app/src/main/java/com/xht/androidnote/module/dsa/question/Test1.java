@@ -5,6 +5,8 @@ import com.xht.androidnote.module.dsa.Node;
 
 /**
  * Created by xht on 2020/1/7.
+ *
+ * 判断一个链表是否有环？环的长度？入环点
  */
 public class Test1 {
 

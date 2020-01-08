@@ -2,6 +2,9 @@ package com.xht.androidnote.module.dsa.question;
 
 /**
  * Created by xht on 2020/1/8.
+ *
+ * 求最大公约数、判断一个数是否为2的整数次幂
+ *
  */
 public class Test3 {
 
