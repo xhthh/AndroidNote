@@ -6,14 +6,10 @@ import com.xht.androidnote.module.dsa.Node;
 /**
  * Created by xht on 2020/1/7.
  */
-public class Test {
+public class Test1 {
 
 
     public static void main(String[] args) {
-        test1();
-    }
-
-    private static void test1() {
         Node node1 = new Node(5);
         Node node2 = new Node(3);
         Node node3 = new Node(7);
@@ -68,10 +64,18 @@ public class Test {
     }
 
 
+    /**
+     * 第一次相遇肯定是在环上，因为p2步速是p1的2倍，那么第二次相遇肯定是第一次相遇的点上
+     *
+     * @param head
+     * @return
+     */
     public static int cycleLength(Node head) {
 
         Node p1 = head;
         Node p2 = head;
+        int v1 = 1;
+        int v2 = 2;
 
         int length = 0;
 
@@ -80,6 +84,7 @@ public class Test {
             p2 = p2.next.next;
 
             if (p1 == p2) {
+                System.out.println("第一次相遇 data=" + p1.data);
                 while (true) {
                     p1 = p1.next;
                     p2 = p2.next.next;
@@ -87,7 +92,8 @@ public class Test {
                     length++;
 
                     if (p1 == p2) {
-                        return length;
+                        System.out.println("第二次相遇 data=" + p2.data);
+                        return (v2 - v1) * length;
                     }
                 }
             }
@@ -97,6 +103,14 @@ public class Test {
     }
 
 
+    /**
+     * 从链表头结点到入环点的距离，等于从首次相遇点绕环n-1圈再回到入环点的距离。
+     * 这样一来，只要把其中一个指针放回到头节点位置，另一个指针保持在首次相遇点，两个指针都是每次向
+     * 前走1步。那么，它们最终相遇的节点，就是入环节点。
+     *
+     * @param head
+     * @return
+     */
     public static Node findPoint(Node head) {
 
         Node p1 = head;
@@ -105,7 +119,7 @@ public class Test {
         while (p2 != null && p2.next != null) {
 
             p1 = p1.next;
-            p2 = p2.next.next;
+            p2 = p2.next.next.next;
 
             if (p1 == p2) {
                 p1 = head;
