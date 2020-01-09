@@ -21,15 +21,12 @@ public class PriceWatcher implements TextWatcher {
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count,
                                   int after) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        // TODO Auto-generated method stub
         String editable = pedt.getText().toString();
-        String str = stringFilter(editable.toString());
+        String str = stringFilter(editable);
         if (!editable.equals(str)) {
             pedt.setText(str);
             pedt.setSelection(str.length());
@@ -38,14 +35,13 @@ public class PriceWatcher implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        // TODO Auto-generated method stub
 
     }
 
     public static String stringFilter(String str) throws PatternSyntaxException {
         //^(([1-9]\\d{0,5}\\.{1}\\d{0,1})|([1-9]\\d{0,5})|([0]{1}\\.{1}[1-9]{0,1})|([0]))$
 
-        // 只允许字母和数字
+
         String regEx = "^(([1-9]\\\\d{0,5}\\\\.{1}\\\\d{0,1})|([1-9]\\\\d{0,5})|([0]{1}\\\\" +
                 ".{1}[1-9]{0,1})|([0]))$";
         Pattern p = Pattern.compile(regEx);

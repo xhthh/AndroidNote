@@ -1,5 +1,7 @@
 package com.xht.androidnote.module.dsa.question;
 
+import java.util.Arrays;
+
 /**
  * Created by xht on 2020/1/8.
  */
@@ -71,12 +73,65 @@ public class Test4 {
     }
 
 
+    /**
+     * 缺点：如果最大值和最小值相差太大，则效率低
+     *
+     * @param array
+     * @return
+     */
+    public static int test2(int[] array) {
+        int max = array[0];
+        int min = array[0];
+
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+
+        int[] countArray = new int[max - min + 1];
+
+        for (int i = 0; i < array.length; i++) {
+            countArray[array[i] - min]++;
+        }
+
+        System.out.println("countArray=" + Arrays.toString(countArray));
+        //[1, 1, 1, 2, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+
+        int cont = 0;
+        int maxNum = 0;
+        for (int i = 0; i < countArray.length; i++) {
+            //判断0值最多连续出现的次数
+            if (countArray[i] == 0) {
+                cont++;
+                if (cont > maxNum) {
+                    maxNum = cont;
+                }
+            } else {
+                cont = 0;
+            }
+        }
+
+        return maxNum + 1;
+    }
+
 
     public static void main(String[] args) {
-        int[] array = new int[]{2, 6, 3, 4, 5, 10, 9};
+        int[] array = new int[]{2, 5, 3, 4, 5, 10, 105};
 
-        int maxDistance = test(array);
-        System.out.println("最大差值：" + maxDistance);
+
+
+
+        int maxDistance1 = test(array);
+        System.out.println("最大差值1：" + maxDistance1);
+
+        int maxDistance2 = test2(array);
+        System.out.println("最大差值2：" + maxDistance2);
+
+
     }
 
 
