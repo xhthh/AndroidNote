@@ -30,6 +30,7 @@ import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.thread.ThreadTestActivity;
+import com.xht.androidnote.module.view.edittext.EditTextActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 
 import butterknife.OnClick;
@@ -64,11 +65,16 @@ public class MainActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_rxjava, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
-            R.id.btn_service, R.id.btn_broadcast_receiver, R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp, R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
+            R.id.btn_service, R.id.btn_broadcast_receiver, R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp,
+            R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
-            R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy, R.id.btn_recyclerview, R.id.btn_dsa})
+            R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
+            R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_edit_text:
+                skip2Activity(EditTextActivity.class);
+                break;
             case R.id.btn_dsa:
                 skip2Activity(DsaActivity.class);
                 break;

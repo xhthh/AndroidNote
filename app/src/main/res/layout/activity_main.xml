@@ -19,6 +19,10 @@
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"
             android:text="RecyclerView" />
+        <Button
+            android:id="@+id/btn_edit_text"
+            style="@style/btnStyle"
+            android:text="EditText" />
 
         <Button
             android:id="@+id/btn_test_pickerview"
