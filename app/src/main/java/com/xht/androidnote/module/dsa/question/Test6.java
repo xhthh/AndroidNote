@@ -11,24 +11,29 @@ public class Test6 {
 
     public static int[] findNearestNumber(int[] numbers) {
 
+        //1、从后向前查看逆序区域，找到逆序区域的前一位，也就是数字置换的边界
         int index = findTransferPoint(numbers);
 
-
+        //如果数字置换边界是0，说明整个数组已经逆序，无法得到更大的相同数字组成的整数，返回null
         if (index == 0) {//已经逆序
             return null;
         }
 
+        //2、把逆序区域的前一位和逆序区域中刚刚大于它的数字交换位置
+        //复制并入参，避免直接修改入参
         int[] numbersCopy = Arrays.copyOf(numbers, numbers.length);
 
         exchangeHead(numbersCopy, index);
 
+        //3、把原来的逆序区域转为顺序
         reverse(numbersCopy, index);
 
         return numbersCopy;
     }
 
     private static void reverse(int[] numbers, int index) {
-        //12453
+        //将逆序区域转为顺序
+        //12453 =》12435
         for (int i = index, j = numbers.length - 1; i < j; i++, j--) {
             int temp = numbers[i];
             numbers[i] = numbers[j];
@@ -38,8 +43,10 @@ public class Test6 {
 
     private static void exchangeHead(int[] numbers, int index) {
         //12354
+        //逆序区域的前一位
         int head = numbers[index - 1];
 
+        //从后往前遍历，找出第一个大于head的值，进行交换，然后跳出循环
         for (int i = numbers.length - 1; i > 0; i--) {
             if (head < numbers[i]) {
                 numbers[index - 1] = numbers[i];
