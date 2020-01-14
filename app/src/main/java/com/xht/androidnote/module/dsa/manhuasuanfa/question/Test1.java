@@ -1,7 +1,7 @@
-package com.xht.androidnote.module.dsa.question;
+package com.xht.androidnote.module.dsa.manhuasuanfa.question;
 
 
-import com.xht.androidnote.module.dsa.Node;
+import com.xht.androidnote.module.dsa.manhuasuanfa.Node;
 
 /**
  * Created by xht on 2020/1/7.

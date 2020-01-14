@@ -1,4 +1,4 @@
-package com.xht.androidnote.module.dsa;
+package com.xht.androidnote.module.dsa.manhuasuanfa;
 
 /**
  * Created by xht on 2019/12/24.

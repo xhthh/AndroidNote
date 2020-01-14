@@ -1,4 +1,4 @@
-package com.xht.androidnote.module.dsa;
+package com.xht.androidnote.module.dsa.manhuasuanfa;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;

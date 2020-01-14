@@ -14,7 +14,7 @@ import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
-import com.xht.androidnote.module.dsa.DsaActivity;
+import com.xht.androidnote.module.dsa.manhuasuanfa.DsaActivity;
 import com.xht.androidnote.module.eventbus.EventBusActivity;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
 import com.xht.androidnote.module.fragment.FragmentTestActivity;
