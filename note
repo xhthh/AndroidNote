@@ -1,0 +1,10 @@
+2020年1月20日 11:19:47
+之前好好的，突然编译运行失败
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Could not resolve all files for configuration ':annotations_processor:compileClasspath'.
+> Could not download guava.jar (com.google.guava:guava:18.0)
+   > Could not get resource 'http://jcenter.bintray.com/com/google/guava/guava/18.0/guava-18.0.jar'.
+      > Could not GET 'http://jcenter.bintray.com/com/google/guava/guava/18.0/guava-18.0.jar'. Received status code 403 from server: Forbidden

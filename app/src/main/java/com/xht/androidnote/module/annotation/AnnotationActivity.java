@@ -3,13 +3,11 @@ package com.xht.androidnote.module.annotation;
 import android.support.annotation.CheckResult;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.widget.Button;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.annotation.test.Animal;
 import com.xht.androidnote.module.annotation.test.Test;
-import com.xht.annotations.BindView;
 
 import java.lang.reflect.Field;
 
@@ -18,8 +16,8 @@ import java.lang.reflect.Field;
  */
 public class AnnotationActivity extends BaseActivity {
 
-    @BindView(id = R.id.btn_1)
-    Button btn1;
+//    @BindView(id = R.id.btn_1)
+//    Button btn1;
 
     @Override
     protected int getLayoutId() {
@@ -29,15 +27,13 @@ public class AnnotationActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
 
-        Bind_AnnotationActivity.bindView(this);
-        btn1.setText("btnTest1");
+//        Bind_AnnotationActivity.bindView(this);
+//        btn1.setText("btnTest1");
 
         //testMethod();
 
-        test(null);
-
-
-        test2("foo bar");
+//        test(null);
+//        test2("foo bar");
     }
 
     /**

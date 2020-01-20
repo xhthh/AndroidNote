@@ -44,7 +44,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
     implementation "com.android.support:appcompat-v7:${SUPPORT_LIBRARY_VERSION}"
+    //noinspection GradleCompatible
     implementation "com.android.support:design:${SUPPORT_LIBRARY_VERSION}"
 
     //implementation 'com.android.support:multidex:1.0.1'
@@ -76,7 +78,7 @@ dependencies {
 
 
     //注解
-    implementation project(':annotations')
-    annotationProcessor project(':annotations_processor')
+    //implementation project(':annotations')
+    //annotationProcessor project(':annotations_processor')
 
 }
