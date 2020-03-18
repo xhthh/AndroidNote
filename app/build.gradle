@@ -74,7 +74,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     // 权限
-    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    //implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
 
 
     //注解

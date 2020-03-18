@@ -5,8 +5,9 @@ buildscript {
 
     repositories {
         jcenter(){url 'http://jcenter.bintray.com/'}
-        mavenCentral()
+//        mavenCentral()
         google()
+        jcenter()
     }
     //gradle需要的插件
     dependencies {
@@ -23,7 +24,8 @@ allprojects {
     repositories {
         jcenter(){url 'http://jcenter.bintray.com/'}
         google()
-        maven { url "https://jitpack.io" }
+//        maven { url "https://jitpack.io" }
+        jcenter()
     }
 }
 
