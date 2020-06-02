@@ -146,7 +146,9 @@
         <activity android:name=".module.thread.ThreadTestActivity" />
         <activity android:name=".module.thread.executor.ExecutorActivity" />
         <activity android:name=".module.annotation.AnnotationActivity" />
-        <activity android:name=".module.view.edittext.EditTextActivity" />
+        <activity
+            android:name=".module.view.edittext.EditTextActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
