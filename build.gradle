@@ -4,6 +4,7 @@
 buildscript {
 
     repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         jcenter(){url 'http://jcenter.bintray.com/'}
 //        mavenCentral()
         google()
@@ -22,6 +23,7 @@ buildscript {
 //项目中所有modules需要使用的，仓库和依赖，不过依赖写在每个module自身中的build.gradle，如果有共同的依赖可以写在此处的dependencies中
 allprojects {
     repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
         jcenter(){url 'http://jcenter.bintray.com/'}
         google()
 //        maven { url "https://jitpack.io" }
