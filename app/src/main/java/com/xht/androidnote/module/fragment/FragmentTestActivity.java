@@ -23,9 +23,12 @@ public class FragmentTestActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_fragment_navigation, R.id.btn_fragment_back_stack, R.id
-            .btn_fragment_viewpager})
+            .btn_fragment_viewpager,R.id.btn_fragment_life_cycle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_fragment_life_cycle:
+                skip2Activity(TestLifeCycleActivity.class);
+                break;
             case R.id.btn_fragment_navigation:
                 skip2Activity(FragmentNavigationActivity.class);
                 break;

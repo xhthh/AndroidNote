@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 ext {
     SUPPORT_LIBRARY_VERSION = '27.1.1'
@@ -72,6 +74,7 @@ dependencies {
 
     // EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // 权限
     //implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
@@ -81,4 +84,7 @@ dependencies {
     //implementation project(':annotations')
     //annotationProcessor project(':annotations_processor')
 
+}
+repositories {
+    mavenCentral()
 }

@@ -19,4 +19,9 @@
         style="@style/btnStyle"
         android:text="回退栈" />
 
+    <Button
+        android:id="@+id/btn_fragment_life_cycle"
+        style="@style/btnStyle"
+        android:text="Activity/Fragment 生命周期" />
+
 </LinearLayout>
