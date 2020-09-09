@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
@@ -14,6 +16,7 @@ import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
 import com.xht.androidnote.module.contentprovider.ContentProviderActivity;
+import com.xht.androidnote.module.customview.CustomViewActivity;
 import com.xht.androidnote.module.dsa.manhuasuanfa.DsaActivity;
 import com.xht.androidnote.module.eventbus.EventBusActivity;
 import com.xht.androidnote.module.eventdispatch.EventDispatchActivity;
@@ -33,6 +36,7 @@ import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -53,6 +57,10 @@ public class MainActivity extends BaseActivity {
 
     private static final String ACTIVITY_ALIAS_1 = "com.xht.androidnote.MainActivity_rect";
     private static final String ACTIVITY_ALIAS_2 = "com.xht.androidnote.MainActivity_circle";
+    @BindView(R.id.ll_content)
+    LinearLayout llContent;
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
 
     @Override
     protected int getLayoutId() {
@@ -62,9 +70,20 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
 
+
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                int height = scrollView.getHeight();
+                int measuredHeight = scrollView.getMeasuredHeight();
+
+                Log.i("xht", "height=" + height + "  measuredHeight=" + measuredHeight);
+                Log.i("xht", "height2=" + llContent.getHeight() + "  measuredHeight1=" + llContent.getMeasuredHeight());
+            }
+        });
     }
 
-    @OnClick({R.id.btn_rxjava, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
+    @OnClick({R.id.btn_rxjava, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
             R.id.btn_service, R.id.btn_broadcast_receiver, R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp,
             R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
@@ -72,6 +91,9 @@ public class MainActivity extends BaseActivity {
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_event_custom_view:
+                skip2Activity(CustomViewActivity.class);
+                break;
             case R.id.btn_edit_text:
                 skip2Activity(EditTextActivity.class);
                 break;
@@ -195,6 +217,4 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
-
-
 }

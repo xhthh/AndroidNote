@@ -31,4 +31,17 @@
         android:layout_height="wrap_content"
         android:text="IntentService"
         android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_handler_test"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试熄屏后能否执行方法"
+        android:textAllCaps="false" />
+
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="测试熄屏" />
 </LinearLayout>

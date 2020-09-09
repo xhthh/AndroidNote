@@ -27,18 +27,31 @@ public class MyView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 L.i("View---dispatchTouchEvent()---DOWN");
+                //                return true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 L.i("View---dispatchTouchEvent()---MOVE");
                 break;
+            //            return true;
+
             case MotionEvent.ACTION_UP:
                 L.i("View---dispatchTouchEvent()---UP");
                 break;
+            case MotionEvent.ACTION_CANCEL:
+                L.i("View---dispatchTouchEvent()---CANCEL");
+                break;
         }
-//        return super.dispatchTouchEvent(event);
-                return false;
-        //        return true;
+                return super.dispatchTouchEvent(event);
+        //        return true;//父view和子view的事件都会走到，不会走子view的onTouchEvent()，如果需要两个都处理，可以在这里返回true
+//        return false;//如果返回false，子view不会接收到其它事件，父view也只能接收到DOWN事件，
+        // 因为父view的dispatchTransformedTouchEvent()的返回值由子view的dispatchTouchEvent()决定，如果子view返回false，则不能对mFirstTouchTarget进行赋值
+        //如果mFirstTouchTarget为空，后续事件调用 dispatchTransformedTouchEvent()时，传入的view为null，就会调用父view的dispatchTouchEvent()
+
+        /*
+            如果子view的dispatchTouchEvent()返回true，则会对mFirstTouchTarget进行赋值，然后break跳出对子view的遍历循环。
+         */
     }
+
 
 
     @Override
@@ -46,6 +59,7 @@ public class MyView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 L.i("View---onTouchEvent()---DOWN");
+                //                return true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 L.i("View---onTouchEvent()---MOVE");
@@ -53,22 +67,17 @@ public class MyView extends View {
             case MotionEvent.ACTION_UP:
                 L.i("View---onTouchEvent()---UP");
                 break;
+            case MotionEvent.ACTION_CANCEL:
+                L.i("View---onTouchEvent()---CANCEL");
+                break;
         }
-        return super.onTouchEvent(event);
-//        return true;
-//        return false;
+//        return super.onTouchEvent(event);
+//                return true;
+                return false;
     }
+    /*
+        子view的onTouchEvent() return false
 
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        L.i("MyView---onMeasure()");
-    }
-
-    @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        L.i("MyView---onLayout()");
-    }
+        子view的onTouchEvent()接收DOWN事件，不再接收MOVE UP 事件，即如果不消耗，同一事件序列中，当前view无法再接收到事件
+     */
 }

@@ -21,10 +21,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -37,7 +39,7 @@ import okhttp3.Response;
 
 /**
  * Created by xht on 2018/4/23.
- *
+ * <p>
  * OkHttp的基本使用
  */
 
@@ -102,10 +104,45 @@ public class OkHttpActivity extends BaseActivity {
         }
     }
 
-    private void cacheTest() {
+
+    private void cacheTest2() {
+        final CacheControl.Builder builder = new CacheControl.Builder();
+        builder.maxAge(100, TimeUnit.MILLISECONDS); // 设置缓存的最大有效时间为100毫秒
+        CacheControl cache = builder.build();
+        final Request request = new Request.Builder().cacheControl(cache).url("requestUrl").build();
+
         OkHttpClient client = new OkHttpClient()
                 .newBuilder()
-                .cache(new Cache(new File("cache"), 24 * 1024 * 1024))
+                .build();
+
+        final Call call = client.newCall(request);//
+
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+            }
+        });
+    }
+
+    private void cacheTest() {
+        //设置缓存文件夹
+        File file = new File(getExternalCacheDir().toString(), "cache");
+        //设置缓存大小
+        int cacheSize = 24 * 1024 * 1024;
+        //创建缓存对象
+        Cache cache = new Cache(file, cacheSize);
+
+        final CacheControl.Builder builder = new CacheControl.Builder();
+        builder.maxAge(100, TimeUnit.MILLISECONDS);//设置缓存最大有效时间
+
+
+        OkHttpClient client = new OkHttpClient()
+                .newBuilder()
+                .cache(cache)
                 .build();
 
         Request request = new Request

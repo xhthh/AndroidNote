@@ -9,6 +9,7 @@ import android.os.Message;
 import android.os.MessageQueue;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -23,7 +24,7 @@ import butterknife.OnClick;
  * 1、Handler源码
  * 2、子线程之间的通信
  * 3、HandlerThread
- *
+ * <p>
  * 4、Handler的延迟消息原理
  * 5、Looper的无限循环为何不会阻塞主线程
  */
@@ -64,11 +65,13 @@ public class HandlerActivity extends BaseActivity {
         }
     };
 
+
     private Handler handler1;
 
     private Handler handler2;
 
     private HandlerThread mHandlerThread;
+    private TextView tvResult;
 
 
     @Override
@@ -91,6 +94,23 @@ public class HandlerActivity extends BaseActivity {
                 return false;
             }
         });*/
+
+        tvResult = findViewById(R.id.tv_result);
+
+
+        Handler handlerCallbackTest = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message msg) {
+                if(msg.what == 233) {
+                    L.i("Handler CallBack 的使用");
+                }
+                return false;
+            }
+        });
+
+        handlerCallbackTest.sendEmptyMessageDelayed(233,3000);
+
+        handlerCallbackTest.handleMessage(null);
 
     }
 
@@ -229,7 +249,7 @@ public class HandlerActivity extends BaseActivity {
 
 
     @OnClick({R.id.btn_handler, R.id.btn_handler_thread, R.id.btn_handler_and_thread, R.id
-            .btn_handler_intent_service})
+            .btn_handler_intent_service, R.id.btn_handler_test})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_handler:
@@ -244,23 +264,37 @@ public class HandlerActivity extends BaseActivity {
             case R.id.btn_handler_intent_service:
                 intentServiceTest();
                 break;
-
+            case R.id.btn_handler_test:
+                MyHandler handler = new MyHandler(HandlerActivity.this);
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        tvResult.setText("熄屏后处理");
+                    }
+                }, 10000);
+                break;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+                Log.i("xht", "HandlerActivity---queueIdle()");
+                return false;
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        Log.i("xht","HandlerActivity---onResume()");
+        Log.i("xht", "HandlerActivity---onResume()");
 
-        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-            @Override
-            public boolean queueIdle() {
-                Log.i("xht","HandlerActivity---queueIdle()");
-                return false;
-            }
-        });
+
     }
 
 

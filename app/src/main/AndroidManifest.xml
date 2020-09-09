@@ -150,6 +150,7 @@
             android:name=".module.view.edittext.EditTextActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".module.fragment.TestLifeCycleActivity" />
+        <activity android:name=".module.customview.CustomViewActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

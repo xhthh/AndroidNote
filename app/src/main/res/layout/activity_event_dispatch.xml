@@ -4,30 +4,38 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.xht.androidnote.module.eventdispatch.MyViewGroup1
-        android:id="@+id/view_group_1"
+    <com.xht.androidnote.module.eventdispatch.MyViewGroup
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_centerInParent="true"
-        android:background="@android:color/holo_blue_bright">
-
-        <!--  <com.xht.androidnote.module.eventdispatch.MyViewGroup2
-              android:id="@+id/view_group_2"
-              android:layout_width="200dp"
-              android:layout_height="200dp"
-              android:layout_centerInParent="true"
-              android:background="@android:color/holo_orange_light">-->
+        android:background="@color/colorPrimary">
 
         <com.xht.androidnote.module.eventdispatch.MyView
-            android:id="@+id/view"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@color/colorAccent" />
+
+    </com.xht.androidnote.module.eventdispatch.MyViewGroup>
+
+
+    <com.xht.androidnote.module.eventdispatch.MyViewGroup
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@color/colorPrimary"
+        android:padding="30dp">
+
+        <com.xht.androidnote.module.eventdispatch.TestButton1
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:background="@android:color/darker_gray" />
+            android:background="#ff0000" />
 
-        <!--</com.xht.androidnote.module.eventdispatch.MyViewGroup2>-->
+        <com.xht.androidnote.module.eventdispatch.TestButton2
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="#ffff00" />
 
-    </com.xht.androidnote.module.eventdispatch.MyViewGroup1>
-
+    </com.xht.androidnote.module.eventdispatch.MyViewGroup>
 
 </LinearLayout>

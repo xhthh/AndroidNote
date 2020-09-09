@@ -1,0 +1,874 @@
+Android
+一、四大组件+Fragment
+    1.1 Activity
+    1、四种启动模式
+       ①主页面SingleTask，再次打开SingleTask，走哪些回调？
+        onNewIntent()
+       ②主页面为什么使用SingleTask的模式？
+        保证一个任务栈中只能有一份MainActivity，当然可以有其他Activity。如果其他Activity将其覆盖住了，
+        再次去启动MainActivity的时候，系统会杀死MainActivity上面所有的其他Activity。
+       ③在其它app投放一个广告，点击跳转自己的app怎么实现？
+        ComponentName指定包名和类名，通过intent，启动activity
+        通过包名跳转，具体类的话，在AndroidManifest中设置exported，暴露给外面
+
+        还需要在原App中也声明要打开的activity？
+
+    2、Application的context启动Activity会怎样？
+      使用Application和Service启动launchMode为standard的activity会报错，因为它们没有任务栈，需要为代启动的activity指定
+      FLAG_ACTIVITY_NEW_TASK，但此时Activity是以singleTask模式启动的。
+
+    3、Activity启动过程
+        ①Launcher请求AMS过程
+        ②AMS到ApplicationThread的调用过程
+        ③ActivityThread启动Activity
+
+        startActivity 主要就是应用进程与 system_server 进程的 AMS 通信，AMS 是实际来管理 Activity 组件的，
+        负责处理启动模式，维护 Activity 栈等工作。startActivity 的大概流程就是由应用进程 IPC 调用到 AMS，
+        AMS 处理完这些工作后再 IPC 回到应|用进程，创建 Activity 的实例，回调 Activity 的生命周期。
+
+        由Instrumentation处理，它通过Binder向AMS发请求，AMS内部维护着一个Activity栈并负责栈内的Activity的状态同步，
+        AMS通过ActivityThread去同步Activity的状态从而完成生命周期方法的调用。
+
+    4、A Activity 启动 B Activity 然后再返回，声明周期？A一定会走onStop()吗？
+      比如B是透明主题就不会
+      A onPause()会先走，在ActivityStack中代码
+
+      activity生命周期，下拉手机状态栏走生命周期吗
+      不走
+
+    5、onSaveInstanceState()什么时候会被调用
+      系统配置发生改变时导致Activity被杀死并重新创建、资源内存不足导致低优先级的Activity被杀死
+      系统会用onSaveInstanceState()来保存Activity的状态，调用时机在onStop()之后，
+
+      场景：
+          ①横竖屏切换
+          ②按home键返回，不管是返回桌面还是切到其它程序，都会走
+          ③熄屏
+          ④启动一个新的Activity时
+
+          onSaveInstanceState方法和onRestoreInstanceState方法“不一定”是成对的被调用的，
+          onRestoreInstanceState被调用的前提是，activity A“确实”被系统销毁了，而如果仅仅是停留在有这种可能性的情况下，则该方法不会被调用
+
+          比如②③④都不会走onRestoreInstanceState()
+
+
+    1.2 Service
+        1、service的生命周期
+            1、从生命周期来看
+            startService()会调用service的onCreate()、onStartCommand()，调用stopService()后就执行service的onDestroy()
+
+            bindService()则会调用service的onCreate()、onBind()，调用unBindService()后就执行service的onDestroy()
+
+            并且当service已经启动之后再次调用都不会执行onCreate()
+
+            2、从和调用者的生命周期的关系上看
+            startService()启动的service和调用者的生命周期没有关系，是独立的，调用者结束之后不会结束service，当调用者再次启动调用stopService()可以结束service
+
+            bindService()启动的service当调用者生命结束了，系统会自动调用unBindService()
+
+            当同时执行了启动和绑定同一个service时，则只有当以上两个条件都满足时service才会结束掉
+        2、Activity和Service数据交互
+              ①Binder
+
+              在MyService中，创建继承自Binder的MyBinder
+              在MyService中重写 public IBinder onBind(Intent intent) {return new MyBinder()}
+
+              在Activity中创建ServiceConnection实例
+              通过bindService(intent, con, BIND_AUTO_CREATE) 启动service
+
+              private ServiceConnection con = new ServiceConnection() {
+                  @Override
+                  public void onServiceConnected(ComponentName name, IBinder service) {
+                      MyService.MyBinder myBinder = (MyService.MyBinder) service;
+                      myBinder.showTip();
+
+                      mService = ((MyService.MyBinder) service).getService();
+
+                      mService.setOnProgressListener(new OnProgressListener() {
+                          @Override
+                          public void onProgress(int progress) {
+                              mProgressBar.setProgress(progress);
+                          }
+                      });
+                  }
+
+                  @Override
+                  public void onServiceDisconnected(ComponentName name) {
+
+                  }
+              };
+
+              ②BroadcastReceiver
+
+        3、service和IntentService的区别？
+          Service不是在子线程，执行耗时操作会ANR
+          IntentService，onCreate()内部通过HandlerThread 开启子线程，同时获取Looper，创建Handler，
+          在开启service后，onStart()里，会发送消息到子线程，然后在子线程中Handler#handleMessage()中的onHandleIntent()里处理耗时操作
+          最后，stopSelf()
+
+
+
+    1.3、Fragment
+    1、fragment的生命周期
+          onAttach()、onCreate()、onCreateView()、onActivityCreated()、onStart()、onResume()、onPause()、
+          onStop()、onDestroyView()、onDestroy()、onDetach()
+    2、Fragment的使用场景？
+        ①适配手机平板
+        ②一般主页面Activity+多个fragment，减少内存消耗，提升性能
+        ③面对非常复杂的页面时，可以把它拆分成几个fragment，这样就分担了activity的压力，
+         activity只需要负责管理fragment的生命周期和数据传递，具体的业务逻辑由对应的fragmnet处理。
+        ④需要对某个页面进行反复替换——动态添加碎片
+
+    3、Activity与Fragment之间的通信方式及什么场景使用哪种方式？
+        ①创建fragment时传入数据，通过bundle
+        ②通过接口回调
+        ③在Activity中定义方法，fragment中getActivity()获取
+        ④通过EventBus之类
+
+    4、A-->B-->Fragment
+        A onPause()--->B onCreate()--->F onAttach()--->onCreate()---onCreateView()--->onActivityCreated()-->
+        onStart()--->B onStart()--->onResume()--->F onResume()
+
+        Activity---onCreate()\n" +
+        "Fragment---onAttach()\n" +
+        "Fragment---onCreate()\n" +
+        "Fragment---onCreateView()\n" +
+        "Fragment---onActivityCreated()\n" +
+        "Fragment---onStart()\n" +
+        "Activity---onStart()\n" +
+        "Activity---onResume()\n" +
+        "Fragment---onResume()\n" +
+        "Fragment---onPause()\n" +
+        "Activity---onPause()\n" +
+        "Fragment---onStop()\n" +
+        "Activity---onStop()\n" +
+        "Fragment---onDestroyView()\n" +
+        "Fragment---onDestroy()\n" +
+        "Fragment---onDetach()\n" +
+        "Activity---onDestroy()
+
+    5、ViewPager+三个Fragment的生命周期？加载第一个的时候，第一第二的生命周期，第三个会不会走？怎样实现懒加载？
+        ①默认预加载1个，刚进入页面，前两个都会走到onResume()，切换到第三个时，第一个会onDestroyView()
+        ②懒加载，自定义一个基类，通过setUserVisibleHint()来实现
+
+    6、进程间通信方式
+        Bundle
+        文件共享
+        Messenger
+        AIDL
+        ContentProvider
+        Socket
+
+二、Handler
+    1、Handler的延迟消息是通过什么时间来处理的？为什么？
+     开机启动时间+延迟时间 SystemClock.uptimeMillis() + delayMillis
+     不使用System.currentTimeMillis()是这个时间可以修改，不可靠
+
+    2、handler处理消息，优先级？
+      dispatchMessage()中处理消息的顺序：
+      ①msg.callback不为空的话，优先处理
+      ②handler里的mCallBack不为空的话，mCallback.handleMessage()，这里是直接创建Handler实例，不需要派生Handler的子类
+      ③handleMessage()
+
+    3、handler的postDelayed()，怎么实现？怎样将runnable封装成message的？能自己封装message，处理延迟消息吗？
+      ①handler#getPostMessage(r)，通过Message.obtain()构建msg对象，将runnable赋值给msg.callback
+
+      ②最好不要自己封装message，message有复用机制
+      Looper#loop()里 msg.recycleUnchecked()
+
+      Message通过静态单链表来全局完成消息的复用，而在每次回收的过程中消息数据重置防止Message持有其他对象而造成内存泄漏操作，
+      所有在日常开发开发中尽量使用Message.obtain 来获取Message，如果手动创建Message，也不是不行，
+      因为Looper的消息在使用完都会自动调用recycle的，但是一旦消息链表到达上限，那么如果大量发送消息 ，
+      仍然存在大量Message对象需要在堆中回收的问题。
+
+    4、handler怎样处理延迟消息，时间未到和时间到了分别怎么处理？
+      MessageQueue
+      enqueueMessage() nativeWake()       唤醒
+      next()           nativePollOnce()   休眠
+
+    5、Handler如果消息池中没有消息，会怎样？是线程休眠吗？
+      如果消息队列里面没有消息就会被阻塞。
+      主要时next() 中的 nativePollOnce(ptr, nextPollTimeoutMillis);
+      for (;;) {
+          ...
+          nativePollOnce(ptr, nextPollTimeoutMillis);
+          synchronized(this) {
+              ...
+              if (msg != null) {
+                  ...
+              } else {
+                  // No more messages.
+                  nextPollTimeoutMillis = -1;
+              }
+              ...
+              if (pendingIdleHandlerCount <= 0) {
+                  ...
+                  continue;
+              }
+              ...
+          }
+          ...
+      }
+
+      如果队列里没有消息， nextPollTimeoutMillis 就为 -1 ，然后调用 continue 。跳出这次循环进行下一次循环。
+
+      nativePollOnce 就会传一个 -1 下去。
+
+      private native void nativePollOnce(long ptr, int timeoutMillis);
+      如果为 -1，则表示无限等待，直到有事件发生为止。如果值为0，则无需等待立即返回。
+
+      如果队列里面没有消息，当前的线程就处于阻塞状态。这个时候想退出，就要调用 Looper.quit()
+      线程处于阻塞状态，如果想退出就必须先唤醒。先把所有的消息 remove 掉。removeAllMessageLocked()
+      其中调用了recycleUnchecked()，用于回收消息进行复用，并不是将消息置为null，而是将消息中的变量置为null
+
+      释放线程的好处是子线程又可以在别的地方使用（因为释放了资源）。
+      但是主线程不能释放，
+      void quit(boolean safe) {
+          if (!mQuitAllowed) {
+              throw new IllegalStateException("Main thread not allowed to quit.");
+          }
+      }
+
+      因为所有 Activity 操作，包括四大组件，他们的生命周期都是在主线程的 Handler 里处理。
+
+    6、mainLooper为什么不会阻塞导致ANR，为什么不会消耗CPU
+      一个线程是一段可执行代码，代码执行完毕，就结束，app肯定不能一会儿就结束，在ActivityThread中进入Looper.loop()循环
+      Activity基于消息循环机制
+      主线程的Looper.loop()中死循环本身不会对Activity产生ANR，除非其消息事件本身的处理存在耗时操作，才会产生ANR.
+      主线的Looper对于消息的处理时，当子线程有消息发送时才会被唤醒，但子线程没有消息发送时，处于待唤醒状态，因此不会对CPU的性能产生影响。
+
+    7、threadLocal怎样实现的，会乱吗？
+      Looper
+      private static void prepare(boolean quitAllowed) {
+          if (sThreadLocal.get() != null) {
+              throw new RuntimeException("Only one Looper may be created per thread");
+          }
+          sThreadLocal.set(new Looper(quitAllowed));
+      }
+
+      ThreadLocal
+      public void set(T value) {
+          Thread t = Thread.currentThread();
+          ThreadLocalMap map = getMap(t);
+          if (map != null)
+              map.set(this, value);
+          else
+              createMap(t, value);
+      }
+
+      内部通过Thread#threadLocals，这是一个ThreadLocalMap，ThreadLocalMap是一个定制的哈希映射，只适用于维护线程本地值。
+
+    8、Looper循环怎样退出？主线程能退出吗？
+    调用Looper.quit()或者Looper.quitSafely();
+    最终都是调用MessageQueue.quit(boolean safe)
+    true 设定一个退出标记，把消息队列中的所有消息处理完后才安全的退出。
+    false   直接退出
+
+    主线程是无法退出的，主线程退出，会触发异常
+    在MessageQueue#quit()中，throw new IllegalStateException("Main thread not allowed to quit.");
+
+
+    9、线程切换
+      AsyTask、RxJava和EventBus都是最终通过Handler来切换线程的
+
+      基本上来说，Android中的多线程切换，主要使用Runnable和Callable来定义工作内容，使用线程池来实现异步并行，
+      使用Handler机制来通知主线程，有些场景下会视情况需要，使用Future的接口回调，使用SynchronousQueue阻塞队列等。
+
+    10、为什么要使用Handler?为什么系统不允许在子线程中访问UI？
+       之所以提供Handler，主要原因就是为了解决在子线程中无法访问UI的矛盾。
+
+       因为Android的UI控件不是线程安全的，如果在多线程中并发访问可能会导致UI控件处于不可预期的状态，之所以系统不对
+       UI控件的访问加上锁机制，主要因为首先加上锁机制会让UI访问的逻辑变得复杂；其次锁机制会降低UI访问的效率，因为
+       锁机制会阻塞某些线程的执行。
+
+
+
+三、View事件分发、绘制流程
+    3.1事件分发
+    1）cancel事件什么情况会发生
+    在父view的onInterceptTouchEvent() 的MOVE事件中拦截，子view的onTouchEvent()中return true，dispatchTouchEvent()和onTouchEvent()就会被CANCEL
+    比如ScrollView里面有一个button，当点在button上，但是没有抬起而是移动手指的话，scrollview就会判断进行拦截，此时button的点击事件就会取消CANCEL
+
+    当用户保持按下操作，并从你的控件转移到外层控件时，会触发ACTION_CANCEL，建议进行处理～
+
+    2）在button上 onTouchEvent的down事件返回true，viewGroup还能拦截move和up事件吗
+    能  如上
+
+    Activity中的dispatchTouchEvent()
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            onUserInteraction();
+        }
+        if (getWindow().superDispatchTouchEvent(ev)) {
+            return true;
+        }
+        return onTouchEvent(ev);
+    }
+    是通过调用window.superDispatchTouchEvent()来向下分发的，由PhoneWindow中实现，最终调用的是
+    mDecor.superDispatchTouchEvent()，然后DecorView中调用super.dispatchTouchEvent()
+    即ViewGroup#dispatchTouchEvent()进行事件分发
+
+    最终都不处理的话 调用Activity#onTouchEvent()
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mWindow.shouldCloseOnTouch(this, event)) {
+            finish();
+            return true;
+        }
+
+        return false;
+    }
+    只有在点击事件在Window边界外才会返回true，一般情况都返回false
+
+
+    mOnTouchListener.onTouch  >  onTouchEvent()  > mClickListener
+
+    设置touchListener，执行onTouch后，还会执行onTouchEvent()吗?
+    可能会，如果返回true，则不会执行，如果为false，则会执行onTouchEvent()
+    if (li != null && li.mOnTouchListener != null
+            && (mViewFlags & ENABLED_MASK) == ENABLED
+            && li.mOnTouchListener.onTouch(this, event)) {
+        result = true;
+    }
+
+    if (!result && onTouchEvent(event)) {
+        result = true;
+    }
+
+
+    只要CLICKABLE 和 LONG_CLICKABLE有一个为true，onTouchEvent()就会返回true，会在 onTouchEvent()的UP事件中调用
+    performClick()方法
+
+    ViewGroup#dispatchTouchEvent()主要做的三件事：
+        ①去判断是否需要拦截事件
+        ②在当前ViewGroup中找到用户真正点击的view
+        ③分发事件到view上
+
+
+    3)父view中两个button，点击一个然后手指不抬起，一直滑出屏幕
+    只会走第一个点到的子view的DWON事件，然后是ViewGroup的DOWN事件，Activity的MOVE UP事件
+
+    4）那你觉得在一个列表中，同时对父 View 和子 View 设置点击方法，优先响应哪个？为什么会这样？
+    子view
+    子view处理后，就不会在走父view的onTouchEvent()也就不会再走到父view的点击事件
+
+    5）如何让父view和子view都处理事件？
+    如果是DOWN事件，只要在子view的onTouchEvent()中return false即可，
+
+    如果其他事件，需要在父view的dispatchTouchEvent()中处理，并在子view的dispatchTouchEvent()中return true。
+
+    6）一个ScrollView嵌套两个RecyclerView1和RecyclerView2，什么时机事件交由谁处理？
+        RecyclerView1滑动到底部的时候，交由外层View来处理
+
+    7）一个ViewPager嵌套一个RecyclerView都是横向的，滑动的话是谁动？
+        RecyclerView动，因为ViewPager里面做了处理，如果子View能够滑动，交由子View处理。
+
+
+
+    8）事件分发最初是从哪儿开始的？事件到底是先到DecorView还是先到Window的？
+        先到DecorView
+
+        ①触摸发生，硬件将产生的事件包装成Event，一路处理到了ViewRootImpl#WindowInputEventReceiver
+        最终到了mView.dispatchPointerEvent()
+
+        Activity和Dialog对应的ViewRootImpl成员mView就是DecorView
+        view的dispatchPointerEvent()
+        @UnsupportedAppUsage
+        public final boolean dispatchPointerEvent(MotionEvent event) {
+            if (event.isTouchEvent()) {
+                return dispatchTouchEvent(event);
+            } else {
+                return dispatchGenericMotionEvent(event);
+            }
+        }
+
+        ②因为DecorView继承FrameLayout，上面所以会调用DecorView的dispatchTouchEvent()：
+        @Override
+        public boolean dispatchTouchEvent(MotionEvent ev) {
+            final Window.Callback cb = mWindow.getCallback();
+            return cb != null && !mWindow.isDestroyed() && mFeatureId < 0
+                    ? cb.dispatchTouchEvent(ev) : super.dispatchTouchEvent(ev);
+        }
+        上面Window.Callback都被Activity和Dialog实现，所以变量cb可能就是Activity和Dialog。
+
+        主要是由Window的callback回调dispatchTouchEvent()，即回到Activity#dispatchTouchEvent()
+
+        后面就是正常的流程，Activity--->Window--->DecorView--->ViewGroup  dispatchTouchEvent()
+
+
+    9）ViewGroup分发
+        只有在DOWN事件或者是 mFirstTouchTarget != null的情况下才可能调用onInterceptTouchEvent()
+        当子元素成功处理时，mFirstTouchTarget会被赋值并指向子元素，所以MOVE、UP事件不会走onInterceptTouchEvent()，
+        子元素可以通过requestDisallow要求不拦截，会有一个FLAG_DISALLOW_INTERCEPT，但是这个会在DOWN事件被重置，
+        所以子元素要求不拦截并不能影响父view对DOWN事件的处理。
+        父view遍历子元素，判断子元素是否能接收到点击事件，dispatchTransformedTouchEvent()
+        会根据情况调用子元素的dispatchTouchEvent()，
+        if (child == null) {
+            handled = super.dispatchTouchEvent(event);
+        } else {
+            handled = child.dispatchTouchEvent(event);
+        }
+        遍历所有子View 后，事件也没有被合适的处理：
+        ①ViewGroup 没有子元素
+        ②子元素处理了事件，但是 dispatchTouchEvent() 返回了 false，这一般是子 View 在 onTouchEvent() 中返回了 false。
+        这种情况下，ViewGroup 自己处理。
+
+
+
+
+
+
+    3.2view的绘制流程
+    1、View的绘制流程？draw()先绘制哪些？
+        对 DecorView 而言，它的 MeasureSpec 由窗口尺寸和其自身的 LayoutParams 共同决定；
+        对于普通的 View，它的 MeasureSpec 由父视图的 MeasureSpec 和其本身的 LayoutParams 共同决定。
+
+        measure过程：
+            ViewGroup 在它的 measureChild 方法中传递给子 View。ViewGroup 通过遍历自身所有的子 View，获取child measureSpec，
+            并逐个调用子 View 的 measure 方法实现测量操作。
+
+            测量子view，然后测量自己，比如LinearLayout竖直方向，有个mTotalLength
+
+            最终的测量是通过回调 onMeasure 方法实现的，这个通常由 View 的特定子类自己实现，可以通过重写这个方法实现自定义 View。
+            最终调用setMeasuredDimension()设置测量后的宽高
+
+        layout过程：
+            用来确定子元素的位置，当ViewGroup的位置确定后，它的onLayout中会遍历所有的子元素并调用其layout方法，
+            通过setFrame()设置view四个顶点的位置，里面会调用子view的layout()
+            比如LinearLayout中的onLayout()  通过setChildFrame()，竖直方向上的childTop不断增加，
+
+        draw过程：
+            绘制背景
+            绘制自己
+            绘制children
+            绘制装饰
+
+    2、View.post()
+        为什么 View.post() 的操作是可以对 UI 进行操作的呢，即使是在子线程中调用 View.post()？
+         因为这些 Runnable 操作都通过 ViewRootImpl 的 mHandler 切到主线程来执行了。
+
+        View.post(Runnable) 的这些 Runnable 操作，在 View 被 attachedToWindow 之前会先缓存下来，
+        然后在 dispatchAttachedToWindow() 被调用时，就将这些缓存下来的 Runnable 通过 mAttachInfo 的 mHandler 来执行。
+        在这之后再调用 View.post(Runnable) 的话，这些 Runnable 操作就不用再被缓存了，而是直接交由 mAttachInfo 的 mHandler 来执行。
+
+
+    3、Handler的post和View.post()的区别？
+       Handler.post(r)，将runnable构建成一个message，最终还是通过sendMessageDelayed()来完成，delay为0
+       View.post(r)，先将runnable缓存起来，Runnable 操作只有在 View 的 attachedToWindow 到 detachedFromWindow 这期间才会被执行。
+
+
+    4、getHeight()和getMeasuredHeight()有什么不同？ScrollView 用这两种方法获取到的数据相同吗？
+        View的默认实现中，测量宽高和最终宽高是相等的，测量宽高形成与measure过程，最终宽高形成于layout过程，赋值的时机不同。
+        但是特殊情况，如果重写layout，手动修改值，就会导致最终宽高和测量宽高不同
+
+        ScrollView获取高度getHeight()和getMeasuredHeight()相等，都是屏幕内的高度，完整高度可以通过ScrollView的唯一子View进行获取
+
+        正确获取View宽高的方式：
+        ①View.post()
+        ②onWindowFocusChanged()
+        ③OnGlobalLayoutListener
+        ④PreDrawListener
+        ⑤自定义宽高
+
+    5、自定义ViewGroup都需要重写哪些方法？
+          继承自ViewGroup，需要重写测量和布局这两个过程，同事处理子元素的测量和布局过程。
+          onMeasure()：
+              计算出所有的childView的宽和高；
+              然后根据childView的计算结果设置自己的宽度和高度；
+              设置测量的宽度和高度；
+          onLayout()：
+              获取childView的数量；
+              遍历所有childView进行相应的布局；
+                  获取childView；
+                  childView的左、顶、右、底的坐标；
+                  根据不同的childView进行相应的设置；
+                  对childView进行定位（设置view的绘制区域）；
+
+
+
+          继承自LinearLayout这类，不需要自己处理ViewGroup的测量和布局过程。
+
+    6、requestLayout和invalidate的区别？
+        View绘制分三个步骤，顺序是：onMeasure，onLayout，onDraw。调用invalidate方法只会执行onDraw方法；
+        调用requestLayout方法只会执行onMeasure方法和onLayout方法，并不会执行onDraw方法。
+
+        所以当我们进行View更新时，若仅View的显示内容发生改变且新显示内容不影响View的大小、位置，则只需调用invalidate方法；
+        若View宽高、位置发生改变且显示内容不变，只需调用requestLayout方法；
+        若两者均发生改变，则需调用两者，按照View的绘制流程，推荐先调用requestLayout方法再调用invalidate方法。
+        invalidate和postInvalidate：invalidate方法只能用于UI线程中，在非UI线程中，可直接使用postInvalidate方法，
+        这样就省去使用handler的烦恼。
+
+    7、ViewRootImpl中常见的方法？
+        performTraversals()
+        requestLayout()
+        invalidate()
+        checkThread()
+
+
+
+
+四、OkHttp、Retrofit
+    4.1 OkHttp
+        1、简述OkHttp流程？
+        ①构建OkHttpClient，request
+        ②构建Call实例，通过OkHttpClient#newCall()，最终是通过工厂方法模式，RealCall来创建的
+        ③同步、异步请求
+        ④getResponseWithInterceptChain，责任链模式，拦截器，加工request，处理response
+
+        Dispatcher
+        封装了线程池，三个双端队列，分别是将要运行的异步请求队列、正在运行的异步请求队列、正在运行的同步请求队列
+        最大并发请求数64，每个主机的最大请求数5
+
+        可以使用自己设定的线程池，如果没有设定，会创建默认的线程池，
+        类似CachedThreadPool，核心线程数量为0，适合执行大量的耗时较少的任务。
+        executorService = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60, TimeUnit.SECONDS,
+                  new SynchronousQueue<>(), Util.threadFactory("OkHttp Dispatcher", false));
+
+        RealCall的异步请求，是通过Dispatcher的enqueue()执行的，
+        void enqueue(AsyncCall call) {
+            synchronized (this) {
+              readyAsyncCalls.add(call);
+              ......
+            }
+            promoteAndExecute();
+          }
+        请求先添加到将要运行的异步请求队列
+
+        private boolean promoteAndExecute() {
+            List<AsyncCall> executableCalls = new ArrayList<>();
+            boolean isRunning;
+            synchronized (this) {
+              for (Iterator<AsyncCall> i = readyAsyncCalls.iterator(); i.hasNext(); ) {
+                AsyncCall asyncCall = i.next();
+
+                if (runningAsyncCalls.size() >= maxRequests) break; //正在运行的异步请求队列数>64
+                if (asyncCall.callsPerHost().get() >= maxRequestsPerHost) continue; //每个主机正在请求的数量>=5
+
+                i.remove();
+                asyncCall.callsPerHost().incrementAndGet();
+                executableCalls.add(asyncCall);//添加到集合中
+                runningAsyncCalls.add(asyncCall);//添加到正在运行的异步请求队列中
+              }
+              isRunning = runningCallsCount() > 0;
+            }
+
+            for (int i = 0, size = executableCalls.size(); i < size; i++) {
+              AsyncCall asyncCall = executableCalls.get(i);
+              asyncCall.executeOn(executorService());//遍历取出，用线程池执行
+            }
+
+            return isRunning;
+          }
+
+          不管是同步还是异步，执行完后，通过finished()对队列中的请求进行移除
+
+
+          ①同步执行 execute()
+          每个 call 只能执行一次，同步、异步都一样；
+          通知 dispatcher 已经进入执行状态，加入到runningSyncCalls中；
+          通过一些列拦截器获得 response；
+          通知 dispatcher 自己已经执行完毕，runningSyncCalls.remove()。
+
+          ②异步执行 enqueue()
+          AsyncCall（这是一个runnable，用于异步任务的执行，在 回调中处理 response）
+
+
+          如果正在运行的异步请求数量小于最大的并发数，且正在运行的客户端实际数量请求小于规定的每个主机最大请求数量，
+          那么就把该请求放进正在运行的异步请求队列中，否则就把该请求放进将要执行的异步请求队列中。
+
+
+        2、页面退出，怎样不再请求数据
+            可以通过对request的处理，设置tag，传入当前activity
+            然后在页面销毁时，进行取消请求
+            然后通过Dispatcher获取正在执行和等待执行的请求队列，如果tag相符，则call.cancel()
+
+        3、OkHttp责任链模式怎么实现的？递归的话，多个拦截器会有什么问题？
+          getResponseWithInterceptorChain()
+
+          interface Interceptor{
+              intercept(Chain chain);
+
+              interface Chain{
+                  Response proceed(Request request);
+              }
+          }
+
+          拦截器集合
+          自定义、重定向拦截器、Bridge拦截器、CacheInterceptor、ConnectInterceptor、自定义网络拦截器、CallServer拦截器
+
+          将集合传入RealInterceptorChain()，这是一个拦截器链
+          关键方法 proceed()：这里面获取下一个拦截器，调用intercept(Chain chain)，
+
+
+          intercept(Chain chain)
+          1、在发起请求前对request进行处理
+          2、调用下一个拦截器，获取response
+          3、对response进行处理，返回给上一个拦截器
+
+        4、拦截器
+            ①使用场景
+            Log输出
+            增加公共请求参数
+            修改请求头
+            加密请求参数
+            服务器端错误码处理（时间戳异常为例）
+
+            ②addInterceptor()和addNetworkInterceptor()的区别？
+
+            通过 addInterceptor() 方法添加的拦截器是放在最前面的。
+            而通过 addNetworkInterceptor() 方法添加的网络拦截器，则是在非 WebSocket 请求时，添加在 ConnectInterceptor 和 CallServerInterceptor 之间的。
+
+            addInterceptor（应用拦截器）：
+            1，不需要担心中间过程的响应,如重定向和重试.
+            2，总是只调用一次,即使HTTP响应是从缓存中获取.
+            3，观察应用程序的初衷. 不关心OkHttp注入的头信息如: If-None-Match.
+            4，允许短路而不调用 Chain.proceed(),即中止调用.
+            5，允许重试,使 Chain.proceed()调用多次.
+            +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+            addNetworkInterceptor（网络拦截器）：
+            1，能够操作中间过程的响应,如重定向和重试.
+            2，当网络短路而返回缓存响应时不被调用.
+            3，只观察在网络上传输的数据.
+            4，携带请求来访问连接.
+
+        5、OkHttp缓存机制
+            缓存基础：
+            ①强制缓存：所谓强制缓存是指，请求网络数据时，如果本地存在缓存数据且缓存数据有效，则直接使用缓存数据。
+            ②对比缓存：请求网络数据时，如果本地存在缓存数据且没有过期，先要发给服务端进行校验，来决定缓存数据是否需要更新，
+            如果需要更新则网络端会返回新的数据，如果不需要更近则直接使用缓存数据。在http协议中具体参数是通过head中的Last-Modified/If-Modified-Since来实现的。
+
+            缓存使用：
+            设置缓存文件夹，设置缓存大小，创建缓存对象，设置缓存，缓存策略的设置和CacheControl有关
+
+            相关类：CacheInterceptor、Cache、CacheStrategy、CacheControl
+
+            网络请求缓存处理
+            ①根据 request 得到 cache 中缓存的 response
+            ②根据 request 获取缓存策略，是否使用网络、缓存或者两者都使用
+            ③如果我们被禁止使用网络，且缓存不足，则失败
+            ④如果我们不使用网络，则返回缓存
+            ⑤调用下一个拦截器，从网络上获取 response
+            ⑥如果本地已经存在cacheResponse，那么让它和网络得到的networkResponse做比较，决定是否来更新缓存的cacheResponse
+            ⑦缓存未经缓存过的 response
+
+            缓存拦截器会根据请求的信息和缓存的响应的信息来判断是否存在缓存可用，如果有可以使用的缓存，那么就返回该缓存给用户，
+            否则就继续使用责任链模式来从服务器中获取响应。当获取到响应的时候，又会把响应缓存到磁盘上面。
+
+
+        6、OkHttp复用机制，如果已经有这个请求，还会创建新的请求吗
+
+        7、OkHttp的优势？
+          ·HTTP/2 支持允许所有访问同一主机的请求共享一个socket
+          ·利用连接池减少请求延迟（如果HTTP/2不可用）
+          ·支持GZIP压缩
+          ·响应缓存减少重复请求
+
+        8、OkHttp分为哪几个模块？分别是什么作用？
+            大的模块：okhttp 和 okio
+            包模块：cache、connection、http、platform。。。
+
+        5、OkHttp缓存策略，安全性，hook okHttp 加入一个插值器，怎样保证安全？
+
+    4.2 Retrofit
+        1、Retrofit的流程，动态代理怎样将一个注解的方法变成一个请求
+          充当一个适配器的角色，将Java接口翻译成http请求，然后通过OkHttp去发送这个请求
+          ①定义一个接口，里面是各种通过注解和参数描述的API调用方法。
+          ②Retrofit#create()
+          Proxy.newProxyInstance最终会调用一个 native 方法，动态生成一个 ApiService（我们前面声明的接口）的实现类；
+          newProxyInstance 方法中会传入一个 InvocationHandler 对象，即源码中的 new InvocationHandler() {...}
+          在Java动态生成的ApiService的实现类中，有我们定义的各种api调用方法，其中，会调用 super.h.invoke(this,m3,null)，
+          就是调用父类的h的invoke()，它的父类是Proxy，h即上面我们传入的 InvocationHandler对象。
+
+          最后就是源码中 invoke()中的代码，serviceMethod之类获取注解信息，方法参数等，然后构建一个OkHttpCall
+
+          callAdapter的作用是进行数据转换
+
+        2、Retrofit和OkHttp相比的优势？
+          okHttp消息回来需要切回主线程，需要自己处理
+          调用比较复杂，需要自己进行封装
+
+          支持同步、异步、RxJava
+          超级解耦
+          可以配置不同的反序列化工具来解析数据，如json、XML
+
+          • Retrofit主要负责应用层面的封装，就是说主要面向开发者，方便使用，比如请求参数，响应数据的处理，错误处理等等。
+          • OkHttp主要负责socket部分的优化，比如多路复用，buffer缓存，数据压缩等等。
+
+
+        3、Retrofit如果设置baseUrl，然后API接口中定义的方法注解中传入了完整的url，哪个生效？
+          如果你在注解中提供的url是完整的url，则url将作为请求的url。
+          如果你在注解中提供的url是不完整的url，且不以 / 开头，则请求的url为baseUrl+注解中提供的值
+          如果你在注解中提供的url是不完整的url，且以 / 开头，则请求的url为baseUrl的主机部分+注解中提供的值
+
+        4、Retrofit怎样切换线程？
+          在Retrofit中的builder类中，会调用Platform.get()方法获取platform，
+          Android平台下，默认defaultCallbackExecutor是一个 MainThreadExecutor，
+          在这里面获取主线程的looper，构建handler，通过handler.post()切换到主线程
+
+        5、Retrofit中CallAdapter的作用？
+          callAdapter 数据转换
+
+          CallAdapter接口的设计，使得我们在使用Retrofit的时候可以自定义我们想要的返回类型。此接口的设计也为RxJava的扩展使用做了很好的基础！！！
+
+
+五、性能优化
+    体积优化：
+      代码优化
+        代码混淆：可以防止反编译，将代码转换成难以阅读和直接理解的形式，还能精简编译后程序的大小，通过缩短变量和函数名以及丢失部分无用信息等方式，能使得应用包体积减小。
+        三方库优化：去掉冗余的库，尽量选择能实现功能且比较小的库，比如Picasso相比Glide大很多，如果有可能只引入部分代码。
+        移除无用代码：可以通过Lint扫描或者AOP来统计没有被用到的类。
+      资源优化
+        删除无用资源：使用 Lint 的 Remove Unused Resource
+        图片压缩：tinyPNG
+        删除重复图片：使用腾讯的Matrix，检测相同MD5值的图片
+        资源混淆：AndroidResGuard，主要是通过 短路径的优化以达到 减少 resources.arsc、metadata 签名文件以及 ZIP 文件大小 的效果
+        只保留一份图片：xxhdpi，在不同的分辨率下它会做自动的适配，即 等比例地拉伸或者是缩小。
+        资源在线化：将一些图片放在服务器
+        统一风格：如设定统一的 字体、尺寸、颜色和按钮按压效果、分割线 shape、selector 背景 等等。
+
+      so库瘦身
+        so库移除：只保留armeabi一种，它可以兼容别的平台上的so
+        so库动态下发：
+            优点
+            1.灵活可以动态更新so库。
+            2.减少apk文件体积，毕竟动态下载不用打包进apk。
+            3.可以解决so库加载冲突的问题。
+
+            步骤
+            1.下载so文件并且解压到本地存储目录
+            2.拷贝文件到app私有目录（data/data/app包名/app_xxx）
+            3.配置gradle，制定cpu架构（此处防止64位cpu加载32位so的问题，还有x86 mips等cpu架构的问题）
+            4.load so文件
+
+      其它方案
+        插件化
+        业务梳理，删除无用的业务代码
+
+    启动优化：
+
+
+    内存优化：
+
+
+    布局优化：
+        减少布局层级，可以使用Lint检查，去除无用的层级
+        使用<merge>、<include>等标签
+
+    绘制优化：
+        尽量避免在View的onDraw()中创建大量对象
+
+    内存泄漏优化：
+        Lint检查可以查找Handler内存泄漏的问题
+
+
+    RelativeLayout 和 LinearLayout的选择
+        1.RelativeLayout会让子View调用2次onMeasure，LinearLayout 在有weight时，也会调用子View2次onMeasure
+        2.RelativeLayout的子View如果高度和RelativeLayout不同，则会引发效率问题，当子View很复杂时，这个问题会更加严重。如果可以，尽量使用padding代替margin。
+        3.在不影响层级深度的情况下,使用LinearLayout和FrameLayout而不是RelativeLayout。
+
+    内存泄漏问题举例？
+        集合类泄漏(集合一直引用着被添加进来的元素对象)
+        单例/静态变量造成的内存泄漏(生命周期长的持有了生命周期短的引用)
+        匿名内部类/非静态内部类
+        资源未关闭造成的内存泄漏
+            资源对象未关闭：BroadcastReceiver，ContentObserver，File，Cursor，Stream，Bitmap等资源，使用后未关闭会导致内存泄漏。
+            因为资源性对象往往都用了一些缓冲，缓冲不仅存在于 java虚拟机内，还存在于java虚拟机外。如果仅仅是把它的引用置null，而不关闭它们，也会造成内存泄漏
+        网络，文件等流忘记关闭
+        手动注册广播时，退出时忘记unregisterReceiver()
+        Service执行完成后忘记stopSelf()
+        EventBus等观察者模式的框架忘记手动解除注册
+
+六、插件化：
+    掌阅插件化
+        通过app启动后，ActivityThread中源码，application和activity都是通过反射，利用classLoader来进行类加载
+        可知要实现插件的类加载有两种方式：
+        ①把插件的信息通过反射放进这个数组里面
+        ②替换系统的ClassLoader
+
+        类加载：
+            apk信息在LoadedApk中，通过mClassLoader加载
+            定义一个ClassLoader继承自原始apk的classLoader即PathClassLoader，它相当于一个容器，里面通过数组维护一个插件ClassLoader序列，
+            重写loadClass()，先查找parent classLoader，这里实际就是系统帮我们创建的classLoader，目标对应为宿主apk，
+            然后通过遍历插件classLoader数组，查找插件类信息，
+            通过反射将容器classLoader，替换调mClassLoader
+
+
+        资源加载：
+            真正创建Resources的地方是在ContextImpl的构造方法中，最终是通过AssetManager来实现
+
+            要实现插件资源加载，只需创建一个AssetManager,然后把把宿主资源路径和插件apk路径添加进去，
+            创建我们自己的Resources，然后通过反射把LoadedApk（即ContextImpl中的mPackageInfo）的mResources替换成我们的Resources即可
+
+        启动插件Activity：
+            ①可以采用预埋的方式，加载插件的Activity
+            ②在AndroidManifest中声明一个Activity的类名，
+            自定义startActivity()的方法，为intent设置className（即AndroidManifest中声明的名字），同时将要启动的真正插件名也通过intent携带，
+            自定义类继承自Instrumentation，重写newActivity()，当newActivity()中的className和预定义的匹配，
+            intent中的extras不为空时，启动真实的插件activity，否则，调用默认的newActivity()启动宿主activity
+            super.newActivity(插件activity)
+
+
+    插件化和热更新的区别？
+        插件化和热修复区别插件化顾名思义，更多是想把需要实现的模块或功能当做一个独立的提取出来，减少宿主的规模，
+        当需要使用到相应的功能时再去加载相应的模块。
+        热修复则是从修复bug的角度出发，强调的是在不需要二次安装应用的前提下修复已知的bug。
+
+    插件化和组件化的区别？
+        和组件化的区别就是，插件化可以动态增加和修改线上的模块，而组件化只能对现有模块进行增加和删除。
+
+        1）组件化是模块化基础上的演进，区别是模块角色的可转换性。
+         即Module在application和library间的转换，一个模块可以独立编译，也可以作为lib集成到整个apk中。
+
+         模块化偏向于复用，组件化偏向于单一功能拆分，强调独立编译。
+         优点：
+             ①每个模块可以独立编译，提高编译速度；
+             ②避免模块之间的交叉依赖，做到低耦合，高内聚；
+             ③方便维护，只负责自己的组件；
+
+        2）将一个完整的工程，按照业务划分为不同的模块，每一个模块都是一个独立的apk，最终插件apk通过动态下发到宿主apk。
+        在apk使用时，每个插件是动态加载的，插件也可以进行热修复和热更新。
+
+
+七、常见问题
+    1、Apk文件结构
+        AndroidManifest.xml
+            是Android应用程序的配置文件
+
+        META-INF
+            META-INF目录下存放的是签名信息，用来保证apk包的完整性和系统的安全。里面包含了三个文件，MANIFEST.MF、CERT.SF、CERT.RSA。
+
+        res目录
+            res目录存放资源文件（布局、图片、values下的等等）
+
+        resources.arsc
+            编译后的二进制资源文件，主要作用是App的资源索引表，可以从二进制的文件中查找到资源的相关信息，或者根据资源的id可以定位到二进制文件中的位置
+
+        classes.dex文件
+            简单来说就是android系统的可执行文件，类似于window系统的xx.exe,它包含应用程序的全部操作指令以及运行时数据
+
+        lib目录
+            so库
+
+        assets目录
+            用于存放需要打包到APK中的静态文件，和res的不同点在于，assets目录支持任意深度的子目录，
+            用户可以根据自己的需求任意部署文件夹架构，而且res目录下的文件会在.R文件中生成对应的资源ID，assets不会自动生成对应的ID，访问的时候需要AssetManager类。
+
+    2、打包流程
+        ①打包资源文件，生成R.java文件
+
+        ②处理aidl文件，生成相应的Java文件
+
+        ③编译项目源代码，生成class文件
+
+        ④转换所有的class文件，生成classes.dex文件
+        dx工具的主要工作是将Java字节码转成成Dalvik字节码、压缩常量池、消除冗余信息等。
+
+        ⑤打包生成apk
+
+        ⑥对apk文件进行签名
+
+        ⑦对签名后的文件进行对齐整理
+
+
+    3、
+
+

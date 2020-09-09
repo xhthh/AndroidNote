@@ -3,6 +3,7 @@ package com.xht.androidnote.module.animation;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
 import com.xht.androidnote.R;
@@ -43,6 +44,7 @@ public class AnimationActivity extends BaseActivity {
                 showFrameAnimation();
                 break;
             case R.id.btn_view_animation_translate:
+                translate();
                 break;
             case R.id.btn_view_animation_scale:
                 break;
@@ -60,6 +62,13 @@ public class AnimationActivity extends BaseActivity {
                 skip2Activity(PropertyAnimationActivity.class);
                 break;
         }
+    }
+
+    private void translate() {
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, 0, 200, 200);
+        translateAnimation.setDuration(1000);
+        // 开始动画
+        mIvAnimation.startAnimation(translateAnimation);
     }
 
     private void showFrameAnimation() {
