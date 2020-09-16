@@ -32,6 +32,10 @@ public class RetrofitClient {
             builder.addInterceptor(new LoggingInterceptor());
             OkHttpClient okHttpClient = builder.build();
 
+//            GsonBuilder gsonBuilder = new GsonBuilder();
+//            Gson gson = gsonBuilder.enableComplexMapKeySerialization().create();
+//            gson.toJson()
+
             sRetrofit = new Retrofit.Builder()
                     .client(okHttpClient)
                     .baseUrl(BASE_URL)
