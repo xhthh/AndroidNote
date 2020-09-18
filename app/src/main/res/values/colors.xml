@@ -11,4 +11,5 @@
     <color name="selector_black">#EEEEEE</color>
     <color name="orange">#EF8200</color>
     <color name="gray">#9cffffff</color>
+    <color name="color_333333">#333333</color>
 </resources>

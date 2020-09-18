@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:id="@+id/scrollView"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/ll_content"
         android:orientation="vertical">
 
         <Button
@@ -21,6 +21,7 @@
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"
             android:text="RecyclerView" />
+
         <Button
             android:id="@+id/btn_edit_text"
             style="@style/btnStyle"
@@ -56,6 +57,12 @@
             android:id="@+id/btn_fragment"
             style="@style/btnStyle"
             android:text="Fragment" />
+
+        <Button
+            android:id="@+id/btn_constraint"
+            style="@style/btnStyle"
+            android:text="ConstraintLayout" />
+
 
         <Button
             android:id="@+id/btn_handler"
