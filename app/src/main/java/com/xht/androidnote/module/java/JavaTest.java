@@ -10,7 +10,9 @@ public class JavaTest {
 
 
 
+    int test = 10_000;
 
+        System.out.println("10_000 = " + test);
 
 
 
