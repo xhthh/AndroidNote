@@ -30,6 +30,7 @@ import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.proxy.ProxyActivity;
+import com.xht.androidnote.module.recyclerview.RecyclerViewActivity;
 import com.xht.androidnote.module.retrofit.RetrofitActivity;
 import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
@@ -117,7 +118,7 @@ public class MainActivity extends BaseActivity {
                 skip2Activity(EventBusActivity.class);
                 break;
             case R.id.btn_recyclerview:
-                skip2Activity(PickerViewActivity.class);
+                skip2Activity(RecyclerViewActivity.class);
                 break;
             case R.id.btn_test_pickerview:
                 skip2Activity(PickerViewActivity.class);
