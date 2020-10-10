@@ -1,5 +1,9 @@
 package com.xht.androidnote.module.java;
 
+import android.os.Build;
+
+import java.util.Base64;
+
 /**
  * Created by xht on 2018/5/25.
  */
@@ -9,25 +13,18 @@ public class JavaTest {
     public static void main(String[] args) {
 
 
+        String number = "15037102559";
+        byte[] bytes = number.getBytes();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            byte[] decode = Base64.getDecoder().decode(bytes);
+            String str = new String(decode);
+            System.out.println("str=" + str);
+        }
 
-    int test = 10_000;
+
+        int test = 10_000;
 
         System.out.println("10_000 = " + test);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         Integer a = 1000, b = 1000;
