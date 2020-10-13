@@ -659,7 +659,7 @@ Android和js交互？jsBridge？
 
 3、二叉树中序遍历，非递归
     左子树、根节点、右子树
-    public static void inOrderTraversal(TreeNode node) {
+    public static void inOrderTraversal(com.xht.androidnote.summarize.TreeNode node) {
         if(node == null) {
             return;
         }
@@ -1482,7 +1482,7 @@ ArrayMap SparseArray 替换 HashMap
 
 2、https加密算法
     HTTPS一般使用的加密与HASH算法如下：
-    非对称加密算法：RSA，DSA/DSS
+    非对称加密算法：RSA，com.xht.androidnote.summarize.DSA/DSS
     对称加密算法：AES，RC4，3DES
     HASH算法：MD5，SHA1，SHA256
 

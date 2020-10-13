@@ -1,4 +1,4 @@
-package com.xht.androidnote;
+package com.xht.androidnote.summarize;
 
 import java.util.Arrays;
 import java.util.HashSet;
