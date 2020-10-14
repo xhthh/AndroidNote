@@ -3,6 +3,7 @@ package com.xht.androidnote.module.recyclerview;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,17 +27,29 @@ public class RvTestAdapter extends RecyclerView.Adapter<RvTestAdapter.RvTestView
     @Override
     public RvTestViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_rv_test, parent, false);
-        return new RvTestViewHolder(view);
+        RvTestViewHolder holder = new RvTestViewHolder(view);
+        Log.i("xht", "Adapter---onCreateViewHolder");
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RvTestViewHolder holder, int position) {
+        Log.i("xht", "Adapter---onBindViewHolder---position=" + position);
         holder.tvTitle.setText(list.get(position));
     }
 
     @Override
     public int getItemCount() {
         return list == null ? 0 : list.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position % 2 == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
     class RvTestViewHolder extends RecyclerView.ViewHolder {

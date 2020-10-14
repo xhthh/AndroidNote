@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:orientation="vertical">
+    android:layout_height="120dp"
+    android:background="@color/colorAccent">
 
     <TextView
         android:id="@+id/tv_title"
@@ -10,6 +10,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="title"
+        android:textColor="@color/white"
         android:textSize="20sp" />
 
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

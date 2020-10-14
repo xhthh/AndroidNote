@@ -716,7 +716,7 @@ Android和js交互？jsBridge？
 
 4、请简述Java Class文件的构成及其作用
 
-5、假设有一个20个item的RecyclerView,每五个占满一个屏幕，在从头滑到尾的过程中，AonCreatViewHolder会调用多少次？
+5、假设有一个20个item的RecyclerView,每五个占满一个屏幕，在从头滑到尾的过程中，onCreateViewHolder会调用多少次？
 
 6、大文件整型数字相加：有一个超大size的文件，存放的都是整型数字+空格，求文件中所有整型数字的和，以字符串表示
 
