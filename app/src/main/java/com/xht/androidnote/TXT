@@ -1,0 +1,84 @@
+一、RecyclerView的回收与复用
+
+
+class Recycler {
+    mChangedScrap
+
+    mAttachScrap
+
+    mCachedViews	默认大小为2
+
+    mViewCacheExtension 用户自定义
+
+    mRecyclerPool   根据type进行匹配，每个type缓存5个
+}
+
+
+缓存流程就是，屏幕中 –屏幕外–用户自定义–pool池。
+需要注意的是从pool池中拿出来的viewHolder是剥了层皮的，需要重新绑定一次数据。
+
+
+
+RecyclerView三级缓存
+	一级缓存：返回布局和内容都有效的ViewHolder
+		按照position或者id进行匹配
+		命中一级缓存就无需调用onCreateViewHolder()和onBindViewHolder()
+
+	二级缓存：返回View
+		按照position和type进行匹配
+		直接返回View
+		需要自己继承ViewCacheExtension实现
+
+	三级缓存：返回布局有效，内容无效的ViewHolder
+		按照type进行匹配，每个type缓存值默认=5
+		layout是有效的，但是内容是无效的，会调用onBindViewHolder()
+		多个RecyclerView可共享，可用于多个RecyclerView的优化
+
+
+
+
+
+
+多类型item需求
+
+
+RecyclerView滑动卡顿
+	①嵌套布局滑动冲突
+	②嵌套布局层级太深
+		测量、绘制布局可能造成卡顿
+	③RecyclerView加载大量大图
+		可以监听RecyclerView的滑动，addOnScrollListener()，滑动时不加载图片，停止滑动时再加载
+	④在onCreateViewHolder()和onBindViewHolder()中做了耗时操作
+
+
+RecyclerView优化
+	①DiffUtil刷新优化
+		分页拉取远端数据，对拉取下来的远端数据进行缓存，提升二次加载速度；
+		对于新增或者删除数据通过DiffUtil来进行局部刷新，而不是全局刷新。
+	②布局优化
+		减少xml文件inflate时间
+			xml文件inflate出itemView是通过耗时的IO操作，尤其是当Item复用几率很低的情况下，随着Type的增多，
+			这种inflate的损耗是相当大的，此时我们可以用代码去生成布局，即new View()的方式
+		减少View对象的创建
+		    尽量简化ItemView，对于多ViewType能够共用的部分尽量设计成自定义View，减少View的构造和嵌套
+	③对itemView中孩子View的点击事件优化
+     onBindViewHolder() 中频繁创建新的 onClickListener 实例没有必要，建议实际开发中应该在 onCreateViewHolder()
+     中每次为新建的 View 设置一次就行。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

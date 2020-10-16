@@ -47,6 +47,9 @@ public class RecyclerViewActivity extends BaseActivity {
         rvTest.setLayoutManager(layoutManager);
         rvTest.setAdapter(adapter);
 
+        //设置mCachedView 缓存大小，默认是2
+        //rvTest.setItemViewCacheSize(5);
+
 
         //        rvTest.addOnScrollListener(new RecyclerView.OnScrollListener() {
         //            @Override
@@ -107,7 +110,8 @@ public class RecyclerViewActivity extends BaseActivity {
 
         //四级缓存
         /*
-            ViewHolder 缓存池，在有限的 mCachedViews 中如果存不下新的 ViewHolder 时，就会把 ViewHolder 存入 RecyclerViewPool 中。
+            ViewHolder 缓存池，在有限的 mCachedViews 中如果存不下新的 ViewHolder 时，根据FIFO的原则，把最新存入mCachedView中的
+            viewHolder 存入 RecyclerViewPool 中，然后从mCachedView中移除。
             按照 Type 来查找 ViewHolder
             每个 Type 默认最多缓存 5 个
             可以多个 RecyclerView 共享 RecycledViewPool

@@ -2,7 +2,9 @@ package com.xht.androidnote.module.java;
 
 import android.os.Build;
 
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * Created by xht on 2018/5/25.
@@ -12,14 +14,12 @@ public class JavaTest {
 
     public static void main(String[] args) {
 
-
-        String number = "15037102559";
-        byte[] bytes = number.getBytes();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            byte[] decode = Base64.getDecoder().decode(bytes);
-            String str = new String(decode);
-            System.out.println("str=" + str);
-        }
+        List<Integer> list = new ArrayList<>();
+        list.add(00);
+        list.add(11);
+        list.add(22);
+        int data = list.get(list.size() - 1);
+        System.out.println("data=" + data);
 
 
         int test = 10_000;
