@@ -8,6 +8,14 @@
         android:id="@+id/btn_dynamic_proxy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="动态代理" />
+        android:textAllCaps="false"
+        android:text="动态代理 newProxyInstance" />
+
+
+    <Button
+        android:id="@+id/btn_dynamic_proxy2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="动态代理 getProxyClass" />
 
 </LinearLayout>

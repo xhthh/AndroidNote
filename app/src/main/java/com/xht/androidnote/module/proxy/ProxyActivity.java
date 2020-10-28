@@ -1,11 +1,13 @@
 package com.xht.androidnote.module.proxy;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -19,6 +21,8 @@ import butterknife.OnClick;
 public class ProxyActivity extends BaseActivity {
     @BindView(R.id.btn_dynamic_proxy)
     Button btnDynamicProxy;
+    @BindView(R.id.btn_dynamic_proxy2)
+    Button btnDynamicProxy2;
 
     @Override
     protected int getLayoutId() {
@@ -53,8 +57,37 @@ public class ProxyActivity extends BaseActivity {
         xht.debug();
     }
 
-    @OnClick(R.id.btn_dynamic_proxy)
-    public void onViewClicked() {
-        dynamicProxy();
+    private void dynamic2() {
+        AndroidDeveloper androidDeveloper = new AndroidDeveloper("xht");
+        Class<?> proxyClass = Proxy.getProxyClass(androidDeveloper.getClass().getClassLoader(), androidDeveloper.getClass().getInterfaces());
+        try {
+            Constructor<?> constructor = proxyClass.getConstructor(InvocationHandler.class);
+            Developer instance = (Developer) constructor.newInstance(new InvocationHandler() {
+                @Override
+                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    Log.i("xht","dynamic 2---invoke()");
+                    Object result = method.invoke(androidDeveloper, args);
+                    return result;
+                }
+            });
+            instance.code();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+
+
+    @OnClick({R.id.btn_dynamic_proxy,R.id.btn_dynamic_proxy2})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_dynamic_proxy:
+                dynamicProxy();
+                break;
+            case R.id.btn_dynamic_proxy2:
+                dynamic2();
+                break;
+        }
+    }
+
 }

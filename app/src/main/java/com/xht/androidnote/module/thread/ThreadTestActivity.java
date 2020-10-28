@@ -12,9 +12,11 @@ import com.xht.androidnote.module.thread.executor.ExecutorActivity;
 import com.xht.androidnote.utils.L;
 
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -96,6 +98,16 @@ public class ThreadTestActivity extends BaseActivity {
         try {
             String result = future.get();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        FutureTask ft = new FutureTask(callable);
+        new Thread(ft).start();
+        try {
+            ft.get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
