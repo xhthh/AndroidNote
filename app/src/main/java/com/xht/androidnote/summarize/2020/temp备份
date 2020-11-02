@@ -130,7 +130,12 @@
     一个栈模拟入队，一个栈模拟出队
     直接将一组数据压入一个A栈中，出队列操作，将A栈中的数据出栈，压入B栈中，让B出栈，即最先入队的数据
 
-
+7、TaskAffinity
+    可以在AndroidManifest.xml中设置 android:taskAffinity，用来指定Activity希望归属的栈，默认情况下，
+    同一个应用程序的所有Activity都有着相同的taskAffinity。
+    ①taskAffinity与FLAG_ACTIVITY_NEW_TASK或者singleTask配合。如果新启动Activity的taskAffinity和栈的
+    taskAffinity相同则加入到该栈中；如果不同，就会创建新栈。
+    ②taskAffinity与allowTaskReparenting配合。如果allowTaskReparenting为true，说明activity具有转移能力。
 
 8、Tinker的原理？为什么插入到dexElements前面可以修复？
     Tinker是将新旧apk做diff 得到path.dex 再将path.dex与手机中apk的 classes.dex进行合并生成新的 classes.dex，
@@ -1324,6 +1329,16 @@ public Method getMethod(String name, Class<?>... parameterTypes)
 10、EventBus原理？怎样处理消息冗余的问题？
 
 11、图片加载怎样减少内存消耗？
+·
+
+12、Fragment设置数据为什么使用setArguments的方式？
+    设备横竖屏切换的话，当前展示给用户的Activity默认情况下会重新创建并展现给用户，那依附于Activity的Fragment会进行如何处理呢？
+    由于我们的Fragment是由FragmentManager来管理，所以可以跟进FragmentManager.restoreAllState()方法，
+    最终会通过反射无参构造实例化一个新的Fragment，并且给mArguments初始化为原先的值，而原来的Fragment实例的数据都丢失了，并重新进行了初始化
+
+    通过上面的分析，我们可以知道Activity重新创建时，会重新构建它所管理的Fragment，
+    原先的Fragment的字段值将会全部丢失，但是通过Fragment.setArguments(Bundle bundle)方法设置的bundle会保留下来。
+    所以尽量使用Fragment.setArguments(Bundle bundle)方式来传递参数
 
 
 13、程序计数器是干啥的？栈里存放的是什么？一个对象一定是在堆内存吗？

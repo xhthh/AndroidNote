@@ -1,9 +1,11 @@
 package com.xht.androidnote.module.activity;
 
+import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.xht.androidnote.MainActivity;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.utils.L;
@@ -108,6 +110,15 @@ public class ATestActivity extends BaseActivity {
     @OnClick(R.id.btn_start)
     public void onViewClicked() {
         skip2Activity(BTestActivity.class);
+
+        //弹出Dialog 不会影响Activity的生命周期
+//        AlertDialog dialog = new AlertDialog.Builder(ATestActivity.this)
+//                .setIcon(R.mipmap.ic_launcher_round)
+//                .setCancelable(false)
+//                .setMessage("Error")
+//                .setTitle("Warring")
+//                .show();
+
 
         /*Intent intent = new Intent();
         intent.setClass(mContext, BTestActivity.class);

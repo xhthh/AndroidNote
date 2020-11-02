@@ -1,0 +1,255 @@
+https://blog.csdn.net/wq6ylg08/article/details/105822679
+
+https://www.bilibili.com/read/cv7556139/
+
+
+•生产者消费者模式
+•wait 和 sleep的区别
+•String、StringBuffer 、StringBuilder的区别
+•String a = "abc" 和 String str = new String(“abc”) 的区别
+•谈谈四种引用
+•HashSet和HashMap的关系
+•HashMap与HashTable的区别
+•ConcurrentHashMap知道吗，ConcurrentHashMap在jdk1.8之后的优化
+•重写和重载的区别
+•图片的三级缓存是怎么做的？
+
+
+•binder机制
+•Handler消息机制，子线程可以创建handler吗
+•View的绘制流程，MeasureSpec(MS)知道吗？如何确定一个View的MS？那DecorView呢？
+•OkHttp的源码讲解，它涉及哪些设计模式
+•为什么TCP要三次握手，两次不行吗？
+•TCP与UDP的区别，OSI五层结构
+•死锁的四个条件
+•操作系统中页面置换算法
+•线程的所有状态
+•synchronized关键字
+
+
+
+•数据库的范式
+•数据库中事务的特性
+•用过的设计模式或者是安卓中遇到的设计模式
+•责任链模式有哪些优势
+•实现一个单例模式
+•DCL为什么要两次判断null呢？为什么使用volatile？
+•在浏览器输入一个网址到网页显示出来有哪些经过
+•DNS如何解析域名
+•HTTPS与HTTP的区别，HTTPS为什么安全
+•GC过程
+•知道哪些数据结构，红黑树的特点
+•做过的安卓性能优化
+•内存泄露检测工具leakcanary的原理
+•RN开发和原生开发的区别
+•线程池的参数和工作流程
+•IntentService能用bind方式启动吗？IntentService的原理
+•MVP MVVM架构
+•算法题：两个队列实现一个栈
+•HashMap的hash算法和扩容机制的原因
+
+
+
+
+
+如何更新UI，为什么子线程不能更新UI？
+UI线程和工作线程的区别
+安卓中启动一个APP一般启动多少个进程，多少线程
+线程池有用过吗
+线程池的参数和工作流程
+
+活动启动流程
+谁启动活动的
+
+
+Fragment add与replace的区别，分别对Fragment的生命周期影响
+
+RecyclerView与ListView的对比(x2)，缓存策略，优缺点，性能优化方案，ViewHolder的好处是什么
+ListView复用item
+如果scrollView嵌套listView，如果listView滑到底部后，下滑事件怎么处理
+RecycleView的缓存机制，四级缓存，然后又说ListView两级缓存，RecycleView的局部刷新机制，最后讲了它的用法
+
+
+IntentService能用bind方式启动吗？IntentService的原理
+
+
+事件传递
+事件分发
+事件处理机制(事件分发机制,x2)
+事件的分发机制 提到了责任链模式，就接着问责任链模式的优缺点
+除了责任链模式还了解哪些设计模式，说了观察者模式，单例模式，工厂模式
+观察者模式的优缺点，什么情景下使用？使用过哪些用观察者模式的框架？
+
+进程间通信机制(x3)，讲了线程和进程的区别(x2)(是否有独立地址空间，怎么实现独立地址空间)，Android里面常用的进程间通信方式，包括基于Binder的(ContentProvider、AIDL、Messanger)和基于文件的(普通文件读写，sp)和基于网络的（Socket）
+详解Binder机制，Binder通信的几个角色，实现一次拷贝的函数mmap。
+
+Handler机制(x2)，详细讲了Handler、Looper、Message、MessageQueue、空消息时的阻塞、IntentService、HandlerThread、AsyncTask的实现
+Handler中是否有messagequeue
+Handler解决内存泄漏
+Handler可以主动释放吗
+说说对Handler源码的了解
+Handler  Loop
+讲一下hander和IPC机制，looper会消耗系统资源吗？
+handler消息机制
+handler的postDelay时间精确吗
+Handler消息机制，子线程可以创建handler吗
+
+android如何发起网络请求，有用过相关框架吗，okhttp框架解决了你什么问题？
+OkHttp的源码讲解，它涉及哪些设计模式
+OkHttp相关，包括它的优势，责任链模式中各个拦截链做了什么。
+   详细讲了OkHttp的桥接拦截链和缓存拦截链：https://blog.csdn.net/qq_23594799/article/details/105478769
+由上面引申出http的四种缓存管理方式,讲了HTTP的304状态码
+OkHttp的dispatcher，异步请求，同步请求
+LruCache实现方式，包括底层结构，数据的插入删除为什么是O(1)，提到Gilde的软引用、OOM上面
+断网的情况下也会有页面，为什么？浏览器的缓存是怎样的
+
+AndroidUI绘制流程？
+Android中每一帧绘制时间在多少ms以下算流畅？1000/60 = 16ms
+电影是24fps，为什么Android需要60帧才流畅？触摸、点击事件反应的角度还有动画流畅性的角度，开放性问题
+android的自定义view是如何做的？
+view绘制(自定义View的方法,x2)
+View的绘制过程（非常详细地说），具体还有些仔细的小问题。
+View的事件分发（非常详细地说），具体还有些仔细的小问题。
+自定义View，需要重写哪几个方法。如果要你实现WIFI信号的显示，那么你会怎么做。
+view的绘制流程，View层次过深怎么优化，选择哪个布局比较好？
+View的绘制流程，MeasureSpec(MS)知道吗？如何确定一个View的MS？那DecorView呢？
+滑动冲突的定义和解决方式(x3)：考察的不是内部拦截与外部拦截，其实考察的是：NestedScrollParent  NestedScrollChild
+
+Android动画了解吗
+说了过渡动画，说了自己封装的ObjectAnimator工具类，以及MotionLayout相关使用、以及过渡动画实现共享Item的用法。
+
+图片的三级缓存是怎么做的？
+图片框架的缓存和内存复用
+
+android的性能问题如何发现?
+android如何调试性能问题?
+做过的安卓性能优化
+
+内存泄露是什么，怎么解决
+内存泄露检测工具leakcanary的原理
+有没有使用过内存查看工具
+
+Flutter或者一个新东西是如何学习的?
+flutter 的层级结构
+flutter和 react native的区别?
+flutter 选择dart语言的原因是什么?
+
+ANR
+AndroidManifest文件中用过哪些相关权限？
+Intent显示跳转与隐式跳转，如何使用？
+handlerthread,intentservice,线程池，数据库特性
+让你从0开始搭建一款APP(基础类设计、网络设计、兼容性考虑、代码质量保证、测试相关、设计模式的使用、MVVM架构的使用)
+Android设计模式
+Otto和eventbus区别和原理和使用场景
+Gradle文件了解吗？
+Android和Spring都用的Java，你分析一下这两种开发（框架）用的Java的区别？
+让你实现软件的更新，你会做哪些操作？
+
+MVC、MVP、MVVM架构区别，为什么用MVP
+
+了解RN么，了解前端么。
+RN开发和原生开发的区别
+RN中JsBundle增量加载实现
+
+
+
+单例模式DCL为什么要两次判断null呢？为什么使用volatile？
+静态内部类和双重检验两种单例模式的差别
+熟悉的设计模式（单例）
+介绍了单例的五种实现
+除了责任链模式还了解哪些设计模式，说了观察者模式，单例模式，工厂模式
+观察者模式的优缺点，什么情景下使用？使用过哪些用观察者模式的框架？
+用过的设计模式或者是安卓中遇到的设计模式
+责任链模式有哪些优势
+
+
+
+
+
+
+Android 基础
+四大组件的生命周期
+
+
+
+fragment各种情况下的生命周期是如何管理的
+service的开启方式，原理是怎样的
+
+AlertDialog popupWindow Activity 区别
+Application 和 Activity 的 Context 对象的区别
+Android属性动画特性
+如何导入外部数据库
+LinearLayout、RelativeLayout、FrameLayout 的特性及对比，并介绍使用场景
+谈谈对接口与回调的理解
+介绍下SurfaceView，它的应用场景是怎样的，它与普通View的区别是什么
+序列化的作用，以及Android两种序列化的区别
+插值器、估值器
+Android中数据存储的方式
+
+Android源码相关
+
+Android动画框架实现原理
+Android各个版本 API 的区别
+RequestLayout onLayout onDraw drawChild 区别与联系
+invalidate和postInvalidate的区别及使用
+Activity window view 三者的差别
+如何自定义view，进行优化的一般方向是怎样的
+低版本SDK如何实现高版本API
+描述一次网络请求的流程
+HttpUrlConnection 和 okhttp 关系
+Bitmap对象的理解
+Looper架构
+activityThread AMS WMS 工作原理
+自定义view如何考虑机型适配
+AsyncTask+HttpClient 与 AsyncHttpClient 有什么区别
+LaunchMode应用场景
+AsyncTask如何使用
+SpareArray 原理
+IntentService 原理及作用是什么
+Activity Intent Service 是什么关系
+SP是进程同步的吗？有什么方法做到同步?
+多线程在Android中的使用
+进程和application的成名周期
+封装View的时候怎么知道view的大小
+RecyclerView 原理，如何避免RecyclerView带来的内存问题
+AndroidManifest的作用于理解
+
+常见原理性的问题
+Handler机制与底层实现
+Handler Thread 和HandlerThread的差别
+handler发送消息给子线程，Looper怎么启动
+关于Handler 在任何地方 new Handler都是什么线程下
+ThreadLocal原理，实现及如何保证Local属性
+解释在单线程模型中 Message、Handler、MessageQueue、Looper 之间的关系
+view事件分发机制
+Touch时间传递流程
+事件分发中的 onTouch 和 onTouchEvent 有什么区别，该如何使用
+View 和 ViewGroup 分别有哪些事件分发相关的回调
+View刷新机制
+View绘制流程
+自定义控件原理
+自定义View如何提供获取View属性的接口
+Android代码中实现WAP方式联网
+AsyncTask机制，原理及不足
+为什么不能在子线程更新UI
+ANR产生的原因是什么
+ANR定位和修正
+OOM是什么
+什么情况导致OOM
+有什么解决方法可以避免OOM
+OOM是否可以try catch，为什么
+内存泄漏是什么
+什么情况下导致内存泄漏
+如何防止线程的内存泄漏
+内存泄漏的解决方法
+内存泄漏和内存溢出的区别
+LruCache默认缓存大小
+ContentProvider的权限管理
+如何通过广播拦截和abort一条短信
+广播是否可以请求网络
+计算一个View的嵌套层级
+Activty栈
+Android线程有没有上限
+Android为什么引入Parcelable
+有没有尝试简化 Parcelable 的使用
+dex文件的加载流程描述下
