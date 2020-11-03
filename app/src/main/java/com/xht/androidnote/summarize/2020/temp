@@ -1299,16 +1299,11 @@ public Method getMethod(String name, Class<?>... parameterTypes)
 
 
 
-6、window的类型？Application的上下文能启动dialog吗？为什么？
+6、window的类型？
     FrameWork定义了三种窗口类型，三种类型定义在WindowManager。
     1.应用窗口，对应于一个Activity。加载Activity由AmS完成，创建一个应用窗口只能在Activity内部完成。
     2.子窗口，必须依附于任何类型的父窗口。
     3.系统窗口，不需要对应任何Activity，应用程序不能创建系统窗口。
-
-    Application的context不能启动dialog，会抛出异常，Unable to add window -- token null is not valid; is your activity running?
-    Activity创建的时候会attach()，会创建PhoneWindow，然后调用mWindow.setWindowManager()，第二个参数是token，即attach()中传入的IBinder，
-
-
 
 
 7、布局优化？ViewStub的原理？
