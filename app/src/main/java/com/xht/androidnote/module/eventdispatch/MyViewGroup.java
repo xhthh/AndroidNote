@@ -3,6 +3,7 @@ package com.xht.androidnote.module.eventdispatch;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.xht.androidnote.utils.L;
@@ -13,15 +14,22 @@ import com.xht.androidnote.utils.L;
 
 public class MyViewGroup extends RelativeLayout {
     public MyViewGroup(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public MyViewGroup(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public MyViewGroup(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("MyViewGroup---onClick()");
+            }
+        });
     }
 
 
@@ -42,8 +50,8 @@ public class MyViewGroup extends RelativeLayout {
                 break;
         }
         return super.dispatchTouchEvent(ev);
-//        return false;//ViewGroup只能接收DWON事件
-//        return true;//ViewGroup会接收后续事件
+//                return true;//ViewGroup会接收后续事件
+//                return false;//ViewGroup只能接收DWON事件
     }
 
     @Override

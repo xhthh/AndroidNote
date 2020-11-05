@@ -6,6 +6,8 @@ import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.utils.L;
 
+import butterknife.OnClick;
+
 /**
  * Created by xht on 2018/6/21.
  * 事件分发机制
@@ -59,5 +61,9 @@ public class EventDispatchActivity extends BaseActivity {
                 break;
         }
         return super.onTouchEvent(event);
+    }
+
+    @OnClick(R.id.btn_test_dispatch)
+    public void onViewClicked() {
     }
 }

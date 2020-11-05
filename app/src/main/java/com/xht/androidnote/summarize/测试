@@ -16,7 +16,6 @@ https://www.bilibili.com/read/cv7556139/
 
 
 •binder机制
-•Handler消息机制，子线程可以创建handler吗
 •View的绘制流程，MeasureSpec(MS)知道吗？如何确定一个View的MS？那DecorView呢？
 •OkHttp的源码讲解，它涉及哪些设计模式
 •为什么TCP要三次握手，两次不行吗？
@@ -73,9 +72,6 @@ RecycleView的缓存机制，四级缓存，然后又说ListView两级缓存，R
 IntentService能用bind方式启动吗？IntentService的原理
 
 
-事件传递
-事件分发
-事件处理机制(事件分发机制,x2)
 事件的分发机制 提到了责任链模式，就接着问责任链模式的优缺点
 除了责任链模式还了解哪些设计模式，说了观察者模式，单例模式，工厂模式
 观察者模式的优缺点，什么情景下使用？使用过哪些用观察者模式的框架？
@@ -83,16 +79,12 @@ IntentService能用bind方式启动吗？IntentService的原理
 进程间通信机制(x3)，讲了线程和进程的区别(x2)(是否有独立地址空间，怎么实现独立地址空间)，Android里面常用的进程间通信方式，包括基于Binder的(ContentProvider、AIDL、Messanger)和基于文件的(普通文件读写，sp)和基于网络的（Socket）
 详解Binder机制，Binder通信的几个角色，实现一次拷贝的函数mmap。
 
-Handler机制(x2)，详细讲了Handler、Looper、Message、MessageQueue、空消息时的阻塞、IntentService、HandlerThread、AsyncTask的实现
-Handler中是否有messagequeue
-Handler解决内存泄漏
-Handler可以主动释放吗
-说说对Handler源码的了解
-Handler  Loop
-讲一下hander和IPC机制，looper会消耗系统资源吗？
-handler消息机制
-handler的postDelay时间精确吗
-Handler消息机制，子线程可以创建handler吗
+
+
+
+IPC机制
+
+
 
 android如何发起网络请求，有用过相关框架吗，okhttp框架解决了你什么问题？
 OkHttp的源码讲解，它涉及哪些设计模式
@@ -109,7 +101,6 @@ Android中每一帧绘制时间在多少ms以下算流畅？1000/60 = 16ms
 android的自定义view是如何做的？
 view绘制(自定义View的方法,x2)
 View的绘制过程（非常详细地说），具体还有些仔细的小问题。
-View的事件分发（非常详细地说），具体还有些仔细的小问题。
 自定义View，需要重写哪几个方法。如果要你实现WIFI信号的显示，那么你会怎么做。
 view的绘制流程，View层次过深怎么优化，选择哪个布局比较好？
 View的绘制流程，MeasureSpec(MS)知道吗？如何确定一个View的MS？那DecorView呢？
@@ -137,7 +128,7 @@ flutter 选择dart语言的原因是什么?
 ANR
 AndroidManifest文件中用过哪些相关权限？
 Intent显示跳转与隐式跳转，如何使用？
-handlerthread,intentservice,线程池，数据库特性
+线程池，数据库特性
 让你从0开始搭建一款APP(基础类设计、网络设计、兼容性考虑、代码质量保证、测试相关、设计模式的使用、MVVM架构的使用)
 Android设计模式
 Otto和eventbus区别和原理和使用场景
@@ -215,16 +206,7 @@ RecyclerView 原理，如何避免RecyclerView带来的内存问题
 AndroidManifest的作用于理解
 
 常见原理性的问题
-Handler机制与底层实现
-Handler Thread 和HandlerThread的差别
-handler发送消息给子线程，Looper怎么启动
-关于Handler 在任何地方 new Handler都是什么线程下
-ThreadLocal原理，实现及如何保证Local属性
-解释在单线程模型中 Message、Handler、MessageQueue、Looper 之间的关系
-view事件分发机制
-Touch时间传递流程
-事件分发中的 onTouch 和 onTouchEvent 有什么区别，该如何使用
-View 和 ViewGroup 分别有哪些事件分发相关的回调
+
 View刷新机制
 View绘制流程
 自定义控件原理
@@ -253,3 +235,57 @@ Android线程有没有上限
 Android为什么引入Parcelable
 有没有尝试简化 Parcelable 的使用
 dex文件的加载流程描述下
+
+
+
+DSA
+两个栈实现队列
+快速排序(x3)
+二叉树的非递归前序遍历
+单例模式(x3,1人写的是DCL,DCL为什么要两次判断null呢？为什么使用volatile？)
+单例的静态内部类实现
+两个单例模式，DCL和静态内部类（同时问了final关键字与静态内部类为什么能满足单例模式）
+合并两个有序链表
+逆序输出ArrayList
+递归反转栈
+判断链表是否有环(x2)
+反转链表
+冒泡排序
+二分查找
+翻转二叉树
+打印2到100所有的质数
+生产者消费者模式(x4)
+打印二叉树左侧第一个元素（层序遍历，打印第一个元素）
+判断一个字符串在另一个字符串里面的出现次数
+用选择排序对链表进行排序
+两个链表相加
+打字算法题：https://www.nowcoder.com/practice/7819ebf1369044e5bee2f9848d9c6c72?tpId=110&&tqId=33481&rp=1&ru=/activity/oj&qru=/ta/job-code/question-ranki
+通过先序和中序数组生成后序数组
+链表的选择排序，问了时间复杂度  O(n*n)
+树的深度
+树的广度
+从右往左输出一个整数的不重复数字。
+n皇后问题
+最长不重复公共字串
+100瓶毒药，多少只小白鼠试药问题
+Topk编程，问我为什么不直接用treeset？
+冒泡排序，然后就着冒泡排序分析时间复杂度，并解释怎么得出来的时间复杂度，再然后问稳定性，怎么判断是稳定的？冒泡排序有没有优化的点(加一个flag)，优化后最好和最坏的复杂度是多少
+打印出一个字符串中所有的回文子串
+CAS原理?用CAS实现两个线程给同一个变量赋值？
+
+
+
+排序算法
+红黑树平衡二叉树区别
+栈队列区别
+数组链表区别
+快速排序的复杂度，时间复杂度的推算原理，快排实现原理
+队列和栈和二叉树前序遍历、层次遍历的应用
+二叉树的前序中序(x2)遍历的递归、迭代实现思想
+双链表找相交结点(x2)
+10亿数，找最大100个数
+桶排序，对全省高考成绩做一个排序，怎么设计
+红黑树的特点
+两个队列实现一个栈
+哈夫曼树和哈夫曼编码，为什么哈夫曼编码比常规编码优
+最左前缀匹配原则？

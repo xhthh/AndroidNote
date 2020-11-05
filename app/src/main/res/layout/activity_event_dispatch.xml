@@ -4,6 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <Button
+        android:id="@+id/btn_test_dispatch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test"
+        android:textAllCaps="false" />
+
     <com.xht.androidnote.module.eventdispatch.MyViewGroup
         android:layout_width="300dp"
         android:layout_height="300dp"
@@ -27,11 +34,13 @@
         <com.xht.androidnote.module.eventdispatch.TestButton1
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:clickable="true"
             android:background="#ff0000" />
 
         <com.xht.androidnote.module.eventdispatch.TestButton2
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:clickable="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:background="#ffff00" />

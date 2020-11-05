@@ -30,7 +30,6 @@
 9、RN怎么优化启动快一点
 
 
-3、HandlerThread的原理及作用？IdleHandler的作用？
 
 
 5、遍历一个ViewGroup里的子view
@@ -58,7 +57,6 @@
 6、
 
 
-9、onInterceptTouchEvent()什么场景使用？
 
 10、生命周期，A-->B？如果B是透明的？A-->B--C，B是透明的？
 
@@ -93,9 +91,6 @@
     结构清晰，便于理解
 
 
-1、onInterceptTouchEvent() return false后，事件还会交给该ViewGroup吗
-    会，默认是return false
-
 
 2、滑动冲突的处理，怎样使子view先滚动，然后父view滚动？
 
@@ -109,9 +104,6 @@
 
 8、启动插件的Activity？
 
-
-9、静态内部类的单例模式怎样保证线程安全的？
-    通过JVM类加载是安全的
 
 
 1、数组和链表的区别？查询哪个快？为什么？
@@ -143,14 +135,6 @@
   View适用于主动更新的情况，而SurfaceView则适用于被动更新的情况，比如频繁刷新界面。
   View在主线程中对页面进行刷新，而SurfaceView则开启一个子线程来对页面进行刷新。
   View在绘图时没有实现双缓冲机制，SurfaceView在底层机制中就实现了双缓冲机制。
-
-
-
-1、双重检索单例模式 内部判空的原因，如果没有的话，会造成什么情况？
-    内部判空，主要是防止两个线程同时进入第一层判空，一个持有锁，创建单例实例后，第二个线程进入锁，会重复创建，不再是单例
-
-2、静态内部类模式怎样保证单例的线程安全？
-    由JVM保证了多线程并发访问的正确性，类加载是线程安全的。
 
 
 
@@ -261,7 +245,6 @@
     }
 
 
-3、反射中的方法
 
 
 4、android版本适配
@@ -284,7 +267,6 @@
 8、webView需要注意的安全问题
 
 
-1、怎样3个线程同时启动，执行完后再执行另一个线程？
 
 2、webView和js交互
 
@@ -292,7 +274,6 @@
 5、tinker的缺陷？能修复第三方aar
 
 
-8、本地广播
 
 9、oom能被try catch吗
     OOM 能不能被 catch 住？在某些条件下可以。仅在我们可控的代码，并且在 try 块中存在申请大量内存的情况下，
@@ -300,9 +281,6 @@
     当我们 catch 住 OOM 的时候，我们应该主动释放一些我们可控的内存，做好内存管理，避免在后续的操作中，立即又会触发 OOM，导致崩溃。
 
 
-10、try catch finally  在try中return  finally还会执行吗
-    ①try中有return, 会先将值暂存，无论finally语句中对该值做什么处理，最终返回的都是try语句中的暂存值。
-    ②当try与finally语句中均有return语句，会忽略try中return。
 
 11、ArrayList能遍历的同时删除元素吗？
 
@@ -310,16 +288,6 @@
 12、Scroller是干什么的？
     弹性滑动
 
-
-
-1、Java class文件的构成及作用
-
-2、Java反射效率低的原因和解决方法
-    Method#invoke 方法会对参数做封装和解封操作
-    需要检查方法可见性
-    需要校验参数
-    反射方法难以内联
-    JIT 无法优化
 
 
 
@@ -391,9 +359,6 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
 
 
 
-1、线程池的原理
-
-
 2、RN怎么实现的？
 
 3、MVP基类的封装处理？
@@ -431,9 +396,7 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
 6、怎样实现多进程？
     AndroidManifest.xml中配置 android:process=":remote"
 
-7、分代收集
-    新生代对象存活率较低，使用复制算法
-    老年代对象存活率较高，使用标记整理算法
+
 
 8、sp是线程安全的吗？commit和apply的区别？
     SharedPreferences不支持多线程，进程也是不安全的
@@ -443,9 +406,6 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
     但是如果希望立刻获取存储操作的结果，并据此做相应的其他操作，应当使用 commit。
 
 
-9、Java虚拟机栈里存的什么东西？
-    方法栈帧    用于存储局部 变量表、操作数栈、动态链接、方法出口 等信息。
-    局部变量表   存放了编译期可知的各种 基本数据类型、对象引用类型和returnAddress类型
 
 10、jpg和png的区别？
     二者对比：
@@ -469,15 +429,7 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
 
 12、oom发生在哪个区域？
 
-13、哪些对象可以作为跟root？
-    GC管理的主要区域是Java堆，一般情况下只针对堆进行垃圾回收。
-    方法区、栈和本地方法区不被GC所管理,因而选择这些区域内的对象作为GC roots,被GC roots引用的对象不被GC回收。
 
-    在Java语言里，可作为GC Roots对象的包括如下几种：
-    a.虚拟机栈(栈桢中的本地变量表)中的引用的对象
-    b.方法区中的类静态属性引用的对象
-    c.方法区中的常量引用的对象
-    d.本地方法栈中JNI的引用的对象
 
 14、okHttp链接复用
     首先会对缓存中的连接进行遍历，以寻找一个闲置时间最长的连接，然后根据该连接的闲置时长和最大允许的连接数量等参数来决定是否应该清理该连接。
@@ -519,13 +471,7 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
     14.ConcurrentSkipListMap：是TreeMap的线程安全版本
     15.ConcurrentSkipListSet：是TreeSet的线程安全版本
 
-19、GC什么时候会发生
-    新生代
-        Minor GC
-        Eden区域  from Survivor   to Survivor
 
-    老年代
-        Full  GC
 
 21、native缓存、显存
 
@@ -583,8 +529,7 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
       需要实现监听的Fragment的Activity实现接口
 
 
-2、HashMap初始化，如果要放置5个数据，初始化长度该为多少？
-    初始化长度 =（需要存储的元素个数/负载因子）+ 1
+
 
 3、播放器怎样监听来电、闹钟，进入暂停？
 
@@ -615,8 +560,6 @@ ReactRootView调用自己的startReactApplication()方法启动了整个RN页面
 
 ListView 嵌套scrollview，怎样实现横竖滑动
 
-cas是什么类型的锁
-乐观锁
 
 Android和js交互？jsBridge？
 
@@ -738,7 +681,6 @@ Android和js交互？jsBridge？
 
 2、scrollview嵌套listView
 
-3、事件分发
 
 4、自定义view
     比如自定义九宫格，首先继承自LinearLayout，
@@ -798,74 +740,8 @@ Android和js交互？jsBridge？
 
 
 
-3、ThreadLocalMap的结构，它是怎样存储Looper的？键值对的key是什么？
-    https://blog.csdn.net/weixin_33709609/article/details/87986660
-
-    ThreadLocal是线程内部的数据存储类，它可以在指定线程中存储数据，存储数据后，只有在指定线程中可以获取到存储的数据。
-
-    public void set(T value) {
-        Thread t = Thread.currentThread();
-        ThreadLocalMap map = getMap(t);
-        if (map != null)
-            map.set(this, value);
-        else
-            createMap(t, value);
-    }
-
-    虽然官方申明为ThreadLocalMap是一个哈希表，但是它与我们传统认识的HashMap等哈希表内部结构是不一样的。
-    ThreadLocalMap内部仅仅维护了Entry[] table,数组。其中Entry实体中对应的key为弱引用，
-    在第一次放入数据时，会初始化数组长度（为16),定义数组扩容阀值（当前默认数组长度的2/3)。
-
-    如果key使用强引用，那么当引用ThreadLocal的对象被回收了，
-    但ThreadLocalMap中还持有ThreadLocal的强引用，如果没有手动删除，ThreadLocal不会被回收，导致内存泄漏。
-
-    //根据哈希值计算位置
-    //判断当前位置是否有数据，如果key值相同，就替换，如果不同则找空位放数据。
-
-    //判断key值相同否，如果是直接覆盖 （第一种情况）
-    //如果当前Entry对象对应Key值为null,则清空所有Key为null的数据（第二种情况）
-    //以上情况都不满足，直接添加（第三种情况）
-    //如果当前数组到达阀值，那么就进行扩容。
-
-    ThreadLocal本质是操作线程中ThreadLocalMap来实现本地线程变量的存储的
-    ThreadLocalMap是采用数组的方式来存储数据，其中key(弱引用)指向当前ThreadLocal对象，value为设的值
-    ThreadLocal为内存泄漏采取了处理措施，在调用ThreadLocal的get(),set(),remove()方法的时候都会清除线程ThreadLocalMap里所有key为null的Entry
-    在使用ThreadLocal的时候，我们仍然需要注意，避免使用static的ThreadLocal，分配使用了ThreadLocal后，
-    一定要根据当前线程的生命周期来判断是否需要手动的去清理ThreadLocalMap中清key==null的Entry。
 
 
-    key是当前ThreadLocal对象
-
-
-4、三种线程安全的单例模式
-
-5、synchronized和Lock的区别？
-    来源：
-    lock是一个接口，而synchronized是java的一个关键字，synchronized是内置的语言实现；
-
-    异常是否释放锁：
-    synchronized在发生异常时候会自动释放占有的锁，因此不会出现死锁；而lock发生异常时候，不会主动释放占有的锁，必须手动unlock来释放锁，可能引起死锁的发生。（所以最好将同步代码块用try catch包起来，finally中写入unlock，避免死锁的发生。）
-
-    是否响应中断
-    lock等待锁过程中可以用interrupt来中断等待，而synchronized只能等待锁的释放，不能响应中断；
-
-    是否知道获取锁
-    Lock可以通过trylock来知道有没有获取锁，而synchronized不能；
-
-    Lock可以提高多个线程进行读操作的效率。（可以通过readwritelock实现读写分离）
-
-    在性能上来说，如果竞争资源不激烈，两者的性能是差不多的，而当竞争资源非常激烈时（即有大量线程同时竞争），此时Lock的性能要远远优于synchronized。所以说，在具体使用时要根据适当情况选择。
-
-    synchronized使用Object对象本身的wait 、notify、notifyAll调度机制，而Lock可以使用Condition进行线程之间的调度，
-
-6、Lock的使用场景？
-    1.某个线程在等待一个锁的控制权的这段时间需要中断
-    2.需要分开处理一些wait-notify，ReentrantLock里面的Condition应用，能够控制notify哪个线程
-    3.具有公平锁功能，每个到来的线程都将排队等候
-
-7、HashMap原理？怎样通过哈希值获取数组位置？
-    利用key的hashCode与自身的高16位进行异或运算
-    index = (n - 1) & hash
 
 8、onNewIntent()什么时候会调用？
 
@@ -882,76 +758,7 @@ Android和js交互？jsBridge？
 
 
 
-11、IdleHandler的作用以及如何使用？
-    IdleHandler 可以用来提升性能，主要用在我们希望能够在当前线程消息队列空闲时做些事情
-    （譬如 UI 线程在显示完成后，如果线程空闲我们就可以提前准备其他内容）的情况下，不过最好不要做耗时操作。
 
-
-    public static interface IdleHandler {
-        boolean queueIdle();
-    }
-    这个接口方法是在消息队列消息队列全部处理完成后或者是在阻塞的过程中等待更多的消息的时候调用的，返回值决定了处理一次后是否保存这个接口。
-    返回false，那么就会移除它，返回true就会在下次message处理完了的时候继续回调。
-
-    MessageQueue中有一个ArrayList集合mIdleHandlers，用来保存IdleHandler接口
-    addIdleHandler()中添加，removeIdleHandler()中移除，这两个方法都是线程安全的
-
-    获取空闲队列个数，如果没有pendingIdleHandlerCount < 0，Looper继续阻塞
-    然后，如果空闲数组为空，初始化，个数为pendingIdleHandlerCount和4的最大值，
-    将空闲list转为数组，
-    遍历数组，keep = idler.queueIdle();
-
-
-    在ActivityThread中有应用，GcIdler实现IdleHandler，方法中doGcIfNeeded()
-
-
-    ActivityThread#handleReusmeActivity()
-        里面调用performResumeActivity()，这里面调用了Activity#onResume()
-        然后回到handleResumeActivity()，调用了wm.addView(decor, l);
-    WindowManagerImpl#addView()--->WindowManagerGlobal#addView()--->创建了ViewRootImpl，
-    调用了ViewRootImpl#setView()---->这里最终调用了requestLayout()--->scheduleTraversal()--->
-    这里最终通过handler post了一个runnable，这个runnable的run()里调用的是doTraversal()--->
-    performTraversal()--->measure()、layout()、draw()
-
-    如果我们想在界面绘制出来后做点什么，那么在onResume里面显然是不合适的，它先于measure等流程了
-
-    如果我们想在绘制完成后做一些事情，可以在onResume()中
-
-    因为主线程绘制UI，也是通过handler#post(runnable)来处理的，等绘制处理完后，就会执行空闲队列
-
-
-    // 拿到主线程的MessageQueue
-     Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
-
-     @Override
-     public boolean queueIdle() {
-      // 在这里去处理你想延时加载的东西
-      delayLoad();
-
-      // 最后返回false，后续不用再监听了。
-      return false;
-     }
-     });
-
-
-12、Handler#handleMessage 返回值 true false 的含义、
-    /**
-     * Handle system messages here.
-     */
-    public void dispatchMessage(Message msg) {
-        if (msg.callback != null) {
-            handleCallback(msg);
-        } else {
-            if (mCallback != null) {
-                if (mCallback.handleMessage(msg)) {
-                    return;
-                }
-            }
-            handleMessage(msg);
-        }
-    }
-
-    如果不自定义handler类，
 
 
 13、getMeasuredWidth()和getWidth()的区别？
@@ -991,41 +798,7 @@ Android和js交互？jsBridge？
 
 
 
-1、Looper#quit()方法做了什么？
-    调用的是MessageQueue#quit()
-    void quit(boolean safe) {
-        if (!mQuitAllowed) {
-            throw new IllegalStateException("Main thread not allowed to quit.");
-        }
 
-        synchronized (this) {
-            if (mQuitting) {
-                return;
-            }
-            mQuitting = true;
-
-            if (safe) {
-                removeAllFutureMessagesLocked();
-            } else {
-                removeAllMessagesLocked();
-            }
-
-            // We can assume mPtr != 0 because mQuitting was previously false.
-            nativeWake(mPtr);
-        }
-    }
-
-    loop 方法是一个死循环，唯一跳出循环的方式是 MessageQueue 的 next 方法返回了null。
-    当 Looper 的 quit 方法被调用时，Looper就会调用 MessageQueue 的 quit 或者 qutiSafely 方法来通知消息队列退出，
-    当消息队列被标记为退出状态时，它的 next 方法就会返回 null。loop 方法会调用 MessageQueue 的 next 方法来获取新消息，
-    而 next 是一个阻塞操作，当没有消息时，next 会一直阻塞，导致 loop 方法一直阻塞。
-
-2、Message.obtain()
-
-
-3、HashMap，哈希值是怎么得到的，异或运算的目的？
-   key的hashCoe，进行高16位的异或运算
-   为的是让哈希值分布更均匀
 
 4、HashMap，设置的数据大于初始值会触发扩容吗，比如初始化1000，数据是1001？
 
@@ -1034,7 +807,7 @@ Android和js交互？jsBridge？
 
 6、ConcurrentHashMap线程安全的原理？jdk 1.6之前和之后？
 
-7、线程池的种类，分别的作用？
+
 
 8、环形链表，计算环长？
     快慢指针
@@ -1096,8 +869,6 @@ Android和js交互？jsBridge？
     最小堆的任何一个父节点的值，都小于或等于它左、右孩子节点的值。
 
 
-12、synchronized 底层实现原理
-    jvm基于进入和退出Monitor对象来实现方法同步和代码块同步。
 
 
 
@@ -1121,10 +892,6 @@ Android和js交互？jsBridge？
     7、主线程在收到Message后，通过发射机制创建目标Activity，并回调Activity.onCreate()等方法。
 
 
-1、Java虚拟机和Dalvik虚拟机的区别？
-   ①Java虚拟机基于栈，Dalvik虚拟机基于寄存器
-   ②Java虚拟机运行的是Java字节码文件，Dalvik虚拟机运行的是dex文件。
-
 
 1、JsBridge的实现
     协议怎样封装的
@@ -1132,7 +899,6 @@ Android和js交互？jsBridge？
     onJsPrompt的实现
 
 
-2、Message为什么不建议new，内存相关？
 
 3、Glide原理
 
@@ -1141,24 +907,7 @@ Android和js交互？jsBridge？
 
 
 
-1、主线程等待所有线程执行完毕，再执行某个特定任务怎么实现？
-   join
-   等待多线程完成的CountDownLatch
-   CyclicBarrier
-   countDownLatch只能使用一次，而CyclicBarrier方法可以使用reset()方法重置，所以CyclicBarrier方法可以能处理更为复杂的业务场景。
 
-
-
-2、反射
-getDeclaredMethods 方法返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法。
-1
-public Method[] getDeclaredMethods() throws SecurityException
-getMethods 方法返回某个类的所有公用（public）方法，包括其继承类的公用方法。
-1
-public Method[] getMethods() throws SecurityException
-getMethod 方法返回一个特定的方法，其中第一个参数为方法名称，后面的参数为方法的参数对应Class的对象。
-1
-public Method getMethod(String name, Class<?>... parameterTypes)
 
 
 1、内存优化
@@ -1278,23 +1027,7 @@ public Method getMethod(String name, Class<?>... parameterTypes)
 
 4、资源混淆为什么会减少apk体积
 
-5、反射原理？用途？getMethods()和getDeclaredMethods()的区别？setAccessible()
-    JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；
-    对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。
 
-    反射机制可以用来：
-    • 在运行时分析类的能力。
-    • 在运行时查看对象，例如，编写一个 toString 方法供所有类使用。
-    • 实现通用的数组操作代码。
-    • 利用 Method 对象，这个对象很像中的函数指针。
-
-    一个类只会被加载一次，产生一个class对象
-    每一个类都有一个Class对象，每当编译一个新类就产生一个Class对象
-
-
-    getMethods()和getDeclaredMethods()的区别？
-    getMethods()返回类声明的及继承的方法
-    getDeclaredMethods()只返回类自己声明的方法
 
 
 
@@ -1321,29 +1054,7 @@ public Method getMethod(String name, Class<?>... parameterTypes)
 11、图片加载怎样减少内存消耗？
 
 
-13、程序计数器是干啥的？栈里存放的是什么？一个对象一定是在堆内存吗？
-    程序计数器是一个记录着当前线程所执行的字节码的行号指示器。
 
-    1.线程隔离性，每个线程工作时都有属于自己的独立计数器。
-    2.执行java方法时，程序计数器是有值的，且记录的是正在执行的字节码指令的地址（参考上一小节的描述）。
-    3.执行native本地方法时，程序计数器的值为空（Undefined）。
-    4.程序计数器占用内存很小，在进行JVM内存计算时，可以忽略不计。
-    5.程序计数器，是唯一一个在java虚拟机规范中没有规定任何OutOfMemoryError的区域。
-
-    不一定，可能会在栈中分配
-    逃逸分析
-    对象逃逸状态
-    1、全局逃逸（GlobalEscape）
-    即一个对象的作用范围逃出了当前方法或者当前线程，有以下几种场景：
-
-    对象是一个静态变量
-    对象是一个已经发生逃逸的对象
-    对象作为当前方法的返回值
-    2、参数逃逸（ArgEscape）
-    即一个对象被作为方法参数传递或者被参数引用，但在调用过程中不会发生全局逃逸，这个状态是通过被调方法的字节码确定的。
-
-    3、没有逃逸
-    即方法中的对象没有发生逃逸。
 
 
 14、Looper的死循环为什么不会阻塞主线程？
@@ -1394,11 +1105,7 @@ ArrayMap SparseArray 替换 HashMap
 
     https://www.jianshu.com/p/1ea76a141ed2
 
-2、Fragment和Fragment之间的通信
-    通过接口
-    通过宿主activity
-    通过广播
-    通过EventBus
+
 
 
 
@@ -1473,21 +1180,7 @@ ArrayMap SparseArray 替换 HashMap
     数据链路层
     物理层
 
-4、多线程的方式？有什么不同？
-    ①Thread，本质也是实现Runnable
-        定义Thread子类，重写run()
-        创建Thread子类实例
-        调用start()
-    ②实现Runnable接口，实现run()
-        自定义类实现Runnable接口，实现run()
-        创建Thread实例，将runnable传入
-        调用Thread的start()
-        Thread类中的run方法，里会判断，target是否为空，这个target是Runnable对象，不为空，则执行Runnable的run()
 
-    ③实现Callable接口，重写call()方法
-        Callable可以在任务结束后提供一个返回值
-        Callable的call()可以抛出异常
-        运行Callable可以拿到一个Future对象，它表示异步计算的结果
 
 5、创建线程消耗哪些资源？
     每当有线程被创建的时候，JVM就需要为其在内存中分配虚拟机栈和本地方法栈来记录调用方法的内容，
@@ -1500,12 +1193,7 @@ ArrayMap SparseArray 替换 HashMap
     --->对操作系统来说,创建一个线程的代价是十分昂贵的, 需要给它分配内存、列入调度,同时在线程切换的时候还要执行内存换页,
         CPU 的缓存被 清空,切换回来的时候还要重新从内存中读取信息,破坏了数据的局部性。
 
-6、线程池中的最大线程数由什么决定？
-    一般说来，大家认为线程池的大小经验值应该这样设置：（其中N为CPU的核数）
-    如果是CPU密集型应用，则线程池大小设置为N+1
-    如果是IO密集型应用，则线程池大小设置为2N+1（Android）
 
-    比如AsyncTask中对线程池的配置，核心线程书为 N+1，最大线程数为 2*N+1
 
 7、一组数中找出最大的10个数？
 
@@ -1631,10 +1319,6 @@ post
         然后添加一个和状态栏高、宽相同的指定颜色View来覆盖被透明化的状态栏。
     通过onScrollChanged()随着滑动改变ActionBar的透明度
 
-
-4、ScrollView 嵌套 RecyclerView 为什么会滑动冲突？
-    应该是两个view 都在move中进行了滑动的处理，一个事件分发到子view的同时，如果被子view消费掉，
-    它还是会走父view的各种事件
 
 
 5、view动画的分类？实现？矩阵几乘几？

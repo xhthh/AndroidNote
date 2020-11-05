@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.thread;
 
+import android.app.AlertDialog;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Toast;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
+import com.xht.androidnote.module.activity.ATestActivity;
 import com.xht.androidnote.module.thread.executor.ExecutorActivity;
 import com.xht.androidnote.utils.L;
 
@@ -40,6 +42,30 @@ public class ThreadTestActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                Toast.makeText(mContext, "子线程中弹 toast", Toast.LENGTH_SHORT).show();
+//                Looper.loop();
+//            }
+//        }).start();
+
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                AlertDialog dialog = new AlertDialog.Builder(ThreadTestActivity.this)
+//                        .setIcon(R.mipmap.ic_launcher_round)
+//                        .setCancelable(false)
+//                        .setMessage("Error")
+//                        .setTitle("Warring")
+//                        .show();
+//
+//            }
+//        }).start();
+
     }
 
     @OnClick({R.id.btn_executor, R.id.btn_start1, R.id.btn_start2, R.id.btn_start3})
