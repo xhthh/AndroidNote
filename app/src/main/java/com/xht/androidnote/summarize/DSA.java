@@ -1,5 +1,8 @@
 package com.xht.androidnote.summarize;
 
+import com.xht.androidnote.summarize.test.ListNode;
+import com.xht.androidnote.summarize.test.TreeNode;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -390,21 +393,3 @@ class Singleton2 {
     }
 }
 
-class ListNode {
-    public int val;
-    public ListNode next;
-
-    public ListNode(int x) {
-        val = x;
-    }
-}
-
-class TreeNode {
-    TreeNode left;
-    TreeNode right;
-    int val;
-
-    public TreeNode(int val) {
-        this.val = val;
-    }
-}

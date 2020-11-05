@@ -16,7 +16,6 @@ https://www.bilibili.com/read/cv7556139/
 
 
 •binder机制
-•View的绘制流程，MeasureSpec(MS)知道吗？如何确定一个View的MS？那DecorView呢？
 •OkHttp的源码讲解，它涉及哪些设计模式
 •为什么TCP要三次握手，两次不行吗？
 •TCP与UDP的区别，OSI五层结构
@@ -103,7 +102,6 @@ view绘制(自定义View的方法,x2)
 View的绘制过程（非常详细地说），具体还有些仔细的小问题。
 自定义View，需要重写哪几个方法。如果要你实现WIFI信号的显示，那么你会怎么做。
 view的绘制流程，View层次过深怎么优化，选择哪个布局比较好？
-View的绘制流程，MeasureSpec(MS)知道吗？如何确定一个View的MS？那DecorView呢？
 滑动冲突的定义和解决方式(x3)：考察的不是内部拦截与外部拦截，其实考察的是：NestedScrollParent  NestedScrollChild
 
 Android动画了解吗
