@@ -8,16 +8,44 @@ public class DSATest {
         int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
 
         System.out.println(Arrays.toString(array));
-        bubble(array);
+        //bubble(array);
+        quickSort(array, 0, array.length - 1);
         System.out.println(Arrays.toString(array));
 
         int binarySearch = binarySearch(array, 3, 0, array.length - 1);
         System.out.println(binarySearch);
     }
 
+    private static void quickSort(int[] array, int startIndex, int endIndex) {
+        if (startIndex >= endIndex) {
+            return;
+        }
 
-    public static void quickSort(int[] arr, int left, int right) {
+        int pivotIndex = partition(array, startIndex, endIndex);
+        quickSort(array, startIndex, pivotIndex - 1);
+        quickSort(array, pivotIndex + 1, endIndex);
+    }
 
+    private static int partition(int[] array, int startIndex, int endIndex) {
+        int pivot = array[startIndex];
+        int left = startIndex;
+        int right = endIndex;
+        while (left != right) {
+            if (left < right && array[right] > pivot) {
+                right--;
+            }
+            if (left < right && array[left] <= pivot) {
+                left++;
+            }
+            if (left < right) {
+                int temp = array[left];
+                array[left] = array[right];
+                array[right] = temp;
+            }
+        }
+        array[startIndex] = array[left];
+        array[left] = pivot;
+        return left;
     }
 
 

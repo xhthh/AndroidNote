@@ -12,38 +12,57 @@
         android:textAllCaps="false" />
 
     <com.xht.androidnote.module.eventdispatch.MyViewGroup
+        android:id="@+id/viewgroup"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:background="@color/colorPrimary">
 
-        <com.xht.androidnote.module.eventdispatch.MyView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@color/colorAccent" />
+        <com.xht.androidnote.module.eventdispatch.MyViewGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+
+
+                <com.xht.androidnote.module.eventdispatch.MyView
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:background="@color/colorAccent" />
+
+        </com.xht.androidnote.module.eventdispatch.MyViewGroup>
+
 
     </com.xht.androidnote.module.eventdispatch.MyViewGroup>
 
 
     <com.xht.androidnote.module.eventdispatch.MyViewGroup
         android:layout_width="300dp"
+        android:id="@+id/testCount"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:background="@color/colorPrimary"
         android:padding="30dp">
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:layout_height="wrap_content">
+
         <com.xht.androidnote.module.eventdispatch.TestButton1
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:clickable="true"
-            android:background="#ff0000" />
+            android:background="#ff0000"
+            android:clickable="true" />
+        </LinearLayout>
+
 
         <com.xht.androidnote.module.eventdispatch.TestButton2
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:clickable="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="#ffff00" />
+            android:background="#ffff00"
+            android:clickable="true" />
 
     </com.xht.androidnote.module.eventdispatch.MyViewGroup>
 

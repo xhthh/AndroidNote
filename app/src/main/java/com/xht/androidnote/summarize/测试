@@ -94,14 +94,10 @@ OkHttp的dispatcher，异步请求，同步请求
 LruCache实现方式，包括底层结构，数据的插入删除为什么是O(1)，提到Gilde的软引用、OOM上面
 断网的情况下也会有页面，为什么？浏览器的缓存是怎样的
 
-AndroidUI绘制流程？
 Android中每一帧绘制时间在多少ms以下算流畅？1000/60 = 16ms
 电影是24fps，为什么Android需要60帧才流畅？触摸、点击事件反应的角度还有动画流畅性的角度，开放性问题
-android的自定义view是如何做的？
-view绘制(自定义View的方法,x2)
-View的绘制过程（非常详细地说），具体还有些仔细的小问题。
-自定义View，需要重写哪几个方法。如果要你实现WIFI信号的显示，那么你会怎么做。
-view的绘制流程，View层次过深怎么优化，选择哪个布局比较好？
+
+
 滑动冲突的定义和解决方式(x3)：考察的不是内部拦截与外部拦截，其实考察的是：NestedScrollParent  NestedScrollChild
 
 Android动画了解吗
@@ -179,22 +175,19 @@ Android源码相关
 
 Android动画框架实现原理
 Android各个版本 API 的区别
-RequestLayout onLayout onDraw drawChild 区别与联系
-invalidate和postInvalidate的区别及使用
 
-如何自定义view，进行优化的一般方向是怎样的
+
 低版本SDK如何实现高版本API
 描述一次网络请求的流程
 HttpUrlConnection 和 okhttp 关系
 Bitmap对象的理解
 Looper架构
 activityThread AMS WMS 工作原理
-自定义view如何考虑机型适配
+
 AsyncTask+HttpClient 与 AsyncHttpClient 有什么区别
 LaunchMode应用场景
 AsyncTask如何使用
 SpareArray 原理
-IntentService 原理及作用是什么
 Activity Intent Service 是什么关系
 SP是进程同步的吗？有什么方法做到同步?
 多线程在Android中的使用
@@ -206,8 +199,7 @@ AndroidManifest的作用于理解
 常见原理性的问题
 
 View刷新机制
-View绘制流程
-自定义控件原理
+
 自定义View如何提供获取View属性的接口
 Android代码中实现WAP方式联网
 AsyncTask机制，原理及不足
@@ -227,7 +219,7 @@ LruCache默认缓存大小
 ContentProvider的权限管理
 如何通过广播拦截和abort一条短信
 广播是否可以请求网络
-计算一个View的嵌套层级
+
 Activty栈
 Android线程有没有上限
 Android为什么引入Parcelable
@@ -240,8 +232,7 @@ DSA
 两个栈实现队列
 快速排序(x3)
 二叉树的非递归前序遍历
-单例模式(x3,1人写的是DCL,DCL为什么要两次判断null呢？为什么使用volatile？)
-单例的静态内部类实现
+
 两个单例模式，DCL和静态内部类（同时问了final关键字与静态内部类为什么能满足单例模式）
 合并两个有序链表
 逆序输出ArrayList

@@ -1,11 +1,14 @@
 package com.xht.androidnote.module.eventdispatch;
 
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.utils.L;
 
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -14,6 +17,11 @@ import butterknife.OnClick;
  */
 
 public class EventDispatchActivity extends BaseActivity {
+    @BindView(R.id.viewgroup)
+    MyViewGroup viewgroup;
+    @BindView(R.id.testCount)
+    MyViewGroup testCount;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_event_dispatch;
@@ -21,7 +29,11 @@ public class EventDispatchActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
+        int maxDeep = maxDeep(testCount);
+        L.i("maxDeep = " + maxDeep);
 
+        int count = traversal(testCount);
+        L.i("count = " + count);
     }
 
     @Override
@@ -65,5 +77,49 @@ public class EventDispatchActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test_dispatch)
     public void onViewClicked() {
+    }
+
+    private int maxDeep(View view) {
+        //当前的view已经是最底层view了，不能往下累加层数了，返回0，代表view下面只有0层了
+        if (!(view instanceof ViewGroup)) {
+            return 0;
+        }
+        ViewGroup vp = (ViewGroup) view;
+        //虽然是viewgroup，但是如果并没有任何子view，那么也已经是最底层view了，不能往下累加层数了，返回0，代表view下面只有0层了
+        if (vp.getChildCount() == 0) {
+            return 0;
+        }
+        //用来记录最大层数
+        int max = 0;
+        //广度遍历view
+        for (int i = 0; i < vp.getChildCount(); i++) {
+            //由于vp拥有子view，所以下面还有一层，因为可以+1，来叠加一层，然后再递归几岁算它的子view的层数
+            int deep = maxDeep(vp.getChildAt(i)) + 1;
+            //比较哪个大就记录哪个
+            if (deep > max) {
+                max = deep;
+            }
+        }
+        return max;
+    }
+    public int traversal(View view) {
+        if (!(view instanceof ViewGroup)) {
+            return 0;
+        }
+
+        ViewGroup viewGroup = (ViewGroup) view;
+
+        if (viewGroup.getChildCount() == 0) {
+            return 0;
+        }
+        int max = 0;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            int deep = traversal(viewGroup.getChildAt(i)) + 1;
+            if (deep > max) {
+                max = deep;
+            }
+        }
+
+        return max;
     }
 }
