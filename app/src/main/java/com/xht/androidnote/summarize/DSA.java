@@ -24,22 +24,22 @@ public class DSA {
         System.out.println(Arrays.toString(array));
 
 
-        initLinkedList();
-
-        String reverseStr = reverseStr("1234567");
-        System.out.println(reverseStr);
-
-        System.out.println();
-
-        System.out.println(reverseStrK("1234567", 3));
-
-        int[] arr = {1, 3, 2, 4, 4, 5, 3, 6, 7};
-        int[] newArr = removeElement(arr, 3);
-        System.out.println(Arrays.toString(newArr));
-
-        System.out.println();
-
-        System.out.println(findRepeatNumber(arr));
+//        initLinkedList();
+//
+//        String reverseStr = reverseStr("1234567");
+//        System.out.println(reverseStr);
+//
+//        System.out.println();
+//
+//        System.out.println(reverseStrK("1234567", 3));
+//
+//        int[] arr = {1, 3, 2, 4, 4, 5, 3, 6, 7};
+//        int[] newArr = removeElement(arr, 3);
+//        System.out.println(Arrays.toString(newArr));
+//
+//        System.out.println();
+//
+//        System.out.println(findRepeatNumber(arr));
     }
 
 
