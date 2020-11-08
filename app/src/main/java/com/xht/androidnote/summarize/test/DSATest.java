@@ -10,16 +10,25 @@ public class DSATest {
 
 
         String newStr = reverseStrK("12345678", 3);
+        System.out.println(newStr);
+
     }
 
     private static String reverseStrK(String str, int k) {
         char[] chars = str.toCharArray();
-
-        for (int i = 0; i < chars.length; i += k) {
-
+        int n = chars.length;
+        for (int i = 0; i < n; i += k) {
+            int left = i;
+            int right = (i + k - 1 < n) ? (i + k - 1) : n - 1;
+            while (left <= right) {
+                char temp = chars[left];
+                chars[left] = chars[right];
+                chars[right] = temp;
+                left++;
+                right--;
+            }
         }
-
-        return null;
+        return new String(chars);
     }
 
 

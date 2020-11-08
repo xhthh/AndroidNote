@@ -5,45 +5,209 @@ https://www.bilibili.com/read/cv7556139/
 
 •生产者消费者模式
 •wait 和 sleep的区别
+    wait 是 Object 中的方法，需要在同步代码中使用，需要别的线程进行唤醒操作，会释放锁
+    sleep 是 Thread 中的方法，哪儿都可以用，不需要唤醒，不会释放锁
+
 •String、StringBuffer 、StringBuilder的区别
+    String：不可变字符序列
+    StringBuffer：可变字符序列，效率低，线程安全（使用了 synchronized）
+    StringBuilder：可变字符序列，效率高，线程不安全
+
 •String a = "abc" 和 String str = new String(“abc”) 的区别
-•谈谈四种引用
+编译时，String a="abc" 会把"abc"放到常量池中，
+再定义 String b = "abc" 时，因为常量池中已存在“abc”，所有不会再创建，运行时JVM(JAVA虚拟机)则认为这两个变量赋的是同一个对象
+
+new String("abc") 可能会生成一个对象，也可能是两个，如果"abc"不在常量池，那么会生成两个，一个new的对象在堆中，一个常量池中的对象
+编译过程会把会把字符串“abc”放到在常量池中。用构造器创建的对象，是生成不同的对象。每new一次JVM就会在堆中创建一个对象。
+
+
+
+
+•为什么拼接字符串效率低
+String的+在编译后会被编译为StringBuilder来运行
+String s1 = "abc"
+String s2 = "def"
+String s = s1 + s2 这个操作反编译后，
+一个指针指向一个常量池中的对象内容为“abc”，而另一个指针指向“def”，此时通过new申请了一个StringBuilder，
+然后调用这个StringBuilder的初始化方法；然后分别做了两次append操作，然后最后做一个toString()操作；
+
+如果循环拼接的话，就会new 多个 StringBuilder 对象
+
+String采用连接运算符(+)效率低下，都是上述循环、大批量数据情况造成的，每做一次"+"就产生个StringBuilder对象，
+然后append后就扔掉。下次循环再到达时重新产生个StringBuilder对象，然后append字符串，如此循环直至结束。
+如果我们直接采用StringBuilder对象进行append的话，我们可以节省创建和销毁对象的时间。
+如果只是简单的字面量拼接或者很少的字符串拼接，性能都是差不多的。
+
+
+
 •HashSet和HashMap的关系
+HashSet是基于HashMap实现的。HashSet实现了Set接口，它不允许集合中出现重复的元素，所以第一件事就是在将对象存储在
+HashSet之前，要确保重写hashCode（）方法和equals（）方法，这样才能比较对象的值是否相等，确保集合中没有储存相同的对象。
+
 •HashMap与HashTable的区别
+1、继承的父类不同
+   Hashtable继承自Dictionary类，而HashMap继承自AbstractMap类。但二者都实现了Map接口。
+2、线程安全性不同
+   Hashtable 中的方法是Synchronize的
+3、是否提供contains方法
+   HashMap把Hashtable的contains方法去掉了，改成containsValue和containsKey，因为contains方法容易让人引起误解。
+   Hashtable则保留了contains，containsValue和containsKey三个方法，其中contains和containsValue功能相同。
+4、key和value是否允许null值
+   Hashtable中，key和value都不允许出现null值。但是如果在Hashtable中有类似put(null,null)的操作，编译同样可以通过，因为key和value都是Object类型，但运行时会抛出NullPointerException异常，这是JDK的规范规定的。
+   HashMap中，null可以作为键，这样的键只有一个；
+5、两个遍历方式的内部实现上不同
+   Hashtable、HashMap都使用了 Iterator。而由于历史原因，Hashtable还使用了Enumeration的方式 。
+6、hash值不同
+   哈希值的使用不同，HashTable直接使用对象的hashCode。而HashMap重新计算hash值。
+   Hashtable计算hash值，直接用key的hashCode()，而HashMap重新计算了key的hash值，
+   Hashtable在求hash值对应的位置索引时，用取模运算，而HashMap在求位置索引时，则用与运算
+7、内部实现使用的数组初始化和扩容方式不同
+    HashTable在不指定容量的情况下的默认容量为11，而HashMap为16，Hashtable不要求底层数组的容量一定要为2的整数次幂，而HashMap则要求一定为2的整数次幂。
+    Hashtable扩容时，将容量变为原来的2倍加1，而HashMap扩容时，将容量变为原来的2倍。
+
+
+
 •ConcurrentHashMap知道吗，ConcurrentHashMap在jdk1.8之后的优化
-•重写和重载的区别
+jdk1.8之前，其数据结构为数组加链表。jdk1.8之后的优化，其数据结构变成了数组+链表+红黑树
+jdk1.8之前，ConcurrentHashMap通过将整个Map划分成N（默认16个）个Segment，
+而Segment继承自ReentrantLock ，通过对每个Segment加锁来实现线程安全。
+而在jdk1.8后，摒弃了这种实现方式，采用了CAS + Synchronized，对链表头结点进行加锁，来实现线程安全。
+
+
 •图片的三级缓存是怎么做的？
+内存缓存, 优先加载, 速度最快（加载到内存，就容易出现OOM）
+本地缓存, 次优先加载, 速度快
+网络缓存, 不优先加载, 速度慢,浪费流量
+LruCache
+简单实现：
+1)新数据插入到链表头部；
+2)每当缓存命中（即缓存数据被访问），则将数据移到链表头部；
+3)当链表满的时候，将链表尾部的数据丢弃。
 
 
 •binder机制
+
+
 •OkHttp的源码讲解，它涉及哪些设计模式
+
+
 •为什么TCP要三次握手，两次不行吗？
+第一次握手
+客户端向服务端发送连接请求报文段。该报文段中包含自身的数据通讯初始序号。请求发送后，客户端便进入 SYN-SENT 状态。
+第二次握手
+服务端收到连接请求报文段后，如果同意连接，则会发送一个应答，该应答中也会包含自身的数据通讯初始序号，发送完成后便进入 SYN-RECEIVED 状态。
+第三次握手
+当客户端收到连接同意的应答后，还要向服务端发送一个确认报文。客户端发完这个报文段后便进入 ESTABLISHED 状态，服务端收到这个应答后也进入 ESTABLISHED 状态，此时连接建立成功。
+
+原因：这是因为这是为了防止出现失效的连接请求报文段被服务端接收的情况，从而产生错误。
+
 •TCP与UDP的区别，OSI五层结构
+TCP协议全称是传输控制协议是一种面向连接的、可靠的、基于字节流的传输层通信协议。
+UDP协议全称是用户数据报协议，在网络中它与TCP协议一样用于处理数据包，是一种无连接的协议，不可靠。
+
+应用层
+传输层
+网络层
+数据链路层
+物理层
+
+
 •死锁的四个条件
+1、互斥： 某种资源一次只允许一个进程访问，即该资源一旦分配给某个进程，其他进程就不能再访问，直到该进程访问结束。
+2、占有且等待： 一个进程本身占有资源（一种或多种），同时还有资源未得到满足，正在等待其他进程释放该资源。
+3、不可抢占： 别人已经占有了某项资源，你不能因为自己也需要该资源，就去把别人的资源抢过来。
+4、循环等待： 存在一个进程链，使得每个进程都占有下一个进程所需的至少一种资源。
+
+
 •操作系统中页面置换算法
+
 •线程的所有状态
+New（新创建）
+Runnable（可运行）
+Blocked（被阻塞）
+Waiting（等待）
+Timed waiting（计时等待）
+Terminated（被终止）
+
 •synchronized关键字
 
 
 
 •数据库的范式
+
 •数据库中事务的特性
+
 •用过的设计模式或者是安卓中遇到的设计模式
+单例模式
+外观模式 OkHttpClient
+Builder OkHttp
+工厂方法模式  OkHttp newCall()   Activity onCreate()
+责任链模式 拦截器   使多个对象都有机会处理请求
+代理模式 Retrofit.create()
+适配器模式   把一个类的接口变成客户端所期待的另一种接口
+策略模式    针对同一类型问题的多种处理方式
+观察者模式
+
+
 •责任链模式有哪些优势
-•实现一个单例模式
-•DCL为什么要两次判断null呢？为什么使用volatile？
+
 •在浏览器输入一个网址到网页显示出来有哪些经过
+1、输入网址
+2、缓存解析
+3、域名解析
+4、tcp连接，三次握手
+5、浏览器想服务器发送http请求，请求数据包；
+   服务器收到请求后，将数据返回至浏览器；
+   浏览器收到HTTP响应
+6、读取页面内容，页面渲染
+
 •DNS如何解析域名
+1、找缓存
+2、找本机的hosts文件
+3、找DNS服务器
+
 •HTTPS与HTTP的区别，HTTPS为什么安全
+1.HTTPS 需要向机构申请 CA 证书，极少免费。
+2.HTTP 属于明文传输，HTTPS基于 SSL 进行加密传输。
+3.HTTP 端口号为 80，HTTPS 端口号为 443 。
+4.HTTPS 是加密传输，有身份验证的环节，更加安全。
+
+SSL(安全套接层) TLS(传输层安全)
+以上两者在传输层之上，对网络连接进行加密处理，保障数据的完整性，更加的安全。
+
+
+
 •GC过程
+
 •知道哪些数据结构，红黑树的特点
+
+
 •做过的安卓性能优化
+
 •内存泄露检测工具leakcanary的原理
+
 •RN开发和原生开发的区别
+
 •线程池的参数和工作流程
+
 •IntentService能用bind方式启动吗？IntentService的原理
+不支持，它的 onBind() 方法返回 null
+
 •MVP MVVM架构
+
 •算法题：两个队列实现一个栈
+queue1 queue2
+push(){
+    //如果两个均为空，优先加入q1
+    //如果q1为空，q2不为空，加入q2
+    //如果q2为空，q1不为空，加入q1
+}
+pop(){
+    //如果均为空，抛出异常
+    //如果q1为空，将q2中的数据加入q1，剩下一个，poll返回
+    //如果q2为空，将q1中的数据加入q2，剩下一个，poll返回
+}
+
 •HashMap的hash算法和扩容机制的原因
 
 
@@ -51,13 +215,26 @@ https://www.bilibili.com/read/cv7556139/
 
 
 如何更新UI，为什么子线程不能更新UI？
+ViewRootImpl#checkThread()
+
 UI线程和工作线程的区别
+
 安卓中启动一个APP一般启动多少个进程，多少线程
+main线程(主线程）
+FinalizerDaemon线程
+终结者守护线程。对于重写了成员函数finalize的对象，它们被GC决定回收时，并没有马上被回收，而是被放入到一个队列中，等待FinalizerDaemon守护线程去调用它们的成员函数finalize，然后再被回收。
+FinalizerWatchdogDaemon线程
+监控终结者守护线程。用来监控FinalizerDaemon线程的执行。一旦检测那些重定了成员函数finalize的对象在执行成员函数finalize时超出一定的时候，那么就会退出VM。
+HeapTaskDaemon线程
+堆栈守护线程。用来执行堆栈的操作，也就是用来将那些空闲的堆内存归还给系统。
+ReferenceQueueDaemon线程。
+引用队列守护线程。我们知道，在创建引用对象的时候，可以关联一个队列。当被引用对象引用的对象被GC回收的时候，被引用对象就会被加入到其创建时关联的队列去。这个加入队列的操作就是由ReferenceQueueDaemon守护线程来完成的。这样应用程序就可以知道哪些被引用对象引用的对象已经被回收了。
+
+
 线程池有用过吗
 线程池的参数和工作流程
 
-活动启动流程
-谁启动活动的
+活动启动流程？谁启动活动的？
 
 
 Fragment add与replace的区别，分别对Fragment的生命周期影响
@@ -68,11 +245,8 @@ ListView复用item
 RecycleView的缓存机制，四级缓存，然后又说ListView两级缓存，RecycleView的局部刷新机制，最后讲了它的用法
 
 
-IntentService能用bind方式启动吗？IntentService的原理
 
 
-事件的分发机制 提到了责任链模式，就接着问责任链模式的优缺点
-除了责任链模式还了解哪些设计模式，说了观察者模式，单例模式，工厂模式
 观察者模式的优缺点，什么情景下使用？使用过哪些用观察者模式的框架？
 
 进程间通信机制(x3)，讲了线程和进程的区别(x2)(是否有独立地址空间，怎么实现独立地址空间)，Android里面常用的进程间通信方式，包括基于Binder的(ContentProvider、AIDL、Messanger)和基于文件的(普通文件读写，sp)和基于网络的（Socket）
@@ -138,11 +312,8 @@ RN中JsBundle增量加载实现
 
 
 
-单例模式DCL为什么要两次判断null呢？为什么使用volatile？
-静态内部类和双重检验两种单例模式的差别
-熟悉的设计模式（单例）
+熟悉的设计模式
 介绍了单例的五种实现
-除了责任链模式还了解哪些设计模式，说了观察者模式，单例模式，工厂模式
 观察者模式的优缺点，什么情景下使用？使用过哪些用观察者模式的框架？
 用过的设计模式或者是安卓中遇到的设计模式
 责任链模式有哪些优势

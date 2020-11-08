@@ -24,6 +24,21 @@ public class DSATest2 {
 
         //testCircleList();
 
+        //testStack();
+
+    }
+
+    private static void testStack() {
+        QueueStack stack = new QueueStack();
+        stack.push(2);
+        stack.push(4);
+        stack.push(7);
+        stack.push(5);
+        System.out.println(stack.pop());
+        System.out.println(stack.pop());
+
+        stack.push(1);
+        System.out.println(stack.pop());
     }
 
     private static void testQueue() {
