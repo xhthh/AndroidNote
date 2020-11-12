@@ -17,6 +17,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:textAllCaps="false"
-        android:text="start Activity" />
+        android:text="start Activity"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btn_start"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="30dp"
+        android:text="finish"
+        android:textAllCaps="false" />
 </RelativeLayout>
