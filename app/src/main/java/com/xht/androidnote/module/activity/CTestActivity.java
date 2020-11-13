@@ -2,6 +2,7 @@ package com.xht.androidnote.module.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.xht.androidnote.R;
@@ -9,6 +10,7 @@ import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.utils.L;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -84,8 +86,16 @@ public class CTestActivity extends BaseActivity {
         L.i("Activity C------onConfigurationChanged()");
     }
 
-    @OnClick(R.id.btn_start)
-    public void onViewClicked() {
-        skip2Activity(BTestActivity.class);
+
+    @OnClick({R.id.btn_start, R.id.btn_finish})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_start:
+                skip2Activity(BTestActivity.class);
+                break;
+            case R.id.btn_finish:
+                finish();
+                break;
+        }
     }
 }

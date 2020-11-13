@@ -69,10 +69,10 @@
         <activity
             android:name=".module.activity.BTestActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".module.activity.CTestActivity"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTop" />
         <activity
             android:name=".module.activity.DTestActivity"
             android:launchMode="singleInstance" /> <!-- ===============Service=============== -->
