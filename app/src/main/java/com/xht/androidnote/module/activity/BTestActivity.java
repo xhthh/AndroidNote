@@ -13,6 +13,7 @@ import com.xht.androidnote.utils.L;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import leakcanary.AppWatcher;
 
 /**
  * Created by xht on 2018/5/8.
@@ -22,7 +23,7 @@ public class BTestActivity extends BaseActivity {
     @BindView(R.id.tv_title)
     TextView mTvTitle;
 
-    //private static Activity sActivity;
+    private static Activity sActivity;
 
     @Override
     protected int getLayoutId() {
@@ -31,16 +32,19 @@ public class BTestActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
-        //sActivity = this;
+        sActivity = this;
 
         mTvTitle.setText("Activity B");
         L.i("Activity B------onCreate()");
+
+        AppWatcher.INSTANCE.getObjectWatcher().watch(sActivity,"静态变量持有Activity引用");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         L.i("Activity B------onStart()");
+
     }
 
     @Override

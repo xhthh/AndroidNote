@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
+import com.xht.androidnote.base.App;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
 import com.xht.androidnote.module.animation.AnimationActivity;
@@ -72,6 +73,13 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
 
+        /*
+            llContent持有Activity的引用
+            View.mContext references a destroyed activity
+
+         */
+//        App app = (App) getApplication();
+//        app.leakedViews.add(llContent);
 
         scrollView.post(new Runnable() {
             @Override
