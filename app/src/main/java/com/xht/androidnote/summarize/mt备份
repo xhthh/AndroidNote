@@ -2,6 +2,41 @@ https://blog.csdn.net/wq6ylg08/article/details/105822679
 
 https://www.bilibili.com/read/cv7556139/
 
+权限修饰符
+public protected private default
+
+volatile 和 synchronized
+
+HashMap
+为什么转换成红黑树 时间复杂度
+为什么链表长度为8的时候转换为红黑树
+为什么数组长度是2的次幂
+
+ConcurrentHashMap 什么情况下会阻塞
+
+刷新机制 双缓冲
+
+NestedScrollView 嵌套滑动机制
+
+RN 原理 什么业务场景选择RN
+
+除了堆其他区域会发生GC吗
+
+三种GC MinorGC FullGC
+
+App冷启动流程
+主线程为什么不会卡死
+没有消息的时候会怎么样
+
+requestLayout()
+
+
+
+
+
+
+
+
 技术一面
 •生产者消费者模式
 •wait 和 sleep的区别
