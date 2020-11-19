@@ -2,6 +2,22 @@ https://blog.csdn.net/wq6ylg08/article/details/105822679
 
 https://www.bilibili.com/read/cv7556139/
 
+1、技术难点
+2、插件化开发
+3、类加载机制
+4、Retrofit原理
+5、addInterceptor() 和 addNetworkInterceptor()的区别
+6、内存泄漏场景？怎样检查？LeakCanary原理？
+7、用到的三方框架
+8、跨平台开发 RN Flutter
+
+
+
+
+
+
+
+
 权限修饰符
 public protected private default
 
