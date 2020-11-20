@@ -13,6 +13,10 @@ class Outer {
             println("内部类可以引用外部类的成员：例如：" + o.v)
         }
     }
+
+    fun test1(){
+
+    }
 }
 
 fun main() {
@@ -21,4 +25,7 @@ fun main() {
 
     val demo2 = Outer().Inner().innerTest()
     println(demo2)
+
+    val outer = Outer();
+    outer.test1()
 }

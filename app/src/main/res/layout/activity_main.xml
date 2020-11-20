@@ -23,6 +23,12 @@
             android:text="RecyclerView" />
 
         <Button
+            android:id="@+id/btn_fps"
+            style="@style/btnStyle"
+            android:layout_marginBottom="20dp"
+            android:text="监测 fps" />
+
+        <Button
             android:id="@+id/btn_edit_text"
             style="@style/btnStyle"
             android:text="EditText" />

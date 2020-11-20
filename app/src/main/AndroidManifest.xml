@@ -152,6 +152,7 @@
         <activity android:name=".module.fragment.TestLifeCycleActivity" />
         <activity android:name=".module.customview.CustomViewActivity" />
         <activity android:name=".module.constraint.ConstraintLayoutTestActivity" />
+        <activity android:name=".module.view.fps.FpsViewActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

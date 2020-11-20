@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/btn_start_fps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Monitor Fps"
+        android:textAllCaps="false"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/btn_stop_fps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Monitor Fps"
+        android:textAllCaps="false"
+        app:layout_constraintTop_toBottomOf="@id/btn_start_fps" />
+
+    <TextView
+        android:id="@+id/tv_fps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#ffff00"
+        android:padding="30dp"
+        android:elevation="100dp"
+        android:text="fps"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

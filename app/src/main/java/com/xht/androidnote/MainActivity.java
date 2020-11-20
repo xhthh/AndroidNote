@@ -37,6 +37,7 @@ import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
+import com.xht.androidnote.module.view.fps.FpsViewActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 
 import butterknife.BindView;
@@ -93,7 +94,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.btn_rxjava, R.id.btn_kotlin, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
+    @OnClick({R.id.btn_fps, R.id.btn_rxjava, R.id.btn_kotlin, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
             R.id.btn_service, R.id.btn_broadcast_receiver, R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp,
             R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
@@ -101,6 +102,9 @@ public class MainActivity extends BaseActivity {
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_fps:
+                skip2Activity(FpsViewActivity.class);
+                break;
             case R.id.btn_constraint:
                 skip2Activity(ConstraintLayoutTestActivity.class);
                 break;
