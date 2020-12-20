@@ -1,23 +1,19 @@
 package com.xht.androidnote.module.recyclerview;
 
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.support.v7.widget.RecyclerView.RecycledViewPool;
-import android.support.v7.widget.RecyclerView.ViewCacheExtension;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool;
+import androidx.recyclerview.widget.RecyclerView.ViewCacheExtension;
 import android.util.Log;
-import android.widget.LinearLayout;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by xht on 2019/8/15.

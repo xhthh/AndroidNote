@@ -1,6 +1,6 @@
 package com.xht.androidnote.module.okhttp;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 

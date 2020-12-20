@@ -1,7 +1,7 @@
 package com.xht.androidnote.module.view.fps
 
 import android.os.Build
-import android.support.annotation.RequiresApi
+import androidx.annotation.RequiresApi
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_fps.*

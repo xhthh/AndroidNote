@@ -2,8 +2,8 @@ package com.xht.androidnote.module.bitmap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.LruCache;
 import android.widget.ImageView;
 

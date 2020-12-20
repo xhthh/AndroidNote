@@ -1,7 +1,7 @@
 package com.xht.androidnote.module.fragment
 
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import android.util.Log
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity

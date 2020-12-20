@@ -1,17 +1,11 @@
 package com.xht.androidnote.module.broadcastreceiver;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.xht.androidnote.MainActivity;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 
