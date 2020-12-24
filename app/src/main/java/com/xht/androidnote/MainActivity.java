@@ -28,6 +28,7 @@ import com.xht.androidnote.module.handler.HandlerActivity;
 import com.xht.androidnote.module.hotfix.HotFixTestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
+import com.xht.androidnote.module.kotlin.KotlinTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.proxy.ProxyActivity;
@@ -79,8 +80,8 @@ public class MainActivity extends BaseActivity {
             View.mContext references a destroyed activity
 
          */
-//        App app = (App) getApplication();
-//        app.leakedViews.add(llContent);
+        //        App app = (App) getApplication();
+        //        app.leakedViews.add(llContent);
 
         scrollView.post(new Runnable() {
             @Override
@@ -102,6 +103,9 @@ public class MainActivity extends BaseActivity {
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_kotlin:
+                skip2Activity(KotlinTestActivity.class);
+                break;
             case R.id.btn_fps:
                 skip2Activity(FpsViewActivity.class);
                 break;

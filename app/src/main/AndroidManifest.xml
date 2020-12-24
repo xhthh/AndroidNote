@@ -153,6 +153,7 @@
         <activity android:name=".module.customview.CustomViewActivity" />
         <activity android:name=".module.constraint.ConstraintLayoutTestActivity" />
         <activity android:name=".module.view.fps.FpsViewActivity" />
+        <activity android:name=".module.kotlin.KotlinTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
