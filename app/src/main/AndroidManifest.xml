@@ -154,6 +154,7 @@
         <activity android:name=".module.constraint.ConstraintLayoutTestActivity" />
         <activity android:name=".module.view.fps.FpsViewActivity" />
         <activity android:name=".module.kotlin.KotlinTestActivity" />
+        <activity android:name=".module.okhttp.scode.OkHttpTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
