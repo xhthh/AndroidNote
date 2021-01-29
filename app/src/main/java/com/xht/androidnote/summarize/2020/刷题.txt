@@ -195,7 +195,6 @@ B站三面
 5.算法题，不同面值的几个硬币，怎么求满足条件的最小值
 斗鱼
 1.说说HashMap的原理
-4.说说你对volatile字段有什么用途？
 5.说说事件分发机制，怎么写一个不能滑动的ViewPager
 
 7.说说插件化的原理，资源的插件化id重复如何解决？
@@ -299,7 +298,6 @@ https://juejin.cn/post/6905226221357891592
 10、多线程如何实现？有哪些方式？
 11、线程池的参数
 12、你如何自己实现一个LRUCache？Android里面的LRUCache是如何实现的？
-13、synchronized和volatile的区别？为何不用volatile替代synchronized？类锁和对象锁互斥么？
 16、动态代理的实现。
 17、Gradle的实现，gradle中task的生命周期。
 18、Aop、AspectJ、ASM了解么
@@ -514,7 +512,6 @@ public static class Two {
 5、Android里面进程间通信方式，ContentProvider可以用file实现么？
 6、linux下常见的进程间通信方式，Android为何自己搞一个Binder，有何优势？
 7、本地广播为何效率高？
-8、讲下synchronized和volatile；读写锁和ReentrantLock，synchronized和读写锁的区别。
 9、布局优化
 6、vipkid
 一面
@@ -533,7 +530,6 @@ public static class Two {
 4、ActivityA启动了ActivityB后，两个Activity的生命周期是怎样的？
 5、线程、进程的区别
 6、多线程为何不安全
-7、synchronized和volatile区别
 8、Lock的实现，以及与synchronized的区别
 9、GCRoot，举例说明。比如说Activity和它的匿名内部类Handler，分析下引用链，对应的gcroot是哪个？
 10、图片内存的计算。
@@ -692,7 +688,6 @@ retrofit设计模式
 是否做过音视频和IM？
 APK性能优化
 CurrentHashMap1.7和1.8区别
-volatile关键字的作用，怎么保证原子性呢？
 网络优化
 对新技术的看法
 java泛型，协变和逆变
