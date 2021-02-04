@@ -16,7 +16,6 @@ https://juejin.cn/post/6876968255597051917
 14.你碰到过什么内存泄漏，怎么处理
 15.RXJava怎么切换线程
 16.Fragment hide show生命周期
-17.平常有用到什么锁，synchronized底层原理是什么
 Vivo公司
 1.简单描述下Handler,Handler是怎么切换线程的,Handler同步屏障
 2.Glide的缓存，有用过Glide的什么深入的API，自定义model是在Glide的什么阶段
@@ -35,8 +34,6 @@ B站
 3.如何自定义实现一个FlexLayout
 4.tinker的原理是什么,还用过什么热修复框架，robust的原理是什么？
 5.说说你对注解的了解，是怎么解析的
-6.synchronized是公平锁还是非公平锁,ReteranLock是公平锁吗？是怎么实现的
-7.泛型是怎么解析的，比如在retrofit中的泛型是怎么解析的
 8.mvp与mvvm的区别，mvvm怎么更新UI,databinding用得多吗,databinding的原理？
 9.kotlin ?的原理
 10.在项目中有直接使用tcp,socket来发送消息吗
@@ -60,8 +57,6 @@ B站二面
 8.你觉得B站目前的APP有什么问题？
 9.如果产品要求你开发一个音频播放功能，你会怎么着手？预计会有什么坑？
 10.ViewPager切换Fragment什么最耗时？
-11.线程间同步的方法
-12.锁之间的区别
 B站三面
 1.介绍一下你自已和项目
 2.说说为什么考虑离职
@@ -139,8 +134,6 @@ B站三面
 跟谁学
 1.项目中的Webview与native通信
 2.项目中对WebView的功能进行了怎样的增强
-3.synchronized跟ReentranLock有什么区别？
-4.synchronized与ReentranLock发生异常的场景.
 5.算法,删除数组中的重复元素
 6.手写双检查单例模式，各个步骤有什么区别
 7.Activity生命周期
@@ -172,7 +165,6 @@ B站三面
 4.伪代码实现一个长按事件
 5.实现一个下载功能的接口
 猿辅导
-1.泛型有什么优点？
 2.动态代理有什么作用？
 4.Handler机制了解吗？一个线程有几个Looper？为什么？
 5.你了解协程吗？协程有什么作用？可以完全取代rxjava吗？
@@ -213,7 +205,6 @@ B站三面
 3.动画里面用到了什么设计模式？
 4.OkHttp里面用到了什么设计模式？
 5.OkHttp连接池是怎么实现的？里面怎么处理SSL？
-6.泛型为什么要擦除？kotlin的泛型了解吗？泛型的pecs原则
 7.同步屏障
 8.性能优化做过什么工作？
 9.RecyclerView的缓存结构是怎样的？缓存的是什么？cachedView会执行onBindView吗?
@@ -226,8 +217,6 @@ B站三面
 17.ViewModel的使用中有什么坑？
 18.有用DSL,anko写过布局吗？
 19.HashMap查找的时间复杂度是多少？
-20.阿里编程规范不建议使用线程池，为什么？
-21.四种线程池原理？
 22.了解哪些算法？
 23.IdleHandler用过吗？
 滴滴二面
@@ -236,8 +225,6 @@ B站三面
 3.多进程怎么实现？如果启动一个多进程APP，会有几个进程运行？
 4.反射可以反射final修饰的字段吗？
 5.Activity与AppCompactActivity区别，Activity会打包到包里面去吗？
-6.如何让两个线程循环交替打印
-7.怎么中止一个线程，Thread.Interupt一定有效吗？
 8.动画连续调用的原理是什么？
 9.做过一些SDK的操作吗？
 10.协程可以在Java项目中使用吗？
@@ -261,7 +248,6 @@ B站三面
 2.你们项目的稳定性如何？有做过什么稳定性优化的工作？
 3.WebView性能优化做过什么工作？
 4.AIDL in out oneWay代表什么意思？
-5.线程池了解多少？拒绝策略有几种,为什么有newSingleThread
 6.跨进程通信了解多少？管道了解吗？
 7.协程介绍一下，讲一个协程的scope与context，协程的+号代表什么
 8.Handler休眠是怎样的？epoll的原理是什么？如何实现延时消息，如果移除一个延时消息会解除休眠吗？
@@ -295,8 +281,6 @@ https://juejin.cn/post/6905226221357891592
 7、说一下kotlin的优缺点。let和with的区别
 8、接口和抽象类的区别，接口中可以有属性么？
 9、用过哪些设计模式？策略模式和桥接模式的区别
-10、多线程如何实现？有哪些方式？
-11、线程池的参数
 12、你如何自己实现一个LRUCache？Android里面的LRUCache是如何实现的？
 16、动态代理的实现。
 17、Gradle的实现，gradle中task的生命周期。
@@ -327,14 +311,7 @@ https://juejin.cn/post/6905226221357891592
 18、List的滑动卡顿如何优化
 19、Activity中的Window的初始化和显示过程
 20、Application中可以显示Dialog么？为什么？
-21、泛型擦除，为何会有擦除？擦除的时机。通配符。
-下面这段代码有问题么？有什么问题？为何会有这个问题？
-List<? extends Object> list = new ArrayList<>();
-list.add(123);
-Object obj = list.get(0);
-复制代码
-22、synchronized的同步原语
-23、锁的几种状态
+
 24、Android热修复原理，tinker的patch文件如何生成，patch文件是全部加载dex文件首部么？
 25、插件化原理
 26、两个用单链表表示的大数相加，求他们的和。单链表元素的值为0~9。
@@ -375,7 +352,6 @@ public static class Two {
 
 }
 复制代码
-8、Java为何会有线程安全问题？如何解决？
 二面
 1、vue的binding原理
 2、flutter中isolate的原理。
@@ -404,7 +380,6 @@ public static class Two {
 6、Handler讲一下。Message#what的不同值，会影响Message在MessageQueue中的顺序么？
 7、讲下Java的双亲委派
 8、插件化和热更新原理
-9、讲一下锁，synchronized和Lock。CAS原理
 10、事件分发
 三面
 1、对vue的掌握程度
@@ -415,8 +390,6 @@ public static class Two {
 6、讲下你觉得最好或者最自豪的项目
 四面
 1、讲下hashmap；链表转红黑树的限制为何是8；红黑树的时间复杂度；红黑树转链表的限制为何是6；current hashmap在所有情况下都是线程安全的吗？hashtable呢？
-2、synchronized实现。非静态方法A和B在同一个类中，方法A用synchronized修饰，当A方法因为多线程请求有线程阻塞在对象锁上的时候，B方法的访问受不受影响？
-3、既然泛型有编译期类型擦除，那么运行时无法获取到具体类型；而反射能在运行时获取到Class的类型；它们一个获取不到，一个可以获取到，这不就是矛盾么？请解释下细节。
 4、在同一个手机上，如果把drawable-xxhdpi下的图片移动到drawable-xhdpi下，图片内存是如何变的，解释原理。如果在drawable-hdpi、drawable-xxhdpi下放置了图片，但是手机是xhdpi的，会优先加载哪个，加载优先级是怎样的？如果是400*800，1080*1920这种呢，会如何查找？xhdpi和400*800同时存在时，会如何查找？布局文件呢？
 5、图片内存优化；
 6、Handler机制。MessageQueue中的Message是如何排列的？Msg的runnable对象可以外部设置么，比如说不用Handler#post系列方法（反射可以实现）；
@@ -430,8 +403,6 @@ public static class Two {
 4、单例的几种实现方式：DCL、enum，静态内部类。还有饿汉式。懒汉式的使用场景：占用内存大、延迟初始化
 6、hashmap。hash冲突时给链表插入数据，1.7头插法，1.8尾插法。
 7、ArrayMap和SparseArray的区别，实现。
-8、泛型：为何会有协变和逆变，PECS规则。
-9、kotlin泛型：out和in.
 10、Handler。Looper.loop( )为何不会阻塞进程。
 11、自定义View的几种方式。onMeasure、onLayout、onDraw方法都何时需要重写。自定义属性的作用。
 12、事件分发，多点触碰处理，是在onTouchEvent方法里面。
@@ -474,7 +445,6 @@ public static class Two {
 ④链表和二叉树的区别，优劣势
 10、jetpack组件库使用过么？讲下具体组件
 11、函数式编程如何理解？
-12、t1、t2、t3三个线程，如何让三个线程按照顺序依次打印1-100。手写。
 三面
 1、悬浮窗如何实现
 2、通知的类别
@@ -529,8 +499,6 @@ public static class Two {
 ③dispatchTouchEvent方法返回true后事件如何处理？
 4、ActivityA启动了ActivityB后，两个Activity的生命周期是怎样的？
 5、线程、进程的区别
-6、多线程为何不安全
-8、Lock的实现，以及与synchronized的区别
 9、GCRoot，举例说明。比如说Activity和它的匿名内部类Handler，分析下引用链，对应的gcroot是哪个？
 10、图片内存的计算。
 ①在不影响图片质量的前提下，如何减少内存？
@@ -561,7 +529,6 @@ public static class Two {
 1、讲一下项目
 3、讲下equals和hashcode，他们为何必须一起重写？
 4、字符串的 “+” 和 append操作的区别。避免创建多个String对象。
-5、泛型和泛型擦除。kotlin真泛型的实现；泛型中T和？的区别，List<?>和List有什么区别；泛型里的super和extends区别；泛型为何会有擦除；擦除的时机；泛型的编译器类型检查。
 6、HashMap：数据结构（数组加链表（或者红黑树）），为何这么设计；数组和链表的特性；元素添加的过程；扩容过程中为何不整体复制；链表为什么要转红黑树？
 7、HashMap的替代方案，ArrayMap和SparseArray。
 8、Parcelable和Serializable本质区别，不要说用法，说原理。
@@ -593,7 +560,6 @@ public static class Two {
 2、flutter的生命周期管理？讲讲做过的flutter项目。flutter的路由管理方式。除了默认的两种路由方式，有没有考虑过记录路由状态？
 3、讲下arraylist、hashmap、linkedlist、linkedhashmap的实现。linkedhashmap为何会有这样的特性(lru)?它有个参数，表示命中率和使用次数。
 4、lru是通过linkedhashmap实现的么？
-5、线程的使用。讲下线程池的类型，线程池对象的参数，线程池最大线程数和核心线程数的关系，task的优先级如何实现？（优先级队列）
 6、activity启动模式：standard、singleTop、singleTask、singleInstance。taskAffinity，allowTaskReparting，常见应用场景。
 7、startActivity方法是异步的么？同步的。
 8、activity生命周期。A启动B，生命周期；B回到A，生命周期
@@ -613,8 +579,6 @@ public static class Two {
 6、Handler
 7、ThreadLocal，LocalBroadcastReceiver实现
 8、binder的mmap
-9、Java的线程同步方式；synchronized和Lock的实现及区别
-10、线程池如何配置，核心线程数你一般给多少
 12、TCP和UDP区别，TCP为何是三次握手，为何是四次挥手
 13、设计模式（问了一个什么模式，我没听清）
 14、自定义View，测量模式的匹配
@@ -649,9 +613,7 @@ kotlin优劣势
 事件分发机制
 Activity,view,window联系
 热修复和插件化原理
-Synchronized底层原理，java锁机制
 java容器，hashmap和hashtable区别，hashmap原理，扩容流程，扰动算法的优势
-ArrayList和LinkendList区别，List泛型擦除，为什么反射能够在ArrayList< String >中添加int类型
 Http和Https区别，SSL/TLS过程
 Android性能优化
 组件化注意点，组件间通信机制
@@ -690,7 +652,6 @@ APK性能优化
 CurrentHashMap1.7和1.8区别
 网络优化
 对新技术的看法
-java泛型，协变和逆变
 
 公司五
 
@@ -713,7 +674,6 @@ NestedScrollView触摸机制，AOP相关知识
 设计APP，整体架构选型
 Android沙盒和底层Linux通信
 ACTION_CANCLE什么时候触发
-线程池原理
 
 公司六
 
@@ -738,7 +698,6 @@ MVC,MVP,MVVM
 handler原理及相关知识点，message回收策略
 hashmap原理,arraymap原理，对比性能。
 hashmap为什么大于8才转化为红黑树，加载因子为什么是0.75
-Synchronized底层原理，java锁机制
 服务和广播
 activity启动模式（给例子具体分析，A(标准)-》B(单例)-》C(singleTop)-》D(singleTask)，分析有几个栈，每个栈内的activity）
 常用设计模式，线程安全的单例模式
