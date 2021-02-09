@@ -7,15 +7,12 @@ https://juejin.cn/post/6876968255597051917
 4.对象加载的过程，属性先加载还是方法先加载
 6.自定义View,事件分发机制讲一讲
 7.http与https有什么区别
-8.Activity启动模式，以及各启动模式生命周期问题
 9.静态方法，静态对象为什么不能继承
-10.Activity怎么启动Service，Activity与Service交互，Service与Thread的区别
 11.介绍一下android动画
 12.Launcher启动App的流程，中间有几种跨进程通信(socket)
 13.Handler通信，Binder通信
 14.你碰到过什么内存泄漏，怎么处理
 15.RXJava怎么切换线程
-16.Fragment hide show生命周期
 Vivo公司
 1.简单描述下Handler,Handler是怎么切换线程的,Handler同步屏障
 2.Glide的缓存，有用过Glide的什么深入的API，自定义model是在Glide的什么阶段
@@ -43,9 +40,6 @@ B站
 14.如何实现RecyclerView的局部更新，用过payload吗,notifyItemChange方法中的参数？
 15.讲讲LinkedHashMap的数据结构
 16.put post有什么区别
-17.A Activity打开B Activity的生命周期变化，会有什么方法打断吗？
-18.Fragment hide show生命周期变化
-19.Fragment replace生命周期变化
 B站二面
 1.为什么考虑换工作
 2.屏幕适配做过什么工作？
@@ -56,7 +50,6 @@ B站二面
 7.插件化的主要优点和缺点是什么？
 8.你觉得B站目前的APP有什么问题？
 9.如果产品要求你开发一个音频播放功能，你会怎么着手？预计会有什么坑？
-10.ViewPager切换Fragment什么最耗时？
 B站三面
 1.介绍一下你自已和项目
 2.说说为什么考虑离职
@@ -136,7 +129,6 @@ B站三面
 2.项目中对WebView的功能进行了怎样的增强
 5.算法,删除数组中的重复元素
 6.手写双检查单例模式，各个步骤有什么区别
-7.Activity生命周期
 快手
 1.string,equals,==有什么区别
 2.AsyncTask内存泄露
@@ -463,8 +455,6 @@ public static class Two {
 2、大图加载优化，原理。
 3、http消息体讲一下。消息首行的方法有哪几种？
 4、http post请求上传大文件，如何实现？分块上传呢？用到的关键Header有哪些？
-5、Activity的onSaveInstance方法何时调用？它跟onPause、onStop的调用顺序如何？
-6、Activity A启动Activity B，调用顺序。最后Activity A的onStop一定会调用么？
 7、RecyclerView的缓存。
 8、kotlin的协程，构造函数。
 9、进程间有哪几种通信方式、binder安全原理、讲下aidl内容。
@@ -477,7 +467,6 @@ public static class Two {
 二面
 1、讲下flutter的项目
 2、kotlin的扩展，属性是否可以扩展，是否可以扩展跟现有方法签名相同的方法
-3、讲一下Activity的TaskRecord，也就是四种启动模式。
 4、方法内部的匿名内部类，比如说给View设置的OnClickListener，它里面相关调用外部方法的形参，必须使用final修饰这个形参，为何？
 5、Android里面进程间通信方式，ContentProvider可以用file实现么？
 6、linux下常见的进程间通信方式，Android为何自己搞一个Binder，有何优势？
@@ -497,7 +486,6 @@ public static class Two {
 ①总体流程
 ②DOWN事件拦截后，后续事件如何处理？
 ③dispatchTouchEvent方法返回true后事件如何处理？
-4、ActivityA启动了ActivityB后，两个Activity的生命周期是怎样的？
 5、线程、进程的区别
 9、GCRoot，举例说明。比如说Activity和它的匿名内部类Handler，分析下引用链，对应的gcroot是哪个？
 10、图片内存的计算。
@@ -532,8 +520,6 @@ public static class Two {
 6、HashMap：数据结构（数组加链表（或者红黑树）），为何这么设计；数组和链表的特性；元素添加的过程；扩容过程中为何不整体复制；链表为什么要转红黑树？
 7、HashMap的替代方案，ArrayMap和SparseArray。
 8、Parcelable和Serializable本质区别，不要说用法，说原理。
-9、Activity和Fragment的生命周期；Fragment#onHiddenChanged是生命周期方法么？如何触发？
-10、Activity和Fragment的通信方式；系统为何会设计Fragment#setArgument方法。
 11、View绘制流程；requestLayout和invalidate区别；invalidate每次都会触发onDraw么？View#onLayout每次会触发么？
 12、SharedPreference的apply和commit区别；apply会不会导致ANR；SharedPreference的替代方案
 13、讲下你的自定义View，为何如此设计？
@@ -560,9 +546,7 @@ public static class Two {
 2、flutter的生命周期管理？讲讲做过的flutter项目。flutter的路由管理方式。除了默认的两种路由方式，有没有考虑过记录路由状态？
 3、讲下arraylist、hashmap、linkedlist、linkedhashmap的实现。linkedhashmap为何会有这样的特性(lru)?它有个参数，表示命中率和使用次数。
 4、lru是通过linkedhashmap实现的么？
-6、activity启动模式：standard、singleTop、singleTask、singleInstance。taskAffinity，allowTaskReparting，常见应用场景。
 7、startActivity方法是异步的么？同步的。
-8、activity生命周期。A启动B，生命周期；B回到A，生命周期
 9、rxjava源码。用过哪些操作符？map和flatmap区别。
 10、讲下View绘制流程。canvas可以画Bitmap么？画布要做旋转、缩放、平移等操作该如何实现？
 11、讲下事件分发。如果onInterceptTouchEvent返回true，但是onTouchEvent返回了false，是什么效果？如果还想让其他View接收事件，该怎么做？
@@ -586,8 +570,6 @@ public static class Two {
 16、启动速度优化，IdleHandler用法
 17、冷启动热启动优化
 18、组件化架构设计，ARouter具体实现
-19、Activity生命周期，按Home按键后的生命周期
-20、启动模式及其用法。A应用的A1页面启动B应用的B1页面，A1和B2都是standard模式，B1启动后B1在那个任务栈，按下back键后显示那个页面，再按一次back键呢？
 21、MVC、MVP、MVVM
 22、IM你知道多少？
 
@@ -603,7 +585,6 @@ glide流程，缓存前压缩，缓存命中
 APP性能优化，内存优化，布局优化，绘制优化，内存泄漏
 Http和Https区别
 socket心跳包
-activity启动模式，有哪些不同
 stack栈的特点，自定义stack结构
 kotlin优劣势
 
@@ -623,7 +604,6 @@ Android性能优化
 公司三
 
 MVC,MVP,MVVM
-Activity和fragment生命周期区别，fragment正常添加和viewpager添加的区别，fragment懒加载原理，FragmentPagerAdapter 和 FragmentStatePagerAdapter
 热修复和插件化
 友盟bug统计，混淆后怎么定位bug。没接入热修复的APP中，上线后遇到bug怎么解决
 view绘制原理 （可以先说下基本view绘制，然后再说下屏幕刷新机制）
@@ -633,7 +613,6 @@ Android 版本差异
 公司四
 
 基础类型字节，汉字占几个字节，线程和进程
-四大组件，fileprovider和Contentprovide区别，activity启动流程
 MVC,MVP,MVVM
 TCP三次握手，四次挥手
 Eventbus，glide原理
@@ -699,7 +678,6 @@ handler原理及相关知识点，message回收策略
 hashmap原理,arraymap原理，对比性能。
 hashmap为什么大于8才转化为红黑树，加载因子为什么是0.75
 服务和广播
-activity启动模式（给例子具体分析，A(标准)-》B(单例)-》C(singleTop)-》D(singleTask)，分析有几个栈，每个栈内的activity）
 常用设计模式，线程安全的单例模式
 
 公司八
@@ -719,7 +697,6 @@ retrofit是怎么将service接口转化为我们需要的javabean的？
 公司九
 
 SqLite与contentProvider区别
-fragment周期，两个fragment切换周期变化，fragment通信
 https证书校验，加密相关，网络请求框架
 glide加载流程，大图显示，图片大小计算
 view绘制（从onSync()开始）
