@@ -204,7 +204,6 @@ B站三面
 11.ViewGroup在Action_Move时onIntercept返回true，事件怎么传递
 12.Launcher启动图标，有几个进程？
 14.源码中有哪里用到了AtomicInt
-15.AQS了解吗？
 16.Activity内LinearLayout红色wrap_content,包含View绿色wrap_content,求界面颜色
 17.ViewModel的使用中有什么坑？
 18.有用DSL,anko写过布局吗？
