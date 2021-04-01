@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.fragment;
 
+import android.util.Log;
 import android.widget.TextView;
 
 import com.xht.androidnote.R;
@@ -26,4 +27,9 @@ public class ShopCartFragment extends BaseFragment {
         mTvContent.setText("购物车");
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("xht", "ShopCartFragment---onHiddenChanged()---hidden = " + hidden);
+    }
 }

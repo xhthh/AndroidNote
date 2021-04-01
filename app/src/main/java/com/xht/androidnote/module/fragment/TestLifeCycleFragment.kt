@@ -53,6 +53,11 @@ class TestLifeCycleFragment : BaseFragment() {
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Log.i("xht", "Fragment---onViewCreated()");
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.i("xht", "Fragment---onActivityCreated()");
@@ -61,6 +66,11 @@ class TestLifeCycleFragment : BaseFragment() {
     override fun onStart() {
         super.onStart()
         Log.i("xht", "Fragment---onStart()");
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        Log.i("xht", "Fragment---onHiddenChanged()");
     }
 
     override fun onResume() {

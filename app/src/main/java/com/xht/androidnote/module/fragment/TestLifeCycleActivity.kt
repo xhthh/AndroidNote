@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import android.util.Log
@@ -26,6 +27,11 @@ class TestLifeCycleActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i("xht", "Activity---onCreate()");
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+
     }
 
     override fun onStart() {

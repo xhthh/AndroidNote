@@ -10,8 +10,10 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
 import android.widget.RemoteViews;
 
 import com.xht.androidnote.R;
@@ -50,12 +52,16 @@ public class MyService extends Service {
 
 
     public class MyBinder extends Binder {
+
+        public MyBinder() {
+        }
+
         public MyService getService() {
             return MyService.this;
         }
 
         public void showTip() {
-            L.i("我是来此服务的提示");
+            L.i("你好我是来此服务的提示 ");
         }
     }
 
@@ -69,7 +75,8 @@ public class MyService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        L.i("MyService---onBind()");
+        String clientName = intent.getStringExtra("clientName");
+        L.i("MyService---onBind()---clientName = " + clientName);
         //return null;
         return new MyBinder();
     }
@@ -101,7 +108,8 @@ public class MyService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        L.i("MyService---onUnbind()");
+        String clientName = intent.getStringExtra("clientName");
+        L.i("MyService---onUnbind()---clientName=" + clientName);
         return super.onUnbind(intent);
     }
 

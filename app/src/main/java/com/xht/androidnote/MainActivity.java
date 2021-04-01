@@ -2,7 +2,9 @@ package com.xht.androidnote;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,6 +42,7 @@ import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
 import com.xht.androidnote.module.view.fps.FpsViewActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
+
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -93,6 +96,15 @@ public class MainActivity extends BaseActivity {
                 Log.i("xht", "height2=" + llContent.getHeight() + "  measuredHeight1=" + llContent.getMeasuredHeight());
             }
         });
+
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                finish();
+//                startActivity(new Intent(mContext, MainActivity.class));
+//            }
+//        }, 3000);
     }
 
     @OnClick({R.id.btn_fps, R.id.btn_rxjava, R.id.btn_kotlin, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,

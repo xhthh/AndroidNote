@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.fragment;
 
+import android.util.Log;
 import android.widget.TextView;
 
 import com.xht.androidnote.R;
@@ -26,4 +27,9 @@ public class HomeFragment extends BaseFragment {
         mTvContent.setText("首页");
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("xht", "HomeFragment---onHiddenChanged()---hidden = " + hidden);
+    }
 }

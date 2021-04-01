@@ -231,6 +231,11 @@
 
 
 4、一个service和5个Activity绑定，有几个service的实例？4个Activity退出，service还在吗？
+    service还在
+    多个activity与service绑定只会在第一个activity绑定时走 onCreate、onBind() 回调，service的实例是在
+    多个activity之间共享的，当一个activity 解除绑定或者退出销毁时，只要还有其他activity与service绑定是
+    不会走 onBind() 和 onDestroy() 方法的，但是会走 serviceConnection() 中的回调，
+    只有最后一个activity解除绑定、退出销毁时 service 才会走 onBind() 和 onDestroy() 方法
 
 6、MVP接口爆炸，怎么解决
     抽取基类，BasePresenter

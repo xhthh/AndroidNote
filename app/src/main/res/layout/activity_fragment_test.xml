@@ -24,4 +24,9 @@
         style="@style/btnStyle"
         android:text="Activity/Fragment 生命周期" />
 
+    <Button
+        android:id="@+id/btn_fragment_life_cycle2"
+        style="@style/btnStyle"
+        android:text="Activity/replace/add Fragment 生命周期" />
+
 </LinearLayout>

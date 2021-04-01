@@ -2,6 +2,8 @@ package com.xht.androidnote.module.fragment;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import android.util.Log;
 import android.widget.TextView;
 
 import com.xht.androidnote.R;
@@ -45,5 +47,11 @@ public class ContentFragment extends BaseFragment {
     @Override
     protected void initEventAndData() {
         mTvContent.setText(mArgument);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("xht", "Fragment---onHiddenChanged()");
     }
 }

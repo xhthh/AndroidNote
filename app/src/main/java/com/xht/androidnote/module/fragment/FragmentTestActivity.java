@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
+import com.xht.androidnote.module.fragment.lifecycle.TestFragmentActivity;
 
 import butterknife.OnClick;
 
@@ -23,7 +24,7 @@ public class FragmentTestActivity extends BaseActivity {
     }
 
     @OnClick({R.id.btn_fragment_navigation, R.id.btn_fragment_back_stack, R.id
-            .btn_fragment_viewpager,R.id.btn_fragment_life_cycle})
+            .btn_fragment_viewpager, R.id.btn_fragment_life_cycle, R.id.btn_fragment_life_cycle2})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_fragment_life_cycle:
@@ -37,6 +38,9 @@ public class FragmentTestActivity extends BaseActivity {
                 break;
             case R.id.btn_fragment_back_stack:
                 skip2Activity(FragmentBackStackActivity.class);
+                break;
+            case R.id.btn_fragment_life_cycle2:
+                skip2Activity(TestFragmentActivity.class);
                 break;
         }
     }
