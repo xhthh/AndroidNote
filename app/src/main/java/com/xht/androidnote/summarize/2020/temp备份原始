@@ -1,0 +1,1772 @@
+2、宿主1，插件1、插件2，插件1中使用哪个ClassLoader？
+   ClassLoader加载Integer，Activity、xxxActivity有什么不同
+
+3、插件与宿主之间的通信？
+
+
+7、开启一个Activity为什么要用intent传递信息？
+
+8、什么是序列化？为什么要序列化？两种序列化有什么不同？
+    序列化就是将对象的状态信息转换为可以存储或传输的形式的过程。
+    序列化的原因：
+    ①永久性保存对象，保存对象的字节序列到本地文件中。
+    ②对象在网络中传递。
+    ③对象在IPC间传递。
+
+    两种序列化方式的选择：
+    一般在保存数据到 SD 卡或者网络传输时建议使用 Serializable 即可，虽然效率差一些，好在使用方便。
+    而在运行时数据传递时建议使用 Parcelable，比如 Intent，Bundle 等，Android 底层做了优化处理，效率很高。
+
+    1.在使用内存的时候Parcelable比Serializable的性能高。
+    2.Serializable在序列化的时候会产生大量的临时变量，从而引起频繁的GC（内存回收）。
+    3.Parcelable不能使用在将对象存储在磁盘上这种情况，因为在外界的变化下Parcelable不能很好的保证数据的持续性。
+
+    一个是Java API 一个是Android API
+    一个效率低     一个效率高
+
+7、注解的作用
+
+
+9、RN怎么优化启动快一点
+
+
+3、HandlerThread的原理及作用？IdleHandler的作用？
+
+
+5、遍历一个ViewGroup里的子view
+    public int traverseViewGroup(View view) {
+        int viewCount = 0;
+        if (null == view) {
+            return 0;
+        }
+        if (view instanceof ViewGroup) {
+            //遍历ViewGroup,是子view加1，是ViewGroup递归调用
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View child = ((ViewGroup) view).getChildAt(i);
+                if (child instanceof ViewGroup) {
+                    viewCount += traverseViewGroup(((ViewGroup) view).getChildAt(i));
+                } else {
+                    viewCount++;
+                }
+            }
+        } else {
+            viewCount++;
+        }
+        return viewCount;
+    }
+
+6、
+
+
+9、onInterceptTouchEvent()什么场景使用？
+
+10、生命周期，A-->B？如果B是透明的？A-->B--C，B是透明的？
+
+11、做了哪些优化？
+
+
+6、ndk为什么保留armeabi、armeabi-v7
+    因为所有的x86/x86_64/armeabi-v7a/arm64-v8a设备都支持armeabi架构的.so文件。
+    mips和mips64是不支持armeabi架构的.so文件的，不过MIPS是一种高性能的嵌入式CPU构架，其出发点是高性能,主要用于路由器、猫等，基本在手机上不使用
+
+
+
+2、加固的原理
+
+
+
+1、RecyclerView的原理？
+    RecyclerView 相当于一个容器
+    RecyclerView.LayoutManager  布局管理
+    RecyclerView.Recycler       回收复用机制
+    RecyclerView.Adapter        适配器
+
+
+7、MVC和MVP的区别？MVP的问题？
+    接口爆炸
+    由于对视图的渲染放在了Presenter中，所以视图和Presenter的交互会过于频繁。
+    如果Presenter过多地渲染了视图，往往会使得它与特定的视图的联系过于紧密。一旦视图需要变更，那么Presenter也需要变更了。
+
+8、使用设计模式的好处？说几种设计模式？
+    重用设计
+    支持变化，可扩展性好
+    结构清晰，便于理解
+
+
+1、onInterceptTouchEvent() return false后，事件还会交给该ViewGroup吗
+    会，默认是return false
+
+
+2、滑动冲突的处理，怎样使子view先滚动，然后父view滚动？
+
+
+6、Java值传递？引用传递？
+   值传递
+
+7、合并两个有序数组，其中一个数组长度足够长，尽量不开辟新的内存空间
+    跟替换字符串中的空格一样，都是从后往前遍历。因为从前往后遍历的话，元素需要移动的次数较多。
+
+
+8、启动插件的Activity？
+
+
+9、静态内部类的单例模式怎样保证线程安全的？
+    通过JVM类加载是安全的
+
+
+1、数组和链表的区别？查询哪个快？为什么？
+    数组是有限个相同类型的变量所组成的有序集合，是顺序存储，内存是由连续的内存单元组成的
+    随机访问快，插入、删除慢，适合读操作多，写操作少的场景
+
+    链表是一种在物理上非连续、非顺序的数据结构，由若干个节点组成，是链式存储
+    插入、删除快，查找慢
+
+    栈是一种线性数据结构，先进后出，可以用数组实现，也可以用链表实现。
+
+    队列是一种线性数据结构，先进先出，可以用数组实现，也可以用链表实现。
+
+
+3、两个栈实现一个队列？
+    一个栈模拟入队，一个栈模拟出队
+    直接将一组数据压入一个A栈中，出队列操作，将A栈中的数据出栈，压入B栈中，让B出栈，即最先入队的数据
+
+7、TaskAffinity
+    可以在AndroidManifest.xml中设置 android:taskAffinity，用来指定Activity希望归属的栈，默认情况下，
+    同一个应用程序的所有Activity都有着相同的taskAffinity。
+    ①taskAffinity与FLAG_ACTIVITY_NEW_TASK或者singleTask配合。如果新启动Activity的taskAffinity和栈的
+    taskAffinity相同则加入到该栈中；如果不同，就会创建新栈。
+    ②taskAffinity与allowTaskReparenting配合。如果allowTaskReparenting为true，说明activity具有转移能力。
+
+8、Tinker的原理？为什么插入到dexElements前面可以修复？
+    Tinker是将新旧apk做diff 得到path.dex 再将path.dex与手机中apk的 classes.dex进行合并生成新的 classes.dex，
+    然后在运行时通过反射将其放在数组第一个元素。
+
+
+
+1、View，SurfaceView
+  View是Android中所有控件的基类
+  View适用于主动更新的情况，而SurfaceView则适用于被动更新的情况，比如频繁刷新界面。
+  View在主线程中对页面进行刷新，而SurfaceView则开启一个子线程来对页面进行刷新。
+  View在绘图时没有实现双缓冲机制，SurfaceView在底层机制中就实现了双缓冲机制。
+
+
+
+1、双重检索单例模式 内部判空的原因，如果没有的话，会造成什么情况？
+    内部判空，主要是防止两个线程同时进入第一层判空，一个持有锁，创建单例实例后，第二个线程进入锁，会重复创建，不再是单例
+
+2、静态内部类模式怎样保证单例的线程安全？
+    由JVM保证了多线程并发访问的正确性，类加载是线程安全的。
+
+
+
+11、给一个单向链表，寻找中间节点？
+
+12、给一个单向链表，给一个数，倒数，将给定的值放到链表前边？
+
+13、字符串，判断是否合法？
+
+15、Animation和Animator的区别？
+    Animator框架是Android 4.0中新添加的一个动画框架，和之前的Animation框架相比，
+    Animator可以进行更多和更精细化的动画控制，而且比之前更简单和更高效。在4.0源码中随处都可以看到Animator的使用。
+
+8、MVC和MVP，减少MVP接口的方法
+    MVC：
+        Model层：我们针对业务模型，建立数据结构和相关的类，就可以理解为Model。Model是与View无关，而和业务有关的。
+        View层：一般采用XML文件或者Java代码进行界面的描述，也可以使用JS+HTML等方式作为View层。
+        Controller层：Android的控制层通常在Activity、Fragment或者由它们控制的其它业务类中。
+        简单来说就是通过Controller来操作Model层的数据，并且返回给View层展示
+
+        Activity并不是一个标准的MVC模式中的Controller，它的首要职责是加载引用的布局和初始化用户界面，接受并处理
+        来自用户的操作请求，进而做出响应。随着界面及其逻辑的复杂度不断提升，Activity类的职责不断增加，以致变得臃肿。
+        View层和Model层相互耦合，不易开发和维护。
+
+
+    MVP：
+        Model：主要提供数据的存取功能。Presenter需要通过Model层来存储、获取数据。
+        View：负责处理用户事件和视图部分的展示。在Android中，它可能是Activity、Fragment类或者是某个View控件。
+        Presenter：作为View和Model之间沟通的桥梁，它从Model层检索数据后返回给View层，使得View和Model之间没有耦合。
+
+        主要逻辑在Presenter里处理，Presenter与具体的View是没有直接关联的，而是通过定义好的接口进行交互，从而使得
+        在变更View时可以保持Presenter的不变。
+
+    MVVM：
+        与MVP类似，不同的是ViewModel跟Model和View进行双向绑定：当View发生改变时，ViewModel通知Model进行更新数据；
+        同理Model数据更新后，ViewModel通知View更新。
+        DataBinding
+
+11、RecyclerView和ListView的区别？
+
+
+12、ConstraintLayout的优势？和RelativeLayout的区别？
+    兼顾LinearLayout与RelativeLayout的优点, 非常适合构建复杂布局, 降低布局的层级, 加快渲染速度.
+
+13、优化网络请求
+
+16、开发中怎么限制三方库的大小？
+
+17、进程间通信有哪几种方式？
+
+    Bundle：Activity、Service、Receiver都支持在Intent中传递Bundle数据的，由于Bundle实现了Parcelable接口，
+            所以可以在不同进程间传输。
+    文件共享
+    Messenger
+    AIDL
+    ContentProvider
+    Socket
+
+18、AIDL
+    AIDL是Android中IPC（Inter-Process Communication）方式中的一种，AIDL是Android Interface definition language的缩写，
+    对于小白来说，AIDL的作用是让你可以在自己的APP里绑定一个其他APP的service，这样你的APP可以和其他APP交互。
+
+
+19、简述Binder
+    Binder是Android中的一个类，它实现了IBinder接口。
+    从IPC角度来说，Binder是Android中的一种跨进程方式。
+    从FrameWork角度说，Binder是ServiceManager连接各种Manager(ActivityManager、WindowManager等)和相应ManagerService的桥梁。
+    从Android应用层来说，Binder是客户端和服务端进行通信的媒介，当bindService时，服务端会返回一个包含了服务端业务调用的Binder对象，
+    通过这个Binder对象，客户端就可以获取服务端提供的服务或者数据，这里的服务包括普通服务和基于AIDL的服务。
+
+    Android开发中，Binder主要用于Service中，包括AIDL和Messenger，其中普通service中的Binder不涉及进程间通信，
+    Messenger底层是AIDL。
+
+
+4、一个service和5个Activity绑定，有几个service的实例？4个Activity退出，service还在吗？
+    service还在
+    多个activity与service绑定只会在第一个activity绑定时走 onCreate、onBind() 回调，service的实例是在
+    多个activity之间共享的，当一个activity 解除绑定或者退出销毁时，只要还有其他activity与service绑定是
+    不会走 onBind() 和 onDestroy() 方法的，但是会走 serviceConnection() 中的回调，
+    只有最后一个activity解除绑定、退出销毁时 service 才会走 onBind() 和 onDestroy() 方法
+
+6、MVP接口爆炸，怎么解决
+    抽取基类，BasePresenter
+    合约分包模式，一个Contract接口下，view、model、presenter几个内部接口
+
+
+1、加密算法
+    非对称密钥算法是指一个加密算法的加密密钥和解密密钥是不一样的，或者说不能由其中一个密钥推导出另一个密钥。
+    和对称算法相反，简单的讲就是加密方持有 私钥 对数据进行加密。然后 解密方持有 加密方提供的 公钥进行解密。
+    对于非对称算法而言：
+    算法强度复杂、安全性依赖于算法与密钥但是由于其算法复杂，而使得加密解密速度没有对称加密解密的速度快。但是重在安全。
+
+2、PathClassLoader和DexClassLoader
+    1、DexClassLoader可以加载jar/apk/dex，可以从SD卡中加载未安装的apk
+    2、PathClassLoader只能加载系统中已经安装过的apk
+
+    //dexPath ：dex路径
+    //optimizedDirectory :制定输出dex优化后的odex文件，可以为null
+    //libraryPath:动态库路径（将被添加到app动态库搜索路径列表中）
+    //parent:制定父类加载器，以保证双亲委派机制从而实现每个类只加载一次。
+    public DexClassLoader(String dexPath, String optimizedDirectory,
+            String libraryPath, ClassLoader parent) {
+        super(dexPath, new File(optimizedDirectory), libraryPath, parent);
+    }
+
+
+    //dexPath ：dex路径
+    //libraryPath:动态库路径（将被添加到app动态库搜索路径列表中）
+    //parent:制定父类加载器，以保证双亲委派机制从而实现每个类只加载一次。
+    public PathClassLoader(String dexPath, String libraryPath,
+            ClassLoader parent) {
+        super(dexPath, null, libraryPath, parent);
+    }
+
+
+3、反射中的方法
+
+
+4、android版本适配
+    Android6.0适配
+    权限适配    只有属于危险权限的才需要申请
+
+    Android 7.0适配
+    应用间共享文件 FileProvider
+    APK signature scheme v2  签名  同时勾选v1 v2
+
+    Android 8.0适配
+    通知适配    新增了通知渠道，用户可以根据渠道来屏蔽一些不想要的通知。
+
+    Android 9.0适配
+    Android P 限制了明文流量的网络请求，非加密的流量请求都会被系统禁止掉
+    解决方案：
+        在资源文件新建xml目录，新建文件，在AndroidManifest.xml 中配置 networkSecurityConfig
+
+
+8、webView需要注意的安全问题
+
+
+1、怎样3个线程同时启动，执行完后再执行另一个线程？
+
+2、webView和js交互
+
+
+5、tinker的缺陷？能修复第三方aar
+
+
+8、本地广播
+
+9、oom能被try catch吗
+    OOM 能不能被 catch 住？在某些条件下可以。仅在我们可控的代码，并且在 try 块中存在申请大量内存的情况下，
+    此时触发的 OOM，才是可以被 catch 住的。
+    当我们 catch 住 OOM 的时候，我们应该主动释放一些我们可控的内存，做好内存管理，避免在后续的操作中，立即又会触发 OOM，导致崩溃。
+
+
+10、try catch finally  在try中return  finally还会执行吗
+    ①try中有return, 会先将值暂存，无论finally语句中对该值做什么处理，最终返回的都是try语句中的暂存值。
+    ②当try与finally语句中均有return语句，会忽略try中return。
+
+11、ArrayList能遍历的同时删除元素吗？
+
+
+12、Scroller是干什么的？
+    弹性滑动
+
+
+
+1、Java class文件的构成及作用
+
+2、Java反射效率低的原因和解决方法
+    Method#invoke 方法会对参数做封装和解封操作
+    需要检查方法可见性
+    需要校验参数
+    反射方法难以内联
+    JIT 无法优化
+
+
+
+======================================================================
+5、换肤实现方案
+    换肤其实很简单，说白了就是修改View的属性
+    那么问题就变为如何获取到所有的控件进行属性设置；然后换肤，其实就是换一套皮肤，换一套资源文件
+    ①使用theme实现
+        设置theme只有在activity的setContentView之前才有效，需要重启Activity
+    ②实现换肤就需要找到所有要改变的view，通过Activity的setContentView()一直点进入，
+    直到LayoutInflater#inflate()中的createViewFromTag()里面，
+    最终是通过Factory2来创建View的
+
+    我们实现自己的Factory去创建View对象，就可以趁机保存所有的对象，然后当我们想换肤的时候就可以把每一个对象的属性修改就可以了；
+    至于这里View怎么保存，怎么销毁，怎么防止内存泄漏这些小问题简单提一下，全局监听一下Activity的生命周期就完事了
+
+
+    重新设置LayoutInflater的Factory2，从而拦截创建View的过程，然后搞成自己的控件，想怎么换肤就怎么换肤。
+
+2、recyclerView和ListView的区别
+    ①层级不同
+        RecyclerView比ListView多两级缓存，支持多个离ItemView缓存，支持开发者自定义缓存处理逻辑，
+        支持所有RecyclerView共用同一个RecyclerViewPool(缓存池)。
+        ListView(两级缓存)
+        RecyclerView(四级缓存)
+    ②缓存不同
+        RecyclerView缓存RecyclerView.ViewHolder，抽象可理解为：
+        View + ViewHolder(避免每次createView时调用findViewById) + flag(标识状态)；
+
+        ListView缓存View。而同样是离屏缓存，ListView从mScrapViews根据pos获取相应的缓存，
+        但是并没有直接使用，而是重新getView（即必定会重新bindView）。
+
+    ③RecyclerView可以局部刷新
+
+    ①ListView中ViewHolder是需要自定义的，在RecyclerView中ViewHolder是谷歌已经封装好的
+    ②ListView中的Item是只能垂直滑动的，RecyclerView可以水平滑动或者垂直滑动，针对多种类型条目的展示效果，
+    如瀑布流 网格 支持多种类型
+    ③ListView中删除或添加item时，item是无法产生动画效果的，在RecyclerView中添加、删除或移动item时有两种默认的效果可以选择SimpleItemAnimator（简单条目动画） 和 DefaultItemAnimator（原样的条目动画）。
+
+
+3、协程调度机制
+    就是一个线程框架，提供了一套操作线程的api。
+
+4、dex分包
+5、编译时间长 解决方案
+
+
+======================================================================
+message的同步 异步处理 及消息屏障
+
+延迟消息熄屏后 会执行吗
+最终会执行，不过应该是在亮屏的一瞬
+
+recycle view  oncreateviewholder  执行的次数   满屏5个  20个item
+
+
+recycle view缓存机制
+
+
+1、只选取某一种abi架构，其它架构的手机上会出现什么问题
+
+
+2、GC何时发生的
+
+3、RN的原理
+RN的页面也是依托Activity，React Native框架里有一个ReactActivity，它就是我们RN页面的容器。
+ReactActivity里有个ReactRootView，正如它的名字那样，它就是 ReactActivity的root View，最终渲染出来的view都会添加到这个ReactRootView上。
+ReactRootView调用自己的startReactApplication()方法启动了整个RN页面，在启动的过程中先去创建页面上下文ReactContext，然后再去加载、执行并将JavaScript映射成Native Widget，最终一个RN页面就显示在了用户面前。
+
+
+
+1、线程池的原理
+
+
+2、RN怎么实现的？
+
+3、MVP基类的封装处理？
+    基类BasePresenter，通过弱引用的方式持有View的引用，在BaseActivity的onCreate()中attach(view),
+    在onDestroy()中detachView()，释放view的引用
+
+    定义IPresenter接口，里面定义了同activity的生命周期的方法，通过BasePresenter实现该接口，
+    BaseActivity中，在activity生命周期里调用相应的presenter的回调，来达到presenter对activity生命周期的监控。
+
+    基类BaseActivity通过泛型参数的形式，传入view和presenter，达到activity持有presenter的引用
+
+    怎样处理页面退出，释放presenter的引用
+
+4、RecyclerView parent不为空？parent true，false 的区别？
+    attach不能设置为true，否则inflate返回的布局为RecyclerView，而不是我们希望返回的自定义布局对象
+
+5、动画？
+    帧动画
+        顺序播放一组定义好的图片
+    view动画
+        平移、缩放、旋转、透明
+        使用场景：
+        LayoutAnimation，比如ListView中的每一个item的动画效果
+        Activity切换效果：enterAnim、exitAnim
+    属性动画
+        可以对任何对象做动画
+        几个概念：ValueAnimator、ObjectAnimator、AnimatorSet
+        插值器 TimeInterpolator，根据时间流逝的百分比来计算出当前属性值改变的百分比。
+            比如线性插值器，匀速动画
+        估值器 TypeEvaluator，根据当前属性改变的百分比来计算改变后的属性值。
+
+
+
+
+6、怎样实现多进程？
+    AndroidManifest.xml中配置 android:process=":remote"
+
+7、分代收集
+    新生代对象存活率较低，使用复制算法
+    老年代对象存活率较高，使用标记整理算法
+
+8、sp是线程安全的吗？commit和apply的区别？
+    SharedPreferences不支持多线程，进程也是不安全的
+
+    SharedPreference 相关修改使用 apply 方法进行提交会先写入内存，然后异步写入磁盘，commit
+    方法是直接写入磁盘。如果频繁操作的话 apply 的性能会优于 commit，apply会将最后修改内容写入磁盘。
+    但是如果希望立刻获取存储操作的结果，并据此做相应的其他操作，应当使用 commit。
+
+
+9、Java虚拟机栈里存的什么东西？
+    方法栈帧    用于存储局部 变量表、操作数栈、动态链接、方法出口 等信息。
+    局部变量表   存放了编译期可知的各种 基本数据类型、对象引用类型和returnAddress类型
+
+10、jpg和png的区别？
+    二者对比：
+    1、png有透明通道，而jpg没有
+    2、png是无损压缩的，而jpg是有损压缩，因此png中存储的信息会很多，体积自然就大了
+    3、手机对png情有独钟，会对其进行硬件加速，所以同样一张背景图，png虽然体积大，但是加载速度更快
+
+    综述：
+    1、对于app包中的图片，我们都使用png格式的，而对于要从网络上加载的图片，考虑到流量以及下载上速度，则使用jpg格式的，因为它有较高的压缩率，体积更小。
+    2、对于背景图、引导页，这种大尺寸的图片，我们还是倾向于jpg格式的，虽然加载慢一些吗，但是体积小，减少了包的体积
+    3、Google后来发布了一种新的图片格式，WebP，它的压缩率比jpg更好，已经在慢慢普及
+
+
+11、Bitmap计算图片大小，压缩处理？Bitmap存在哪个区域？
+    通过采样率即可有效地加载图片，那么到底如何获取采样率呢？
+    （1）将 BitmapFactory.Options 的 inJustDecodeBounds 参数设为 true 并加载图片。
+    （2）从 BitmapFactory.Options 中取出图片的原始宽高信息，它们对应于 outWidth 和 outHeight 参数。
+    （3）根据采样率的规则并结合目标 View 的所需大小计算出采样率 inSampleSize。
+    （4）将 BitmapFactory.Options 的 inJustDecodeBounds 参数设为 false，然后重新加载图片。
+
+
+12、oom发生在哪个区域？
+
+13、哪些对象可以作为跟root？
+    GC管理的主要区域是Java堆，一般情况下只针对堆进行垃圾回收。
+    方法区、栈和本地方法区不被GC所管理,因而选择这些区域内的对象作为GC roots,被GC roots引用的对象不被GC回收。
+
+    在Java语言里，可作为GC Roots对象的包括如下几种：
+    a.虚拟机栈(栈桢中的本地变量表)中的引用的对象
+    b.方法区中的类静态属性引用的对象
+    c.方法区中的常量引用的对象
+    d.本地方法栈中JNI的引用的对象
+
+14、okHttp链接复用
+    首先会对缓存中的连接进行遍历，以寻找一个闲置时间最长的连接，然后根据该连接的闲置时长和最大允许的连接数量等参数来决定是否应该清理该连接。
+    同时注意上面的方法的返回值是一个时间，如果闲置时间最长的连接仍然需要一段时间才能被清理的时候，
+    会返回这段时间的时间差，然后会在这段时间之后再次对连接池进行清理。
+
+
+15、requestLayout和invalidate的区别
+
+16、webView碰到的问题？内存泄漏？
+
+17、方法参数中的final
+
+18、线程安全的容器类
+    同步容器类：使用了synchronized
+    1.Vector
+    2.HashTable
+
+    并发容器：
+    3.ConcurrentHashMap:分段
+    4.CopyOnWriteArrayList：写时复制
+    5.CopyOnWriteArraySet：写时复制
+
+    Queue:
+    6.ConcurrentLinkedQueue：是使用非阻塞的方式实现的基于链接节点的无界的线程安全队列，性能非常好。
+    （java.util.concurrent.BlockingQueue 接口代表了线程安全的队列。）
+    7.ArrayBlockingQueue：基于数组的有界阻塞队列
+    8.LinkedBlockingQueue：基于链表的有界阻塞队列。
+    9.PriorityBlockingQueue：支持优先级的无界阻塞队列，即该阻塞队列中的元素可自动排序。默认情况下，元素采取自然升序排列
+    10.DelayQueue：一种延时获取元素的无界阻塞队列。
+    11.SynchronousQueue：不存储元素的阻塞队列。每个put操作必须等待一个take操作，否则不能继续添加元素。内部其实没有任何一个元素，容量是0
+
+    Deque:
+    (Deque接口定义了双向队列。双向队列允许在队列头和尾部进行入队出队操作。)
+    12.ArrayDeque:基于数组的双向非阻塞队列。
+    13.LinkedBlockingDeque:基于链表的双向阻塞队列。
+
+    Sorted容器：
+    14.ConcurrentSkipListMap：是TreeMap的线程安全版本
+    15.ConcurrentSkipListSet：是TreeSet的线程安全版本
+
+19、GC什么时候会发生
+    新生代
+        Minor GC
+        Eden区域  from Survivor   to Survivor
+
+    老年代
+        Full  GC
+
+21、native缓存、显存
+
+22、ANR
+    应用程序无响应
+    activity 5秒
+    broadcastReceiver 10秒
+    service 20秒
+
+    如何避免ANR
+    1.UI线程尽量只做跟UI相关的工作;
+    2.耗时的工作（比如数据库操作，I/O，连接网络或者别的有可能阻碍UI线程的操作）把它放入单独的线程处理;
+    3.尽量用Handler来处理UI thread和别的thread之间的交互;
+    4.实在绕不开主线程，可以尝试通过Handler延迟加载;
+    5.广播中如果有耗时操作，建议放在IntentService中去执行，或者通过goAsync() + HandlerThread分发执行。
+
+23、View的绘制帧率
+    60fps，即每帧绘制时间不超过16ms
+
+
+22、栈、堆
+    栈溢出(StackOverflowError)
+    栈是线程私有的，他的生命周期与线程相同，每个方法在执行的时候都会创建一个栈帧，用来存储局部变量表，操作数栈，
+    动态链接，方法出口灯信息。局部变量表又包含基本数据类型，对象引用类型（局部变量表编译器完成，运行期间不会变化）
+
+    所以我们可以理解为栈溢出就是方法执行是创建的栈帧超过了栈的深度。那么最有可能的就是方法递归调用产生这种结果。
+
+    1.如果线程请求分配的栈容量超过java虚拟机栈允许的最大容量的时候，java虚拟机将抛出一个StackOverFlowError异常。
+    2.如果java虚拟机栈可以动态拓展，并且扩展的动作已经尝试过，但是目前无法申请到足够的内存去完成拓展，或者在建立新线程的时候没有足够的内存去创建对应的虚拟机栈，那java虚拟机将会抛出一个OutOfMemoryError异常。
+
+    堆溢出(OutOfMemoryError:java heap space)
+    java堆是线程共有的区域，主要用来存放对象实例，几乎所有的java对象都在这里分配内存，也是JVM内存管理最大的区域。
+    java堆内存分年轻代和年老代，堆内存溢出一般是年老代溢出。当程序不断地创建大量对象实例并且没有被GC回收时，就容易产生内存溢出。
+    当一个对象产生时，主要过程是这样的：
+        JVM首先在年轻代的Eden区为它分配内存；
+        若分配成功，则结束，否则JVM会触发一次Young GC，试图释放Eden区的不活跃对象；
+        如果释放后还没有足够的内存空间，则将Eden区部分活跃对象转移到Suvivor区，Suvivor区长期存活的对象会被转移到老年代；
+        当老年代空间不够，会触发Full GC，对年老代进行完全的垃圾回收；
+        回收后如果Suvivor和老年代仍没有充足的空间接收从Eden复制过来的对象，使得Eden区无法为新产生的对象分配内存，即溢出。
+
+    由此可见，当程序不断地创建大量对象实例并且没有被GC回收时，就容易产生内存溢出。
+
+23、异常信息怎样打印出来的
+
+24、apk是什么格式的文件
+    zip
+
+
+
+
+1、Fragment监听返回怎么处理？
+    ① 在Fragment中onResume监听返回键事件
+    ② 先定义接口BackHandleInterface
+      定义公用的Fragment
+      需要实现监听的Fragment的Activity实现接口
+
+
+2、HashMap初始化，如果要放置5个数据，初始化长度该为多少？
+    初始化长度 =（需要存储的元素个数/负载因子）+ 1
+
+3、播放器怎样监听来电、闹钟，进入暂停？
+
+
+4、ConcurrentHashMap怎样实现线程安全的？
+    synchronized+CAS操作
+
+
+5、自定义view，通过什么方式可以处理圆角？
+    ①clipPath()  在onDraw()中，canvas.clipPath(mPath);  mPath.addRoundPath()
+    简单，但是带锯齿
+    ②Xfermode
+    可定义高，支持多图层的圆角，但是麻烦
+    ③BitmapShader   遮罩方式
+     mPaint.setShader(mShader);
+     canvas.drawRoundRect()
+     简单有效，仅支持Bitmap圆角，如果是LayerDrawable就显得手足无措。
+
+6、TextView怎样对drawableLeft，里面的图片进行缩放动画？
+
+7、除了RecyclerView、ListView，还有什么可以实现列表？
+
+8、Retrofit怎样将一个call转换成Observable？
+    设置callAdapterFactories
+    在HttpServiceMethod中，获取接口中定义的方法的返回值类型还有注解，创建一个callAdapter，是通过Retrofit.nextCallAdapter()
+    创建的，调用的是callAdapterFactories.get(i).get()方法，这里就是我们创建OkHttpClient时设置的callAdapterFactory
+
+
+ListView 嵌套scrollview，怎样实现横竖滑动
+
+cas是什么类型的锁
+乐观锁
+
+Android和js交互？jsBridge？
+
+
+
+
+1、什么时候该用get请求什么时候该用post请求
+    HTTP标准包含这两种方法是为了达到不同的目的。
+    POST用于创建资源，资源的内容会被编入HTTP请示的内容中。例如，处理订货表单、在数据库中加入新数据行等。
+
+    当请求无副作用时（如进行搜索），便可使用GET方法；当请求有副作用时（如添加数据行），则用POST方法。
+    一个比较实际的问题是：GET方法可能会产生很长的URL，或许会超过某些浏览器与服务器对URL长度的限制。
+
+    若符合下列任一情况，则用POST方法：
+    * 请求的结果有持续性的副作用，例如，数据库内添加新的数据行。
+    * 若使用GET方法，则表单上收集的数据可能让URL过长。
+    * 要传送的数据不是采用7位的ASCII编码。
+
+    若符合下列任一情况，则用GET方法：
+    * 请求是为了查找资源，HTML表单数据仅用来帮助搜索。
+    * 请求结果无持续性的副作用。
+    * 收集的数据及HTML表单内的输入字段名称的总长不超过1024个字符。
+
+2、进程和线程的区别？
+    1.进程：进程是系统进行资源分配的基本单元
+    ·有一段程序供其执行
+    ·拥有专用的系统堆栈空间
+    ·在内存中有对应的进程控制块
+    ·拥有独立的用户存储空间
+    ·进程之间不能进行自由的信息交互（别问我，问就是Android规定的）
+
+    2.线程：是CUP调度的基本单元
+    ·每个进程必须包含一个线程
+    ·进程间的切换开销比较大，线程创建和终止比进程快，进程间无法进行自由的资源交换，同进程内的线程可以自由交换
+
+3、二叉树中序遍历，非递归
+    左子树、根节点、右子树
+    public static void inOrderTraversal(com.xht.androidnote.summarize.TreeNode node) {
+        if(node == null) {
+            return;
+        }
+
+        inOrderTraversal(node.leftChild);
+        System.out.println(node.data);
+        inOrderTraversal(node.rightChild);
+    }
+    非递归的话，可以使用栈
+
+1、请说明一张图片所占用的内存大小的计算方式
+    一张图片占用的内存大小的计算公式：分辨率 * 像素点大小；但分辨率不一定是原图的分辨率，需要结合一些场景来讨论，
+    像素点大小就几种情况：ARGB_8888(4B)、RGB_565(2B) 等等。
+
+    Bitmap位深的计算
+    ARGB_8888是最占内存的，因为一个像素占32位，8位=1字节，所以一个像素占4字节的内存。
+    ARGB_4444的一个像素占2个字节。
+    RGB_565的一个像素也是占两个字节。
+    ALPHA_8的一个像素只占一个字节。
+
+    假设一张480*800的图片，占内存大小：
+    ARGB_8888   480*800*4
+
+    如果不对图片进行优化处理，如压缩、裁剪之类的操作，
+    那么 Android 系统会根据图片的不同来源决定是否需要对原图的分辨率进行转换后再加载进内存。
+
+    图片来源是 res 内的不同资源目录时，系统会根据设备当前的 dpi 值以及资源目录所对应的 dpi 值，做一次分辨率转换，规则如下：
+    新分辨率 = 原图横向分辨率 * (设备的 dpi / 目录对应的 dpi ) * 原图纵向分辨率 * (设备的 dpi / 目录对应的 dpi )。
+
+    其他图片的来源，如磁盘，文件，流等，均按照原图的分辨率来进行计算图片的内存大小。
+
+    jpg、png 只是图片的容器，图片文件本身的大小与它所占用的内存大小没有什么关系，当然它们的压缩算法并不一样，
+    在解码时所耗的内存与效率此时就会有些区别。
+
+    基于以上理论，以下场景的出现是合理的：
+    同个 app，在不同 dpi 设备中，同个界面的相同图片所占的内存大小有可能不一样。
+    同个 app，同一张图片，但图片放于不同的 res 内的资源目录里时，所占的内存大小有可能不一样。
+    以上场景之所说有可能，是因为，一旦使用某个热门的图片开源库，那么，以上理论基本就不适用了。
+    因为系统支持对图片进行优化处理，允许先将图片压缩，降低分辨率后再加载进内存，以达到降低占用内存大小的目的
+    而热门的开源图片库，内部基本都会有一些图片的优化处理操作：
+    当使用 fresco 时，不管图片来源是哪里，即使是 res，图片占用的内存大小仍旧以原图的分辨率计算。
+    当使用 Glide 时，如果有设置图片显示的控件，那么会自动按照控件的大小，降低图片的分辨率加载。图片来源是 res 的分辨率转换规则对它也无效。
+
+
+2、请简述Java反射效率低的原因及优化策略
+
+3、请问Http、Socket、TCP/UDP协议的关系是什么
+    TCP和UDP：传输层协议；
+
+    HTTP：应用层协议；
+
+    SOCKET：TCP/IP网络的API。
+    Socket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。
+
+4、请简述Java Class文件的构成及其作用
+
+5、假设有一个20个item的RecyclerView,每五个占满一个屏幕，在从头滑到尾的过程中，onCreateViewHolder会调用多少次？
+
+6、大文件整型数字相加：有一个超大size的文件，存放的都是整型数字+空格，求文件中所有整型数字的和，以字符串表示
+
+7、请描述下在浏览器访问 www.tencent.com 一直到网页渲染到屏幕上的网络请求流程
+
+
+1、JS和webView交互
+    JSBridge的基本原理为：
+    H5->通过某种方式触发一个url->Native捕获到url,进行分析->原生做处理->Native调用H5的JSBridge对象传递回调。
+
+    对于Android调用JS代码的方法有2种：
+        通过WebView的loadUrl（）
+        通过WebView的evaluateJavascript（）
+    对于JS调用Android代码的方法有3种：
+        通过WebView的addJavascriptInterface（）进行对象映射
+        通过 WebViewClient 的shouldOverrideUrlLoading ()方法回调拦截 url
+        通过 WebChromeClient 的onJsAlert()、onJsConfirm()、onJsPrompt（）方法回调拦截JS对话框alert()、confirm()、prompt（） 消息
+
+    违章里的处理：
+    继承WebChromeClient，
+    通过@JavascriptInterface注解方法，接收js的字符串命令，进行处理，
+    里面维护着一个map，用于增删协议方法
+
+
+2、scrollview嵌套listView
+
+3、事件分发
+
+4、自定义view
+    比如自定义九宫格，首先继承自LinearLayout，
+    计算子view的layoutParams
+    每一行addView()一个横向LinearLayout，addView()内部会调用requestLayout，
+
+
+1、图片压缩
+    ①质量压缩
+     保持像素的前提下改变图片的位深及透明度（即：通过算法抹掉(同化)图片中的一些某点附近 相近的像素）达到降低质量压缩文件的目的。
+     使用场景：将图片压缩后将图片上传到服务器，或者保存到本地，根据实际需求
+    ②尺寸压缩
+     通过减少单位尺寸的像素值，真正意义上的降低像素（通过缩放图片像素来减少图片占用内存大小）
+     使用场景：缓存缩略图的时候（头像处理）
+    ③采样率压缩
+     设置图片的采样率，降低图片像素
+     好处：是不会先将大图片读入内存，大大减少了内存的使用，也不必考虑将大图片读入内存后的释放事宜。
+
+
+
+1、自定义view的流程？
+    ①继承View
+        要自定义View首先需要需要继承View或者其子类，如果需要实现的效果比较复杂，通常需要继承View，
+        有时候我们需要的是系统的控件再加上一些特殊的效果则可以继承View的子类（如TextView）
+        如果是要自己设计一种布局或者要组合其他控件，这时候就需要继承ViewGroup或者LinearLayout、FrameLayout等系统自带的布局
+    ②重写构造方法
+        自定义View至少需要重写两个构造方法
+        Java中创建
+        xml中使用
+    ③自定义xml中的属性
+
+    ④onMeasure方法
+    需要view支持wrap_content
+
+     onSizeChanged()
+     一般情况下onMeasure中就可以把View的大小确定下来了，但是因为View的大小不仅由View本身控制，而且受父控件的影响，所以我们在确定View大小的时候最好使用系统提供的onSizeChanged回调函数。
+
+
+    ⑤onLayout方法
+     一般自定义ViewGroup才需要重写该方法对子View进行排放
+
+    ⑥onDraw方法
+     通过onDraw方法我们可以将view绘制到屏幕上，如果要让view支持padding属性则需要在onDraw中做处理
+
+     onMeasure、onLayout、onDraw三个方法可能会对此调用，特别是onDraw方法，所以最好不要在这些方法中创建对象避免频繁分配内存造成内存抖动，或者做一些耗时操作导致跳帧
+     View中有提供post系列方法，所以不需要在View中使用Handler
+     View中若有创建线程或者动画需要及时停止，View#onDetachedFromWindow就是一个很好的时机
+     View中若有滑动嵌套的情形，需要处理好滑动冲突
+
+
+2、onSizeChanged()和dispatchDraw()什么时候会被调用
+    这个方法是在视图的大小发生改变后的回调，而视图的大小改变时机肯定包括layout方法，所以这个回调方法肯定是在layout方法之中调用。
+    如果旧的宽度和高度任意一个发生了改变都会调用sizeChange方法，而sizeChange方法里面就是onSizeChange方法。
+
+    dispatchDraw()是viewGroup绘制子view，遍历调用子view的draw()，
+    一般我们重写onDraw()来绘制view内容
+
+
+
+3、ThreadLocalMap的结构，它是怎样存储Looper的？键值对的key是什么？
+    https://blog.csdn.net/weixin_33709609/article/details/87986660
+
+    ThreadLocal是线程内部的数据存储类，它可以在指定线程中存储数据，存储数据后，只有在指定线程中可以获取到存储的数据。
+
+    public void set(T value) {
+        Thread t = Thread.currentThread();
+        ThreadLocalMap map = getMap(t);
+        if (map != null)
+            map.set(this, value);
+        else
+            createMap(t, value);
+    }
+
+    虽然官方申明为ThreadLocalMap是一个哈希表，但是它与我们传统认识的HashMap等哈希表内部结构是不一样的。
+    ThreadLocalMap内部仅仅维护了Entry[] table,数组。其中Entry实体中对应的key为弱引用，
+    在第一次放入数据时，会初始化数组长度（为16),定义数组扩容阀值（当前默认数组长度的2/3)。
+
+    如果key使用强引用，那么当引用ThreadLocal的对象被回收了，
+    但ThreadLocalMap中还持有ThreadLocal的强引用，如果没有手动删除，ThreadLocal不会被回收，导致内存泄漏。
+
+    //根据哈希值计算位置
+    //判断当前位置是否有数据，如果key值相同，就替换，如果不同则找空位放数据。
+
+    //判断key值相同否，如果是直接覆盖 （第一种情况）
+    //如果当前Entry对象对应Key值为null,则清空所有Key为null的数据（第二种情况）
+    //以上情况都不满足，直接添加（第三种情况）
+    //如果当前数组到达阀值，那么就进行扩容。
+
+    ThreadLocal本质是操作线程中ThreadLocalMap来实现本地线程变量的存储的
+    ThreadLocalMap是采用数组的方式来存储数据，其中key(弱引用)指向当前ThreadLocal对象，value为设的值
+    ThreadLocal为内存泄漏采取了处理措施，在调用ThreadLocal的get(),set(),remove()方法的时候都会清除线程ThreadLocalMap里所有key为null的Entry
+    在使用ThreadLocal的时候，我们仍然需要注意，避免使用static的ThreadLocal，分配使用了ThreadLocal后，
+    一定要根据当前线程的生命周期来判断是否需要手动的去清理ThreadLocalMap中清key==null的Entry。
+
+
+    key是当前ThreadLocal对象
+
+
+4、三种线程安全的单例模式
+
+5、synchronized和Lock的区别？
+    来源：
+    lock是一个接口，而synchronized是java的一个关键字，synchronized是内置的语言实现；
+
+    异常是否释放锁：
+    synchronized在发生异常时候会自动释放占有的锁，因此不会出现死锁；而lock发生异常时候，不会主动释放占有的锁，必须手动unlock来释放锁，可能引起死锁的发生。（所以最好将同步代码块用try catch包起来，finally中写入unlock，避免死锁的发生。）
+
+    是否响应中断
+    lock等待锁过程中可以用interrupt来中断等待，而synchronized只能等待锁的释放，不能响应中断；
+
+    是否知道获取锁
+    Lock可以通过trylock来知道有没有获取锁，而synchronized不能；
+
+    Lock可以提高多个线程进行读操作的效率。（可以通过readwritelock实现读写分离）
+
+    在性能上来说，如果竞争资源不激烈，两者的性能是差不多的，而当竞争资源非常激烈时（即有大量线程同时竞争），此时Lock的性能要远远优于synchronized。所以说，在具体使用时要根据适当情况选择。
+
+    synchronized使用Object对象本身的wait 、notify、notifyAll调度机制，而Lock可以使用Condition进行线程之间的调度，
+
+6、Lock的使用场景？
+    1.某个线程在等待一个锁的控制权的这段时间需要中断
+    2.需要分开处理一些wait-notify，ReentrantLock里面的Condition应用，能够控制notify哪个线程
+    3.具有公平锁功能，每个到来的线程都将排队等候
+
+7、HashMap原理？怎样通过哈希值获取数组位置？
+    利用key的hashCode与自身的高16位进行异或运算
+    index = (n - 1) & hash
+
+8、onNewIntent()什么时候会调用？
+
+9、synchronized和Lock的效率问题？
+
+10、常用布局？对比效率问题？
+    RelativeLayout会对子View做两次measure。这是为什么呢？首先RelativeLayout中子View的排列方式是基于彼此的依赖关系，
+    而这个依赖关系可能和布局中View的顺序并不相同，在确定每个子View的位置的时候，就需要先给所有的子View排序一下。
+    又因为RelativeLayout允许A，B 2个子View，横向上B依赖A，纵向上A依赖B。所以需要横向纵向分别进行一次排序测量。
+
+    RelativeLayout不如LinearLayout快的根本原因是RelativeLayout需要对其子View进行两次measure过程。
+    而LinearLayout则只需一次measure过程，所以显然会快于RelativeLayout，
+    但是如果LinearLayout中有weight属性，则也需要进行两次measure，但即便如此，应该仍然会比RelativeLayout的情况好一点。
+
+
+
+11、IdleHandler的作用以及如何使用？
+    IdleHandler 可以用来提升性能，主要用在我们希望能够在当前线程消息队列空闲时做些事情
+    （譬如 UI 线程在显示完成后，如果线程空闲我们就可以提前准备其他内容）的情况下，不过最好不要做耗时操作。
+
+
+    public static interface IdleHandler {
+        boolean queueIdle();
+    }
+    这个接口方法是在消息队列消息队列全部处理完成后或者是在阻塞的过程中等待更多的消息的时候调用的，返回值决定了处理一次后是否保存这个接口。
+    返回false，那么就会移除它，返回true就会在下次message处理完了的时候继续回调。
+
+    MessageQueue中有一个ArrayList集合mIdleHandlers，用来保存IdleHandler接口
+    addIdleHandler()中添加，removeIdleHandler()中移除，这两个方法都是线程安全的
+
+    获取空闲队列个数，如果没有pendingIdleHandlerCount < 0，Looper继续阻塞
+    然后，如果空闲数组为空，初始化，个数为pendingIdleHandlerCount和4的最大值，
+    将空闲list转为数组，
+    遍历数组，keep = idler.queueIdle();
+
+
+    在ActivityThread中有应用，GcIdler实现IdleHandler，方法中doGcIfNeeded()
+
+
+    ActivityThread#handleReusmeActivity()
+        里面调用performResumeActivity()，这里面调用了Activity#onResume()
+        然后回到handleResumeActivity()，调用了wm.addView(decor, l);
+    WindowManagerImpl#addView()--->WindowManagerGlobal#addView()--->创建了ViewRootImpl，
+    调用了ViewRootImpl#setView()---->这里最终调用了requestLayout()--->scheduleTraversal()--->
+    这里最终通过handler post了一个runnable，这个runnable的run()里调用的是doTraversal()--->
+    performTraversal()--->measure()、layout()、draw()
+
+    如果我们想在界面绘制出来后做点什么，那么在onResume里面显然是不合适的，它先于measure等流程了
+
+    如果我们想在绘制完成后做一些事情，可以在onResume()中
+
+    因为主线程绘制UI，也是通过handler#post(runnable)来处理的，等绘制处理完后，就会执行空闲队列
+
+
+    // 拿到主线程的MessageQueue
+     Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+
+     @Override
+     public boolean queueIdle() {
+      // 在这里去处理你想延时加载的东西
+      delayLoad();
+
+      // 最后返回false，后续不用再监听了。
+      return false;
+     }
+     });
+
+
+12、Handler#handleMessage 返回值 true false 的含义、
+    /**
+     * Handle system messages here.
+     */
+    public void dispatchMessage(Message msg) {
+        if (msg.callback != null) {
+            handleCallback(msg);
+        } else {
+            if (mCallback != null) {
+                if (mCallback.handleMessage(msg)) {
+                    return;
+                }
+            }
+            handleMessage(msg);
+        }
+    }
+
+    如果不自定义handler类，
+
+
+13、getMeasuredWidth()和getWidth()的区别？
+    ①getMeasuredWidth方法获得的值是setMeasuredDimension方法设置的值，它的值在measure方法运行后就会确定
+    ②getWidth方法获得是layout方法中传递的四个参数中的mRight-mLeft，它的值是在layout方法运行后确定的
+    ③一般情况下在onLayout方法中使用getMeasuredWidth方法，而在除onLayout方法之外的地方用getWidth方法。
+
+    默认情况下是相同的，除非重写view的layout()，手动修改四个顶点的值
+
+14、View动画的原理
+    先是调用View.setAnimation(Animation)方法给自己设置一个Animation对象
+    然后它调用invalidate()来重绘自己。
+
+15、自定义view相关
+    layout是子类确定自己位置的方法，使用者为子类；onLayout是父类确定子类位置的方法，使用者为父类。
+    ViewGroup中的onLayout是个空实现，由具体实现类实现，如LinearLayout，onLayout中遍历子view，setChildFrame()，
+    里面调用了子view的layout方法。
+
+    onDraw()和dispatchDraw()
+    绘制VIew本身的内容，通过调用View.onDraw(canvas)函数实现
+    绘制自己的孩子通过dispatchDraw（canvas）实现
+
+    measure()和onMeasure()
+    measure()是不能被重写的，final方法
+    一般我们会重写onMeasure()，对view进行测量，最终通过setMeasureDimension()来进行测量宽高的设置。
+    如果是ViewGroup的话，会遍历调用子view的measure()，完成子view的测量后，再测量自己的大小，
+    比如LinearLayout竖直方向上的测量，有一个mTotalLength，先遍历测量子view，每测量一个这个值就会增加，最终
+    测量自己，通过setMeasureDimension()来设置测量值。
+
+
+    View绘制分三个步骤，顺序是：onMeasure，onLayout，onDraw。经代码亲测，log输出显示：
+    调用invalidate方法只会执行onDraw方法；调用requestLayout方法只会执行onMeasure方法和onLayout方法，并不会执行onDraw方法。
+
+    所以当我们进行View更新时，若仅View的显示内容发生改变且新显示内容不影响View的大小、位置，
+    则只需调用invalidate方法；若View宽高、位置发生改变且显示内容不变，只需调用requestLayout方法；
+    若两者均发生改变，则需调用两者，按照View的绘制流程，推荐先调用requestLayout方法再调用invalidate方法。
+
+
+
+1、Looper#quit()方法做了什么？
+    调用的是MessageQueue#quit()
+    void quit(boolean safe) {
+        if (!mQuitAllowed) {
+            throw new IllegalStateException("Main thread not allowed to quit.");
+        }
+
+        synchronized (this) {
+            if (mQuitting) {
+                return;
+            }
+            mQuitting = true;
+
+            if (safe) {
+                removeAllFutureMessagesLocked();
+            } else {
+                removeAllMessagesLocked();
+            }
+
+            // We can assume mPtr != 0 because mQuitting was previously false.
+            nativeWake(mPtr);
+        }
+    }
+
+    loop 方法是一个死循环，唯一跳出循环的方式是 MessageQueue 的 next 方法返回了null。
+    当 Looper 的 quit 方法被调用时，Looper就会调用 MessageQueue 的 quit 或者 qutiSafely 方法来通知消息队列退出，
+    当消息队列被标记为退出状态时，它的 next 方法就会返回 null。loop 方法会调用 MessageQueue 的 next 方法来获取新消息，
+    而 next 是一个阻塞操作，当没有消息时，next 会一直阻塞，导致 loop 方法一直阻塞。
+
+2、Message.obtain()
+
+
+3、HashMap，哈希值是怎么得到的，异或运算的目的？
+   key的hashCoe，进行高16位的异或运算
+   为的是让哈希值分布更均匀
+
+4、HashMap，设置的数据大于初始值会触发扩容吗，比如初始化1000，数据是1001？
+
+
+5、多类型item，viewType除了if else 处理不同类型的viewHolder，有什么更好的方式吗？比如什么设计模式？
+
+6、ConcurrentHashMap线程安全的原理？jdk 1.6之前和之后？
+
+7、线程池的种类，分别的作用？
+
+8、环形链表，计算环长？
+    快慢指针
+
+
+9、判断一个数是否为2的次幂？
+    思路：2的整次幂，转换成二进制，都是最高位是1，其他位都是0，如果将这个数减一，转换成二进制所有位数都是1
+    然后进行按位与运算，0和1按位与是0
+    比如16，二进制是10000  减一后是1111
+    10000
+    01111
+
+    00000
+
+     public static boolean isPowerOf2(int num) {
+        return (num&num-1) == 0;
+     }
+
+10、常用的设计模式
+    1、单例
+    2、建造者模式
+       将一个复杂对象的构建与它的表示分离，使得同样的构建过程可以创建不同的展示。
+        比如Dialog
+
+    3、观察者模式
+       定义对象间的一种一对多的依赖关系，当一个对象的状态发送改变时，所有依赖于它的对象都能得到通知并被自动更新
+       //注册观察者
+       baiduclickButton.setOnClickListener(new OnClickListener()
+       {
+           //观察者实现
+           @Override
+           public void onClick(View arg0)
+           {
+               Log.d("Mythou_Log", "Click the button ");
+           }
+       });
+
+       一对一的观察者模式
+
+       EventBus
+
+    3、策略模式
+       策略模式定义了一些列的算法，并将每一个算法封装起来，而且使它们还可以相互替换。策略模式让算法独立于使用它的客户而独立变换。
+
+       当ListView 的Item呈现不同形式，在getView方法中，就得不同的实现。
+       ListView#getItemViewType()
+
+    4、适配器模式
+       把一个类的接口转换为客户端所期待的另一种接口，从而使原本因接口不匹配而无法再一起工作的两个类能够在一起工作。
+
+    5、工厂方法模式
+       定义一个用于创建对象的接口，让子类决定实例化哪个类。
+       比如BaseActivity
+
+    6、责任链模式
+
+11、堆排序
+    最大堆的任何一个父节点的值，都大于或等于它左、右孩子节点的值。
+    最小堆的任何一个父节点的值，都小于或等于它左、右孩子节点的值。
+
+
+12、synchronized 底层实现原理
+    jvm基于进入和退出Monitor对象来实现方法同步和代码块同步。
+
+
+
+1、违章查询的思路
+    主要是使用的代理的机制，防止交管局封ip
+    客户端发起请求，
+    服务端返回代理任务，
+    客户端代理请求交管局，
+    交管局响应客户端代理，
+    客户端提交代理结果，
+    服务器返回违章结果
+
+
+2、app启动
+    1、点击桌面App图标，Launcher进程采用Binder IPC向system_server进程发起startActivity请求；
+    2、system_server进程接收到请求后，向zygote进程发送创建进程的请求；
+    3、Zygote进程fork出新的子进程，即App进程；
+    4、App进程，通过Binder IPC向sytem_server进程发起attachApplication请求；
+    5、system_server进程在收到请求后，进行一系列准备工作后，再通过binder IPC向App进程发送scheduleLaunchActivity请求；
+    6、App进程的binder线程（ApplicationThread）在收到请求后，通过handler向主线程发送LAUNCH_ACTIVITY消息；
+    7、主线程在收到Message后，通过发射机制创建目标Activity，并回调Activity.onCreate()等方法。
+
+
+1、Java虚拟机和Dalvik虚拟机的区别？
+   ①Java虚拟机基于栈，Dalvik虚拟机基于寄存器
+   ②Java虚拟机运行的是Java字节码文件，Dalvik虚拟机运行的是dex文件。
+
+
+1、JsBridge的实现
+    协议怎样封装的
+        json格式的字符串
+    onJsPrompt的实现
+
+
+2、Message为什么不建议new，内存相关？
+
+3、Glide原理
+
+4、什么是内存泄漏，怎样防止内存泄漏？
+
+
+
+
+1、主线程等待所有线程执行完毕，再执行某个特定任务怎么实现？
+   join
+   等待多线程完成的CountDownLatch
+   CyclicBarrier
+   countDownLatch只能使用一次，而CyclicBarrier方法可以使用reset()方法重置，所以CyclicBarrier方法可以能处理更为复杂的业务场景。
+
+
+
+2、反射
+getDeclaredMethods 方法返回类或接口声明的所有方法，包括公共、保护、默认（包）访问和私有方法，但不包括继承的方法。
+1
+public Method[] getDeclaredMethods() throws SecurityException
+getMethods 方法返回某个类的所有公用（public）方法，包括其继承类的公用方法。
+1
+public Method[] getMethods() throws SecurityException
+getMethod 方法返回一个特定的方法，其中第一个参数为方法名称，后面的参数为方法的参数对应Class的对象。
+1
+public Method getMethod(String name, Class<?>... parameterTypes)
+
+
+1、内存优化
+    内存泄漏
+        集合类
+        Static关键字修饰的成员变量
+        非静态内部类 / 匿名类
+        资源对象使用后未关闭
+    内存抖动
+        尽量避免频繁创建大量、临时的小对象
+        比如 onDraw()、getView()方法中
+    bitmap优化
+        根据分辨率适配&缩放图片
+        按需选择合适的解码方式 ARGB_8888、ARGB_4444、RGB_565，默认是ARGB_8888    BitmapFactory.inPreferredConfig设置
+        使用完后释放图片资源  android 2.3.3前，调用bitmap.recycle()，后 采用软引用的方式
+        设置图片缓存
+    代码优化
+        数据结构，使用SparseArray代替key为int的HashMap，ArrayMap代替key为其它类型的HashMap
+        数据类型，避免使用枚举，枚举变量占用内存大
+        数据对象的引用，根据不同场景选择不同的引用类型
+
+
+
+2、卡顿优化
+    matrix
+    卡顿时间过长，一定会造成应用发生ANR。
+
+    如果App的FPS平均值小于30，最小值小于24，即表明应用发生了卡顿。
+
+    1、卡顿产生的原因是错综复杂的，它涉及到代码、内存、绘制、IO、CPU等等。
+    2、线上的卡顿问题在线下是很难复现的，因为它与当时的场景是强相关的，比如说线上用户的磁盘IO空间不足了，
+    它影响了磁盘IO的写入性能，所以导致卡顿。针对这种问题，我们最好在发现卡顿的时候尽量地去记录用户当时发生卡顿时的具体的场景信息。
+
+    从项目的初期到壮大期，最后再到成熟期，每一个阶段都针对卡顿优化做了不同的处理。各个阶段所做的事情如下所示：
+
+    1、系统工具定位、解决
+    2、自动化卡顿方案及优化
+    3、线上监控及线下监测工具的建设
+
+    我做卡顿优化也是经历了一些阶段，最初我们的项目当中的一些模块出现了卡顿之后，我是通过系统工具进行了定位，
+    我使用了Systrace，然后看了卡顿周期内的CPU状况，同时结合代码，对这个模块进行了重构，将部分代码进行了异步和延迟，
+    在项目初期就是这样解决了问题。
+
+    但是呢，随着我们项目的扩大，线下卡顿的问题也越来越多，同时，在线上，也有卡顿的反馈，但是线上的反馈卡顿，我们在线下难以复现，
+    于是我们开始寻找自动化的卡顿监测方案，其思路是来自于Android的消息处理机制，
+    主线程执行任何代码都会回到Looper.loop方法当中，而这个方法中有一个mLogging对象，
+    它会在每个message的执行前后都会被调用，我们就是利用这个前后处理的时机来做到的自动化监测方案的。
+    同时，在这个阶段，我们也完善了线上ANR的上报，我们采取的方式就是监控ANR的信息，同时结合了ANR-WatchDog，
+    作为高版本没有文件权限的一个补充方案。
+
+
+    卡顿的根本原因
+        绘制任务太重、绘制一帧内容耗时太长。
+        主线程太忙，导致VSync信号到来时还没有准备好数据从而导致丢帧。
+
+
+    布局优化
+        减少层级
+        合理使用RelativeLayout和LinearLayout
+        合理使用Merge
+        include 布局复用
+        ViewStub
+            按需加载布局，它继承自View，宽高都是0，因此它本身并不参与任何的布局和绘制。当ViewStub通过setVisibility
+            或者inflate加载后，它就会被内部的布局替换掉。
+
+
+        使用标签加载一些不常用的布局。
+        尽可能少用wrap_content，wrap_content会增加布局measure时的计算成本，已知宽高为固定值时，不用wrap_content。
+        使用TextView替换RL、LL。
+        使用低端机进行优化，以发现性能瓶颈。
+        使用TextView的行间距替换多行文本：lineSpacingExtra/lineSpacingMultiplier。
+        使用Spannable/Html.fromHtml替换多种不同规格文字。
+        尽可能使用LinearLayout自带的分割线。
+        使用Space添加间距。
+        多利用lint + alibaba规约修复问题点。
+        嵌套层级过多可以考虑使用约束布局。
+
+    避免过度绘制
+        打开手机开发者选项中的Show GPU Overdraw选项，会有不同的颜色来表示过度绘制次数，依次是无、蓝、绿、淡红、深红，分别对应0-4次过度绘制。
+
+        XML布局：控件有重叠且都有设置背景。
+        View自绘：View.OnDraw里面同一个区域被绘制多次。
+
+3、启动优化
+    怎样监测时间？
+    adb shell
+    代码插桩
+    TraceView
+    SysTrace小结
+    特性
+    结合Android内核的数据，生成Html报告。
+    系统版本越高，Android Framework中添加的系统可用Label就越多，能够支持和分析的系统模块也就越多。
+    必须手动缩小范围，会帮助你加速收敛问题的分析过程，进而快速地定位和解决问题。
+    作用
+    主要用于分析绘制性能方面的问题。
+    分析系统关键方法和应用方法耗时。
+
+    异步初始化
+        intentService
+    延迟初始化
+        利用IdleHandler特性，在CPU空闲时执行，对延迟任务进行分批初始化。
+    MultiDex预加载优化
+        针对5.0一下的机型，5.0以上默认使用ART，在安装时已将Class.dex转换为oat文件了，无需优化。
+    类预加载优化
+        如何找到耗时较长的类？
+        替换系统的ClassLoader，打印类加载的时间，按需选取需要异步加载的类。
+    WebView启动优化
+        1、WebView首次创建比较耗时，需要预先创建WebView提前将其内核初始化。
+        2、使用WebView缓存池，用到WebView的时候都从缓存池中拿，注意内存泄漏问题。
+        3、本地离线包，即预置静态页面资源。
+    页面数据预加载
+
+    闪屏页与主页的绘制优化
+        1、布局优化。
+        2、过渡绘制优化。
+
+
+4、资源混淆为什么会减少apk体积
+
+5、反射原理？用途？getMethods()和getDeclaredMethods()的区别？setAccessible()
+    JAVA反射机制是在运行状态中，对于任意一个类，都能够知道这个类的所有属性和方法；
+    对于任意一个对象，都能够调用它的任意一个方法和属性；这种动态获取的信息以及动态调用对象的方法的功能称为java语言的反射机制。
+
+    反射机制可以用来：
+    • 在运行时分析类的能力。
+    • 在运行时查看对象，例如，编写一个 toString 方法供所有类使用。
+    • 实现通用的数组操作代码。
+    • 利用 Method 对象，这个对象很像中的函数指针。
+
+    一个类只会被加载一次，产生一个class对象
+    每一个类都有一个Class对象，每当编译一个新类就产生一个Class对象
+
+
+    getMethods()和getDeclaredMethods()的区别？
+    getMethods()返回类声明的及继承的方法
+    getDeclaredMethods()只返回类自己声明的方法
+
+
+
+
+6、window的类型？Application的上下文能启动dialog吗？为什么？
+    FrameWork定义了三种窗口类型，三种类型定义在WindowManager。
+    1.应用窗口，对应于一个Activity。加载Activity由AmS完成，创建一个应用窗口只能在Activity内部完成。
+    2.子窗口，必须依附于任何类型的父窗口。
+    3.系统窗口，不需要对应任何Activity，应用程序不能创建系统窗口。
+
+    Application的context不能启动dialog，会抛出异常，Unable to add window -- token null is not valid; is your activity running?
+    Activity创建的时候会attach()，会创建PhoneWindow，然后调用mWindow.setWindowManager()，第二个参数是token，即attach()中传入的IBinder，
+
+
+
+
+7、布局优化？ViewStub的原理？
+    减少布局层次
+    include、merge、viewStub
+    FrameLayout、LinearLayout、RelativeLayout、
+
+8、volatile怎样保证可见性的？其它线程读取的时候是怎样？刷新？
+
+
+9、Binder原理
+
+10、EventBus原理？怎样处理消息冗余的问题？
+
+11、图片加载怎样减少内存消耗？
+·
+
+12、Fragment设置数据为什么使用setArguments的方式？
+    设备横竖屏切换的话，当前展示给用户的Activity默认情况下会重新创建并展现给用户，那依附于Activity的Fragment会进行如何处理呢？
+    由于我们的Fragment是由FragmentManager来管理，所以可以跟进FragmentManager.restoreAllState()方法，
+    最终会通过反射无参构造实例化一个新的Fragment，并且给mArguments初始化为原先的值，而原来的Fragment实例的数据都丢失了，并重新进行了初始化
+
+    通过上面的分析，我们可以知道Activity重新创建时，会重新构建它所管理的Fragment，
+    原先的Fragment的字段值将会全部丢失，但是通过Fragment.setArguments(Bundle bundle)方法设置的bundle会保留下来。
+    所以尽量使用Fragment.setArguments(Bundle bundle)方式来传递参数
+
+
+13、程序计数器是干啥的？栈里存放的是什么？一个对象一定是在堆内存吗？
+    程序计数器是一个记录着当前线程所执行的字节码的行号指示器。
+
+    1.线程隔离性，每个线程工作时都有属于自己的独立计数器。
+    2.执行java方法时，程序计数器是有值的，且记录的是正在执行的字节码指令的地址（参考上一小节的描述）。
+    3.执行native本地方法时，程序计数器的值为空（Undefined）。
+    4.程序计数器占用内存很小，在进行JVM内存计算时，可以忽略不计。
+    5.程序计数器，是唯一一个在java虚拟机规范中没有规定任何OutOfMemoryError的区域。
+
+    不一定，可能会在栈中分配
+    逃逸分析
+    对象逃逸状态
+    1、全局逃逸（GlobalEscape）
+    即一个对象的作用范围逃出了当前方法或者当前线程，有以下几种场景：
+
+    对象是一个静态变量
+    对象是一个已经发生逃逸的对象
+    对象作为当前方法的返回值
+    2、参数逃逸（ArgEscape）
+    即一个对象被作为方法参数传递或者被参数引用，但在调用过程中不会发生全局逃逸，这个状态是通过被调方法的字节码确定的。
+
+    3、没有逃逸
+    即方法中的对象没有发生逃逸。
+
+
+14、Looper的死循环为什么不会阻塞主线程？
+    那么ANR是什么呢？ANR是Application Not Responding也就是Android程序无响应。为什么没响应呢？
+    因为主线程做了耗时操作啊。可我还是不明白，明明Looper的loop方法就是阻塞了主线程，为什么不ANR呢。
+    那我们就来说道说道，什么是响应？响应就是界面的刷新，交互的处理等等对吧。那么这个响应是谁来响应的？
+    没错，就是loop方法中进行响应的。没响应什么意思？就是loop方法中被阻塞了，导致无法处理其他的Message了。
+
+    所以结论就来了，主线程做耗时操作本质上不是阻塞了主线程，而是阻塞了Looper的loop方法。
+    导致loop方法无法处理其他事件，导致出现了ANR事件。
+
+
+15、Volatile关键字怎样保证可见性
+    线程之间的共享变量存储在主存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程共享变量的副本。
+
+    线程A与线程B之间通信：
+    ①线程A把线程A本地内存中更新过的共享变量刷新到主存中。
+    ②线程B到主存中去读取线程A之前已经更新过的共享变量。
+
+    使用volatile修饰后，线程A进行修改时，会强制将修改的值立即写入主存中，并且导致对线程B的工作内存中的变量的缓存无效，
+    这样线程B再次读取该共享变量时，就会去主存读取。
+
+
+16、阻塞队列
+    阻塞队列常用于生产者和消费者的场景。
+
+
+
+1、设计模式
+
+2、怎样限制一个小时内的登录最多5次
+
+3、一个接口响应很慢，怎样定位？
+
+
+
+1、内存优化
+StringBuilder 和 +
+
+ArrayMap SparseArray 替换 HashMap
+
+
+
+1、Retrofit怎样处理解析数据
+    比如不同的数据格式，一个对象包含一个 字段对应一个数组，还有直接返回一个数组
+
+    自定义convertFactory，自定义convert类，重写convert方法，将responseBody解析为不同类型
+
+    https://www.jianshu.com/p/1ea76a141ed2
+
+2、Fragment和Fragment之间的通信
+    通过接口
+    通过宿主activity
+    通过广播
+    通过EventBus
+
+
+
+1、FutureTask    可取消的异步任务
+    当一个线程需要等待另一个线程把某个任务执行完后它才能继续执行，此时可以使用FutureTask。
+    ①FutureTask执行多任务计算的使用场景
+    利用FutureTask和ExecutorService，可以用多线程的方式提交计算任务，主线程继续执行其他任务，当主线程需要子线程的计算结果时，在异步获取子线程的执行结果。
+    ②FutureTask在高并发环境下确保任务只执行一次
+
+    get()为什么阻塞
+    里面用WaitNode
+
+
+    //step1:封装一个计算任务，实现Callable接口
+    class Task implements Callable<Boolean> {
+
+        @Override
+        public Boolean call() throws Exception {
+            try {
+                for (int i = 0; i < 10; i++) {
+                    Log.d(TAG, "task......." + Thread.currentThread().getName() + "...i = " + i);
+                    //模拟耗时操作
+                    Thread.sleep(100);
+                }
+            } catch (InterruptedException e) {
+                Log.e(TAG, " is interrupted when calculating, will stop...");
+                return false; // 注意这里如果不return的话，线程还会继续执行，所以任务超时后在这里处理结果然后返回
+            }
+            return true;
+        }
+    }
+
+    //step2:创建计算任务，作为参数，传入FutureTask
+    Task task = new Task();
+    FutureTask futureTask = new FutureTask(task);
+    //step3:将FutureTask提交给Thread执行
+    Thread thread1 = new Thread(futureTask);
+    thread1.setName("task thread 1");
+    thread1.start();
+
+    //step4:获取执行结果，由于get()方法可能会阻塞当前调用线程，如果子任务执行时间不确定，最好在子线程中获取执行结果
+    try {
+        // boolean result = (boolean) futureTask.get();
+        boolean result = (boolean) futureTask.get(5, TimeUnit.SECONDS);
+        Log.d(TAG, "result:" + result);
+    } catch (InterruptedException e) {
+        Log.e(TAG, "守护线程阻塞被打断...");
+        e.printStackTrace();
+    } catch (ExecutionException e) {
+        Log.e(TAG, "执行任务时出错...");
+        e.printStackTrace();
+    } catch (TimeoutException e) {
+        Log.e(TAG, "执行超时...");
+        futureTask.cancel(true);
+        e.printStackTrace();
+    } catch (CancellationException e) {
+        //如果线程已经cancel了，再执行get操作会抛出这个异常
+        Log.e(TAG, "future已经cancel了...");
+        e.printStackTrace();
+    }
+
+2、https加密算法
+    HTTPS一般使用的加密与HASH算法如下：
+    非对称加密算法：RSA，com.xht.androidnote.summarize.DSA/DSS
+    对称加密算法：AES，RC4，3DES
+    HASH算法：MD5，SHA1，SHA256
+
+3、网络分层
+    应用层
+    传输层
+    网络层
+    数据链路层
+    物理层
+
+4、多线程的方式？有什么不同？
+    ①Thread，本质也是实现Runnable
+        定义Thread子类，重写run()
+        创建Thread子类实例
+        调用start()
+    ②实现Runnable接口，实现run()
+        自定义类实现Runnable接口，实现run()
+        创建Thread实例，将runnable传入
+        调用Thread的start()
+        Thread类中的run方法，里会判断，target是否为空，这个target是Runnable对象，不为空，则执行Runnable的run()
+
+    ③实现Callable接口，重写call()方法
+        Callable可以在任务结束后提供一个返回值
+        Callable的call()可以抛出异常
+        运行Callable可以拿到一个Future对象，它表示异步计算的结果
+
+5、创建线程消耗哪些资源？
+    每当有线程被创建的时候，JVM就需要为其在内存中分配虚拟机栈和本地方法栈来记录调用方法的内容，
+    分配程序计数器记录指令执行的位置，这样的内存消耗就是创建线程的内存代价。
+
+    ---->关于时间，创建线程使用是直接向系统申请资源的，这里调用系统函数进行分配资源的话耗时不好说。
+    ---->关于资源,Java线程的线程栈所占用的内存是在Java堆外的，所以是不受java程序控制的，只受系统资源限制，
+        默认一个线程的线程栈大小是1M（当让这个可以通过设置-Xss属性设置，但是要注意栈溢出问题），
+        但是，如果每个用户请求都新建线程的话，1024个用户光线程就占用了1个G的内存，如果系统比较大的话，一下子系统资源就不够用了，最后程序就崩溃了。
+    --->对操作系统来说,创建一个线程的代价是十分昂贵的, 需要给它分配内存、列入调度,同时在线程切换的时候还要执行内存换页,
+        CPU 的缓存被 清空,切换回来的时候还要重新从内存中读取信息,破坏了数据的局部性。
+
+6、线程池中的最大线程数由什么决定？
+    一般说来，大家认为线程池的大小经验值应该这样设置：（其中N为CPU的核数）
+    如果是CPU密集型应用，则线程池大小设置为N+1
+    如果是IO密集型应用，则线程池大小设置为2N+1（Android）
+
+    比如AsyncTask中对线程池的配置，核心线程书为 N+1，最大线程数为 2*N+1
+
+7、一组数中找出最大的10个数？
+
+
+
+
+1、EventBus源码
+观察者模式
+register
+    注册时传入当前类对象，register中会通过这个获取该类的class对象，
+    然后通过反射找到该类中声明的所有的方法，里面有个FindState的对象，最终通过对这个处理，遍历所有的方法，找到@subscribe注解的方法
+    添加到一个list集合中
+post
+    将事件加到集合中，然后循环出队列将事件交由 postSingleEvent() 处理
+
+    postSingleEvent()方法中，根据eventInheritance属性，决定是否向上遍历事件的父类型，然后用postSingleEventForEventType()方法进一步处理事件：
+
+    postSingleEventForEventType()方法核心就是遍历发送的事件类型对应的Subscription集合，然后调用postToSubscription()方法处理事件。
+
+    postToSubscription()内部会根据订阅事件方法的线程模式，间接或直接的以发送的事件为参数，通过反射执行订阅事件的方法。
+
+    取出订阅方法的threadMode(线程模式)，之后根据threadMode来分别处理。如果threadMode是MAIN，若提交的线程是主线程，
+    则通过反射直接运行订阅的方法；
+    如果不是主线程，则需要mainThreadPoster将我们订阅事件添加到主线程队列中。mainThreadPoster是HandlerPoster类型的，
+    继承自Handler，通过Handler将订阅方法切换到主线程。
+
+
+1、App启动流程
+
+2、RecyclerView的复用机制
+
+3、model层异步请求数据，怎样更新到view
+    可以定义listener接口，传入model层获取数据的方法，在异步请求结束后，进行回调
+
+
+1、泛型
+
+2、ListView的优化
+
+3、合并两个有序链表
+
+4、简述集合？ArrayList和LinkedList集合扩容机制？
+
+5、https加密方式？三次握手、四次挥手？
+
+6、布局优化？inflate原理？
+
+7、注解
+
+
+
+1、静态内部类和内部类的区别？内部类都可以用静态内部类替换吗？
+
+2、sleep和wait的区别？sleep释放CPU时间片怎样解决？
+
+3、子线程可以弹toast吗？
+    java.lang.RuntimeException: Can't toast on a thread that has not called Looper.prepare()
+
+    子线程弹toast，需要
+    Looper.prepare();
+    Toast.makeText(MainActivity.this, "my toast", Toast.LENGTH_SHORT).show();
+    Looper.loop();
+
+4、view为什么不能在主线程更新？
+
+    如果不这么设计的话，那么所有的线程均可以更新view，那么必然会涉及到同步的问题，所以就会在各个地方加锁，
+    这样就会导致性能损耗。而如果只是在一个线程内更新的话，则不会存在这个问题。
+
+    ViewRootImpl#checkThread()会抛出异常
+    void checkThread() {
+        if (mThread != Thread.currentThread()) {
+            throw new CalledFromWrongThreadException(
+                    "Only the original thread that created a view hierarchy can touch its views.");
+        }
+    }
+    mThread是在初始化的时候赋值，指的是初始化的线程，
+    也就是更新view的线程必须要和创建ViewRootImpl的线程保持一致，否则就会抛出异常。
+    而ViewRootImpl初始化是在ActivityThread#handleResumeActivity中调用window.addView()
+    在WindowManagerGlobal中进行创建
+    而handleResumeActivity是在主线程上执行，因此ViewRootImpl也是在主线程上被创建的，所以只有在主线程上才能更新view。
+    public ViewRootImpl(Context context, Display display) {
+        mThread = Thread.currentThread();
+    }
+
+    我们在子线程里面调用WindowManagerImpl的addview方法，往窗口上加一个View，这样在子线程创建了一个ViewRootImpl，
+    此时如果在主线程或者其他的子线程更新我们添加的button，就会爆出异常。
+    所以并不是只能在主线程更新view，而是必须要在创建ViewRootImpl的线程里面更新view。
+    new Thread(() -> {
+        Looper.prepare();
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        getWindowManager().addView(button,layoutParams);
+        Looper.loop();
+    }).start();
+
+
+5、插件化开发的模块需要做什么处理？怎样解决aot预编译的问题？
+    在assets中
+    {
+        "name": "zeusplugin_asset",
+        "minVersion": "1",
+        "version": "2",
+        "mainClass": "zeus.testplugin.MainActivity",
+        "otherInfo": "",
+        "flag": ""
+    }
+
+    会安装插件
+
+6、线程池的数量怎样规定？
+    核心线程数根据CPU数量固定
+
+
+1、Activity栈
+
+2、换肤功能
+
+3、沉浸式状态栏，上滑改变背景颜色
+    改状态栏透明
+        ①将状态栏透明化，将布局延伸到状态栏来处理。
+        ②使用android:fitsSystemWindows="true"属性，不让布局延伸到状态栏，这时状态栏就是透明的，
+        然后添加一个和状态栏高、宽相同的指定颜色View来覆盖被透明化的状态栏。
+    通过onScrollChanged()随着滑动改变ActionBar的透明度
+
+
+4、ScrollView 嵌套 RecyclerView 为什么会滑动冲突？
+    应该是两个view 都在move中进行了滑动的处理，一个事件分发到子view的同时，如果被子view消费掉，
+    它还是会走父view的各种事件
+
+
+5、view动画的分类？实现？矩阵几乘几？
+    旋转、平移、缩放、透明度
+    它们都是继承自 Animation 类，然后实现了 applyTransformation() 方法，
+    在这个方法里通过 Transformation 和 Matrix 实现各种各样炫酷的动画
+
+    首先，当调用了 View.startAnimation() 时动画并没有马上就执行，而是通过 invalidate() 层层通知到 ViewRootImpl
+    发起一次遍历 View 树的请求，而这次请求会等到接收到最近一帧到了的信号时才去发起遍历 View 树绘制操作。
+
+    从 DecorView 开始遍历，绘制流程在遍历时会调用到 View 的 draw() 方法，当该方法被调用时，如果 View 有绑定动画，
+    那么会去调用applyLegacyAnimation()，这个方法是专门用来处理动画相关逻辑的。
+
+    在 applyLegacyAnimation() 这个方法里，如果动画还没有执行过初始化，先调用动画的初始化方法 initialized()，
+    同时调用 onAnimationStart() 通知动画开始了，然后调用 getTransformation() 来根据当前时间计算动画进度，
+    紧接着调用 applyTransformation() 并传入动画进度来应用动画。
+
+    getTransformation() 这个方法有返回值，如果动画还没结束会返回 true，动画已经结束或者被取消了返回 false。
+    所以 applyLegacyAnimation() 会根据 getTransformation() 的返回值来决定是否通知 ViewRootImpl 再发起一次遍历请求，
+    返回值是 true 表示动画没结束，那么就去通知 ViewRootImpl 再次发起一次遍历请求。然后当下一帧到来时，
+    再从 DecorView 开始遍历 View 树绘制，重复上面的步骤，这样直到动画结束。
+
+    有一点需要注意，动画是在每一帧的绘制流程里被执行，所以动画并不是单独执行的，也就是说，
+    如果这一帧里有一些 View 需要重绘，那么这些工作同样是在这一帧里的这次遍历 View 树的过程中完成的。
+    每一帧只会发起一次 perfromTraversals() 操作。
+
+
+
+
+6、哪种view动画会改变布局？移动的是相对位置还是绝对位置？
+
+7、WebView + 原生评论列表会有哪些问题？为什么会卡顿？
+    一般会用ScrollView嵌套WebView+ListView评论列表
+    需要处理滑动冲突
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        case MotionEvent.ACTION_MOVE:
+            if (dy < 0) { // 手指向上滑
+                if (!mIsWebViewOnBottom)
+                    return false; // 网页未到底，不拦截事件
+            } else { // 手指向下滑
+                if (!mIsOthersLayoutShow)
+                    return false; // 底部原生layout完全隐藏，不拦截事件
+            }
+        break;
+    }
+
+    首先需要监听到WebView中网页内容滑到底部，
+    最后就是监听底部layout是否显示了。
+
+
+
+8、Binder为什么会快？AIDL是用来做什么的？
+
+9、RN与Flutter的区别？virtual DOM 是做什么的？
+    RN的效率由于是将View编译成了原生View,所以效率上要比基于Cordova的HTML5高很多,但是它也有效率问题,
+    RN的渲染机制是基于前端框架的考虑,复杂的UI渲染是需要依赖多个view叠加.比如我们渲染一个复杂的ListView,
+    每一个小的控件,都是一个native的view,然后相互组合叠加.想想此时如果我们的list再需要滑动刷新,
+    会有多少个对象需要渲染.所以也就有了前面所说的RN的列表方案不友好;
+
+    Flutter 吸收了前两者的教训之后,在渲染技术上,选择了自己实现(GDI),由于有更好的可控性,使用了新的语言Dart,
+    避免了RN的那种通过桥接器与Javascript通讯导致效率低下的问题,所以在性能方面比RN更高一筹;
+    有经验的开发者可以打开Android手机开发者选项里面的显示边界布局,发现Flutter的布局是一个整体.
+    说明Flutter的渲染没用使用原生控件进行渲染
+
+    Flutter实现跨平台采用了更为彻底的方案。它既没有采用WebView也没有采用JavaScriptCore，
+    而是自己实现了一台UI框架，然后直接系统更底层渲染系统上画UI。所以它采用的开发语言不是JS，而Dart。
+    据称Dart语言可以编译成原生代码，直接跟原生通信。
+
+    Flutter性能会更好无线接近原生的体验,Dart是AOT编译的，编译成快速、可预测的本地代码
+
+    RN采用JS语言开发，基于React，对前端工程师更友好。Dart语言受众小
+
+    Flutter自己实现了一套UI框架，丢弃了原生的UI框架。而RN还是可以自己利用原生框架，两个各有好处。
+    Flutter的兼容性高，RN可以利用原生已有的优秀UI
+
+    RN的布局更像css，而Flutter的布局更像native布局，但是去掉xml通过代码直接写需要适应下
+
+    Flutter的第三方库还很少，RN发展的早，虽然也还不完善，Flutter github还有3000多个issues要解决，还有很长的路要走。
+
+
+10、FlutterBoost框架的作用？它可能会有哪些问题？
+
+11、==和equals
+
+
+
+YY
+1、Java调H5  除了loadUrl() 还有什么方法
+
+2、RecyclerView嵌套RecyclerView  怎样处理
+
+3、CAS原子操作  AtomicInteger  多个线程 自增  结果是怎样
+    结果正确
+
+4、转场动画 MotionLayout
+
+5、OkHttp的优化？压缩是从哪一个版本开始的？
+
+6、为什么卡顿？怎样从代码层面监测卡顿？
+
+7、怎样调试H5，确定是H5还是android的问题
+
+8、性能优化
+
+9、API 29 需要适配哪些
+
+10、混淆的作用？哪些是需要混淆的？哪些不需要混淆
+
+11、自己实现上拉加载下拉刷新？怎样判断RecyclerView是否滑动到底部？
