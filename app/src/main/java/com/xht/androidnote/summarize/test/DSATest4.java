@@ -1,19 +1,19 @@
 package com.xht.androidnote.summarize.test;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.logging.Level;
 
 public class DSATest4 {
 
     public static void main(String[] args) {
         //testSortAndSearch();
-        //testListNode();
+        testListNode();
 
-        int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
-        System.out.println(Arrays.toString(array));
-
-        quickSort(array, 0, array.length - 1);
-        System.out.println(Arrays.toString(array));
+        //        int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
+        //        System.out.println(Arrays.toString(array));
+        //
+        //        quickSort(array, 0, array.length - 1);
+        //        System.out.println(Arrays.toString(array));
     }
 
     private static void quickSort(int[] array, int startIndex, int endIndex) {
@@ -32,13 +32,12 @@ public class DSATest4 {
         int pivot = arr[startIndex];
 
         while (left != right) {
-            while (left < right && arr[right] > pivot) {
+            while (left < right && pivot < arr[right]) {
                 right--;
             }
-            while (left < right && arr[left] <= pivot) {
+            while (left < right && pivot >= arr[left]) {
                 left++;
             }
-
             if (left < right) {
                 int temp = arr[left];
                 arr[left] = arr[right];
@@ -77,7 +76,7 @@ public class DSATest4 {
         //System.out.println(getMiddleNode(node1).val);
 
 
-        //testMerge();
+        testMerge();
     }
 
     /**
@@ -117,10 +116,18 @@ public class DSATest4 {
         listNodeTraversal(mergeTwoLists(node1, node2));
     }
 
+    /**
+     * pre
+     * 1    3   5   7
+     * 2    4   6
+     *
+     * @param l1
+     * @param l2
+     * @return
+     */
     private static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode preHead = new ListNode(-1);
         ListNode pre = preHead;
-
         while (l1 != null && l2 != null) {
             if (l1.val < l2.val) {
                 pre.next = l1;
@@ -132,7 +139,7 @@ public class DSATest4 {
             pre = pre.next;
         }
 
-        pre.next = l1 == null ? l2 : l1;
+        pre.next = (l1 == null) ? l2 : l1;
 
         return preHead.next;
     }

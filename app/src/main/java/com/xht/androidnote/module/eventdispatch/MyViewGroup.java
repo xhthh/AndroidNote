@@ -49,7 +49,10 @@ public class MyViewGroup extends RelativeLayout {
                 L.i("ViewGroup---dispatchTouchEvent()---CANCEL");
                 break;
         }
-        return super.dispatchTouchEvent(ev);
+
+        boolean result = super.dispatchTouchEvent(ev);
+        L.i("ViewGrouup---dispatchTouchEvent()---result=" + result);
+        return result;
 //                return true;//ViewGroup会接收后续事件
 //                return false;//ViewGroup只能接收DWON事件
     }
@@ -74,8 +77,8 @@ public class MyViewGroup extends RelativeLayout {
                 L.i("ViewGroup---onInterceptTouchEvent()---CANCEL");
                 break;
         }
-        return super.onInterceptTouchEvent(ev);
-//        return true;
+//        return super.onInterceptTouchEvent(ev);
+        return true;
         //        return false;
     }
 
@@ -154,7 +157,9 @@ public class MyViewGroup extends RelativeLayout {
                 L.i("ViewGroup---onTouchEvent()---CANCEL");
                 break;
         }
-        return super.onTouchEvent(event);
+//        return super.onTouchEvent(event);
+//        return true;
+        return false;
     }
     /*
         子view dispatchTouchEvent() 返回true

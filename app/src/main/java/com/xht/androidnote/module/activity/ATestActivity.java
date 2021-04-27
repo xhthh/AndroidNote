@@ -83,6 +83,14 @@ public class ATestActivity extends BaseActivity {
         mTvTitle.setText("Activity A");
         L.i("Activity A------onCreate()");
 
+
+        //测试ANR
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         findViewById(R.id.btn_app_jump).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
