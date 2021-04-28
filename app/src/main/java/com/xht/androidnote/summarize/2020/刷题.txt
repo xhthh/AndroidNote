@@ -7,7 +7,6 @@ https://juejin.cn/post/6876968255597051917
 4.对象加载的过程，属性先加载还是方法先加载
 7.http与https有什么区别
 9.静态方法，静态对象为什么不能继承
-11.介绍一下android动画
 13.Handler通信，Binder通信
 14.你碰到过什么内存泄漏，怎么处理
 15.RXJava怎么切换线程
@@ -74,11 +73,9 @@ B站三面
 5.在这几年里，你有做过什么觉得最有价值的工作
 6.你还有什么要问我的吗？目前有几个offer，倾向性是怎样的？
 网易云音乐
-1.ViewPager2原理
 2.LifeCycle的原理是怎样的？
 3.ViewModel为什么在旋转屏幕后不会丢失状态
 4.Drawable与View有什么区别,Drawable有哪些子类
-5.属性动画更新时会回调onDraw吗？
 6.OkHttp网络拦截器，应用拦截器?OKHttp有哪些拦截器，分别起什么作用
 7.自定义实现一个九宫格如何实现
 9.这些年有做一些什么比较难的工作？
@@ -110,10 +107,8 @@ B站三面
 5.viewModel是怎么实现双向数据绑定的？
 6.viewModel怎么实现自动处理生命周期？
 7.图片加载优化有什么经验吗？
-8.viewpager切换掉帧有什么处理经验？
 9.一个wrap_content的ImageView，加载远程图片，传什么参数裁剪比较好?
 10.两个getDrawable取得的对象，有什么区别？
-11.补间动画与属性动画的区别，哪个效率更高？
 12.jsBridge实现方式
 13.平常是怎么了解一些新知识与业界动态的，最近有什么印象深刻的文章
 14.平常抓包用什么工具？
@@ -185,7 +180,6 @@ B站三面
 17.DataBinding的原理了解吗？
 滴滴一面
 2.Handler内存泄漏的GCRoot是什么？
-3.动画里面用到了什么设计模式？
 4.OkHttp里面用到了什么设计模式？
 5.OkHttp连接池是怎么实现的？里面怎么处理SSL？
 7.同步屏障
@@ -204,7 +198,6 @@ B站三面
 3.多进程怎么实现？如果启动一个多进程APP，会有几个进程运行？
 4.反射可以反射final修饰的字段吗？
 5.Activity与AppCompactActivity区别，Activity会打包到包里面去吗？
-8.动画连续调用的原理是什么？
 9.做过一些SDK的操作吗？
 10.协程可以在Java项目中使用吗？
 11.SharedPreference原理？读取xml是在哪个线程?
@@ -252,7 +245,6 @@ https://juejin.cn/post/6905226221357891592
 一面
 1、View绘制流程。onMeasure、onLayout、onDraw。
 2、竖向的TextView如何实现。TextView文字描边效果如何实现。
-4、动画
 6、SparseArray和ArrayMap。具体实现原理和特性
 7、说一下kotlin的优缺点。let和with的区别
 8、接口和抽象类的区别，接口中可以有属性么？
