@@ -17,7 +17,25 @@ public class CustomViewActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
+        findViewById(R.id.btn_viewpager).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skip2Activity(CustomViewPagerActivity.class);
+            }
+        });
 
+        findViewById(R.id.btn_nested_scrollview).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skip2Activity(NestedActivity.class);
+            }
+        });
+        findViewById(R.id.btn_coordinator).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                skip2Activity(CoordinatorActivity.class);
+            }
+        });
     }
 
     public int traverseViewGroup(View view) {

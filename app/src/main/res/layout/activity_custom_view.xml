@@ -6,9 +6,23 @@
 
     <Button
         android:id="@+id/btn_viewpager"
-        android:text="自定义ViewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="自定义ViewPager" />
+
+    <Button
+        android:id="@+id/btn_nested_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NestedScrollView"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btn_coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CoordinatorLayout"
+        android:textAllCaps="false" />
 
     <com.xht.androidnote.module.customview.MyViewPager
         android:id="@+id/viewpager"

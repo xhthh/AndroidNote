@@ -1,5 +1,8 @@
 package com.xht.androidnote.module.eventdispatch;
 
+import android.os.Looper;
+import android.os.MessageQueue;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +32,48 @@ public class EventDispatchActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
+
+
         int maxDeep = maxDeep(testCount);
         L.i("maxDeep = " + maxDeep);
 
-        int count = traversal(testCount);
+        //int count = traversal2(testCount);
+        int count = traversal3(testCount);
         L.i("count = " + count);
+    }
+
+    private int traversal3(View view) {
+        if (!(view instanceof ViewGroup)) {
+            return 0;
+        }
+
+        ViewGroup viewGroup = (ViewGroup) view;
+
+        if (viewgroup.getChildCount() == 0) {
+            return 0;
+        }
+
+        int max = 0;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            int deep = traversal3(viewGroup.getChildAt(i)) + 1;
+            if (deep > max) {
+                max = deep;
+            }
+        }
+
+        return 0;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Looper.myQueue().addIdleHandler(new MessageQueue.IdleHandler() {
+            @Override
+            public boolean queueIdle() {
+
+                return false;
+            }
+        });
     }
 
     @Override
@@ -102,6 +142,7 @@ public class EventDispatchActivity extends BaseActivity {
         }
         return max;
     }
+
     public int traversal(View view) {
         if (!(view instanceof ViewGroup)) {
             return 0;
@@ -120,6 +161,28 @@ public class EventDispatchActivity extends BaseActivity {
             }
         }
 
+        return max;
+    }
+
+    private int traversal2(View view) {
+        if (!(view instanceof ViewGroup)) {
+            return 0;
+        }
+
+        ViewGroup viewGroup = (ViewGroup) view;
+
+        if (viewgroup.getChildCount() == 0) {
+            return 0;
+        }
+
+        int max = 0;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            int deep = traversal(child) + 1;
+            if (deep > max) {
+                max = deep;
+            }
+        }
         return max;
     }
 }

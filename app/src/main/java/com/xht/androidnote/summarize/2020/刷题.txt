@@ -24,7 +24,6 @@ Vivo公司
 B站
 1.一个大致有序的数组如何排序，最快时间复杂度
 2.如果叫你实现，你会怎样实现一个多主题的效果
-3.如何自定义实现一个FlexLayout
 4.tinker的原理是什么,还用过什么热修复框架，robust的原理是什么？
 5.说说你对注解的了解，是怎么解析的
 8.mvp与mvvm的区别，mvvm怎么更新UI,databinding用得多吗,databinding的原理？
@@ -77,7 +76,6 @@ B站三面
 3.ViewModel为什么在旋转屏幕后不会丢失状态
 4.Drawable与View有什么区别,Drawable有哪些子类
 6.OkHttp网络拦截器，应用拦截器?OKHttp有哪些拦截器，分别起什么作用
-7.自定义实现一个九宫格如何实现
 9.这些年有做一些什么比较难的工作？
 10.编译时注解与运行时注解，为什么retrofit要使用运行时注解？什么时候用运行时注解？
 11.kotlin lazy使用,lazy viewmodel
@@ -122,7 +120,6 @@ B站三面
 1.string,equals,==有什么区别
 2.AsyncTask内存泄露
 3.dispatchTouchEvent,onInterceptEvent,onTouchEvent顺序，关系
-4.onMeasure,onLayout,onDraw关系
 5.算法题，反转数组
 6.算法题，链表求和
 7.说说你对协程的理解
@@ -174,9 +171,6 @@ B站三面
 9.JetPack组件用过哪些？lifeCycle的原理是什么？如果在onStart里面订阅，会回调onCreate吗？
 10.单例模式有什么缺点？
 12.说说你对Handler机制的了解，同步消息，异步消息等
-13.说说你对屏幕刷新机制的了解，双重缓冲，三重缓冲，黄油模型
-14.onCreate,onResume,onStart里面，什么地方可以获得宽高
-15.为什么view.post可以获得宽高，有看过view.post的源码吗？
 17.DataBinding的原理了解吗？
 滴滴一面
 2.Handler内存泄漏的GCRoot是什么？
@@ -227,8 +221,6 @@ B站三面
 10.手写生产者消息者模型
 11.IdleHandler应用场景
 字节跳动2面
-1.自定义圆角图片
-2.自定义LinearLayout，怎么测量子View宽高
 3.setFactory和setFactory2有什么区别？
 4.插件化换肤方案
 5.插件化的原理，startActivity hook了哪个方法
@@ -243,7 +235,6 @@ https://juejin.cn/post/6905226221357891592
 面试真题
 1、滴滴
 一面
-1、View绘制流程。onMeasure、onLayout、onDraw。
 2、竖向的TextView如何实现。TextView文字描边效果如何实现。
 6、SparseArray和ArrayMap。具体实现原理和特性
 7、说一下kotlin的优缺点。let和with的区别
@@ -263,8 +254,6 @@ https://juejin.cn/post/6905226221357891592
 2、redux的状态管理，如何实现的？关键角色有哪些？
 3、flutter的channel通信有哪几种？你用的哪种？插件你如何实现的？
 4、flutter的包体积优化
-5、自定义View的关键步骤，注意事项，你的理解
-6、MeasureSpec讲一下
 7、包体积优化
 8、混淆的步骤和原理
 9、module间的资源文件merge后，生成过多的R文件，处理过么？如何处理？
@@ -293,7 +282,6 @@ https://juejin.cn/post/6905226221357891592
 2、新浪
 一面
 1、封装的Adapter讲解。
-2、自定义View：支持换行的尾部标签的实现。
 3、IdleHandler调用时机
 4、Bitmap内存计算规则
 5、glide默认Bitmap的Config配置是ARGB_8888么？
@@ -339,7 +327,6 @@ public static class Two {
 4、包体积如何优化
 二面
 1、上家公司期间你的技术亮点，期间遇到什么问题，如何解决的，原理深挖。
-2、View的绘制流程。MeasureSpec，关键方法，
 3、LRU如何实现的？LinkedHashMap如何实现的？LinkedHashMap是否线程安全？如何实现线程安全？有序还是无序？
 4、ThreadLocal干嘛的？用法和原理。
 5、HashMap讲一下，数据结构、hash过程、扩容、加载因子为何是0.75等。
@@ -369,7 +356,6 @@ public static class Two {
 6、hashmap。hash冲突时给链表插入数据，1.7头插法，1.8尾插法。
 7、ArrayMap和SparseArray的区别，实现。
 10、Handler。Looper.loop( )为何不会阻塞进程。
-11、自定义View的几种方式。onMeasure、onLayout、onDraw方法都何时需要重写。自定义属性的作用。
 13、网络优化，网络监控。
 14、网络分层架构，https的连接过程，tcp和udp的区别。
 15、blog相关。
@@ -380,18 +366,6 @@ public static class Two {
 ③为什么会有R文件这个映射表？直接使用资源的路径不好么？
 ④Android项目中都包含哪些资源？apk打包流程。apk解压后都包含哪些资源？R文件打包后生成的文件是哪种？
 ⑤dex文件结构了解过么？为何会有65535的限制？mutildex技术了解么？这项技术的目的是什么？
-4、绘制相关：
-①requestLayout调用后，都会调用哪些方法？
-②onMeasure、onLayout、onDraw这三个方法中，哪个最耗时？onMeasure和onLayout呢？
-③Choreography的作用。它的上游和下游各自是哪个。Choreography发布了订阅消息，同类型的Callback还有哪些？这些Callback之间的优先级如何？vsync机制。
-④Surface对象了解么？作用，何时初始化，怎么使用的。
-⑤一个Button的点击事件中，调用requestLayout，接下来哪些方法会被调用？
-⑥Surface和Window的关系
-⑦SurfaceView的实现
-⑧View#draw()方法细节
-⑨绘制的数据是如何提交到远端的SurfaceFlinger
-⑩GPU和surfaceFlinger之间的设计思想是什么？surfaceFlinger具体作用是什么？它对数据做了哪些操作？
-⑪硬件加速了解么？GPU如何高效绘制？
 5、ContentProvider具体实现。
 6、binderService方法中的回调具体运行在哪个线程？binder线程池最大线程数是多少？自定义的Callback远程调用，运行在哪个线程？为何不是主线程，如果运行在主线程会有哪些问题？
 7、hdpi和xxhdpi的手机，分别加载xhdpi下的图片，会缩放图片么？如果会缩放，是如何缩放的，像素点是如何补全或者减少的？图片在内存中的大小会如何变化？
@@ -441,14 +415,10 @@ public static class Two {
 9、布局优化
 6、vipkid
 一面
-1、项目中有哪些亮点？自定义View
+1、项目中有哪些亮点？
 ①获取TextView的行数时，StaticLayout原理
 ②MotionEvent#offsetLocation事件转发。
-2、讲下onMeasure方法：
-①如何测量
-②测量模式
-③入参为什么是int类型？
-④为什么会多次调用onMeasure和onLayout方法？
+
 3、讲下事件传递：
 ①总体流程
 ②DOWN事件拦截后，后续事件如何处理？
@@ -485,9 +455,7 @@ public static class Two {
 6、HashMap：数据结构（数组加链表（或者红黑树）），为何这么设计；数组和链表的特性；元素添加的过程；扩容过程中为何不整体复制；链表为什么要转红黑树？
 7、HashMap的替代方案，ArrayMap和SparseArray。
 8、Parcelable和Serializable本质区别，不要说用法，说原理。
-11、View绘制流程；requestLayout和invalidate区别；invalidate每次都会触发onDraw么？View#onLayout每次会触发么？
 12、SharedPreference的apply和commit区别；apply会不会导致ANR；SharedPreference的替代方案
-13、讲下你的自定义View，为何如此设计？
 14、屏幕适配方案；头条适配方案核心原理。
 15、启动速度优化。
 16、绘制优化。
@@ -512,7 +480,6 @@ public static class Two {
 3、讲下arraylist、hashmap、linkedlist、linkedhashmap的实现。linkedhashmap为何会有这样的特性(lru)?它有个参数，表示命中率和使用次数。
 4、lru是通过linkedhashmap实现的么？
 9、rxjava源码。用过哪些操作符？map和flatmap区别。
-10、讲下View绘制流程。canvas可以画Bitmap么？画布要做旋转、缩放、平移等操作该如何实现？
 12、flutter中，有没有遇到过路由断掉的情况，比如说原生打开flutter，flutter再打开原生这种？
 二面
 没聊技术，就聊些职业发展之类的。
@@ -528,7 +495,6 @@ public static class Two {
 8、binder的mmap
 12、TCP和UDP区别，TCP为何是三次握手，为何是四次挥手
 13、设计模式（问了一个什么模式，我没听清）
-14、自定义View，测量模式的匹配
 16、启动速度优化，IdleHandler用法
 17、冷启动热启动优化
 18、组件化架构设计，ARouter具体实现
@@ -551,7 +517,6 @@ kotlin优劣势
 
 公司二
 
-自定义view，中英文字符串宽高测量显示，测量算法，可扩展性
 热修复和插件化原理
 java容器，hashmap和hashtable区别，hashmap原理，扩容流程，扰动算法的优势
 Http和Https区别，SSL/TLS过程
@@ -565,7 +530,6 @@ Android性能优化
 MVC,MVP,MVVM
 热修复和插件化
 友盟bug统计，混淆后怎么定位bug。没接入热修复的APP中，上线后遇到bug怎么解决
-view绘制原理 （可以先说下基本view绘制，然后再说下屏幕刷新机制）
 使用Analyze减少APK体积，原理
 Android 版本差异
 
@@ -583,7 +547,6 @@ APK体积优化
 进程间通信
 单例模式，哪些是安全的
 retrofit设计模式
-自定义view
 是否做过音视频和IM？
 APK性能优化
 CurrentHashMap1.7和1.8区别
@@ -655,8 +618,7 @@ retrofit是怎么将service接口转化为我们需要的javabean的？
 SqLite与contentProvider区别
 https证书校验，加密相关，网络请求框架
 glide加载流程，大图显示，图片大小计算
-view绘制（从onSync()开始）
-获取view的宽高，更新view的方式，主线程消息机制
+主线程消息机制
 OOM，内存泄漏，内存溢出，java引用类型，ANR分析
 APP性能优化，webview相关，webview优化，webview中Android与js互调
 插件化和热修复
