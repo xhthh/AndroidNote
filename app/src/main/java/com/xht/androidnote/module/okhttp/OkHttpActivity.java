@@ -5,8 +5,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,10 +19,15 @@ import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.utils.L;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -29,6 +36,7 @@ import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Dns;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -67,6 +75,14 @@ public class OkHttpActivity extends BaseActivity {
     protected void initEventAndData() {
         okHttpClient = new OkHttpClient()
                 .newBuilder()
+                .dns(new Dns() {
+                    @NotNull
+                    @Override
+                    public List<InetAddress> lookup(@NotNull String s) throws UnknownHostException {
+                        return null;
+                    }
+                })
+                .readTimeout(20, TimeUnit.SECONDS)
                 .cookieJar(new CookiesManager())
                 .build();
     }
@@ -119,7 +135,7 @@ public class OkHttpActivity extends BaseActivity {
 
         call.enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(Call call, IOException e) { 
             }
 
             @Override

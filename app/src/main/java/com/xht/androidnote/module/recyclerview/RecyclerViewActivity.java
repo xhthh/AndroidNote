@@ -43,6 +43,8 @@ public class RecyclerViewActivity extends BaseActivity {
         rvTest.setLayoutManager(layoutManager);
         rvTest.setAdapter(adapter);
 
+        adapter.notifyDataSetChanged();
+
         //设置mCachedView 缓存大小，默认是2
         //rvTest.setItemViewCacheSize(5);
 

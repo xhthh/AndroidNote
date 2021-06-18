@@ -1,44 +1,69 @@
 package com.xht.androidnote.summarize.test;
 
 import java.util.Arrays;
-import java.util.logging.Level;
 
 public class DSATest4 {
 
     public static void main(String[] args) {
-        //testSortAndSearch();
-        testListNode();
 
-        //        int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
-        //        System.out.println(Arrays.toString(array));
-        //
-        //        quickSort(array, 0, array.length - 1);
-        //        System.out.println(Arrays.toString(array));
+                testSort();
+//        testListNode();
+
     }
 
-    private static void quickSort(int[] array, int startIndex, int endIndex) {
+    private static void testSort() {
+        int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
+        System.out.println(Arrays.toString(array));
+
+        //        quickSort(array, 0, array.length - 1);
+        bubbleSort(array);
+        System.out.println(Arrays.toString(array));
+
+
+    }
+
+    private static void bubbleSort(int[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            boolean isSorted = true;
+            for (int j = 0; j < arr.length - i - 1; j++) {
+                int temp = 0;
+                if (arr[j] > arr[j + 1]) {
+                    temp = arr[j + 1];
+                    arr[j + 1] = arr[j];
+                    arr[j] = temp;
+                    isSorted = false;
+                }
+            }
+            if (isSorted) {
+                break;
+            }
+        }
+    }
+
+    private static void quickSort(int[] arr, int startIndex, int endIndex) {
         if (startIndex >= endIndex) {
             return;
         }
 
-        int pivotIndex = partition(array, startIndex, endIndex);
-        quickSort(array, startIndex, pivotIndex - 1);
-        quickSort(array, pivotIndex + 1, endIndex);
+        int pivotIndex = partition(arr, startIndex, endIndex);
+        quickSort(arr, 0, startIndex - 1);
+        quickSort(arr, startIndex + 1, endIndex);
     }
 
     private static int partition(int[] arr, int startIndex, int endIndex) {
+        int pivot = arr[startIndex];
         int left = startIndex;
         int right = endIndex;
-        int pivot = arr[startIndex];
 
         while (left != right) {
-            while (left < right && pivot < arr[right]) {
+            while (left < right && arr[right] > pivot) {
                 right--;
             }
-            while (left < right && pivot >= arr[left]) {
+            while (left < right && arr[left] <= pivot) {
                 left++;
             }
-            if (left < right) {
+
+            if (left != right) {
                 int temp = arr[left];
                 arr[left] = arr[right];
                 arr[right] = temp;
@@ -81,19 +106,25 @@ public class DSATest4 {
 
     /**
      * cur
-     * pre 1    2   3   4   5
+     * pre  1   3   5   7
+     *
+     * @param head
+     * @return
      */
     private static ListNode reverseListNote(ListNode head) {
         ListNode pre = null;
         ListNode cur = head;
+
         while (cur != null) {
             ListNode temp = cur.next;
             cur.next = pre;
             pre = cur;
             cur = temp;
         }
+
         return pre;
     }
+
 
     private static void testMerge() {
         ListNode node1 = new ListNode(1);
@@ -118,8 +149,8 @@ public class DSATest4 {
 
     /**
      * pre
-     * 1    3   5   7
-     * 2    4   6
+     * l1  1   3   5   7
+     * L2  2   4   6
      *
      * @param l1
      * @param l2
@@ -128,6 +159,7 @@ public class DSATest4 {
     private static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
         ListNode preHead = new ListNode(-1);
         ListNode pre = preHead;
+
         while (l1 != null && l2 != null) {
             if (l1.val < l2.val) {
                 pre.next = l1;
@@ -139,10 +171,11 @@ public class DSATest4 {
             pre = pre.next;
         }
 
-        pre.next = (l1 == null) ? l2 : l1;
+        pre.next = l1 == null ? l2 : l1;
 
         return preHead.next;
     }
+
 
     private static void listNodeTraversal(ListNode head) {
         if (head == null) {
@@ -160,4 +193,23 @@ public class DSATest4 {
         System.out.println();
     }
 
+
+}
+
+class Singleton {
+    private Singleton() {
+    }
+
+    private static volatile Singleton instance = null;
+
+    public static Singleton getInstance() {
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
 }

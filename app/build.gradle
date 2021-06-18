@@ -85,7 +85,39 @@ dependencies {
     //annotationProcessor project(':annotations_processor')
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+
+    //test buildSrc 统筹管理依赖版本
+    //implementation Libs.retrofit
 }
 repositories {
     mavenCentral()
 }
+
+
+/*
+task A {
+    println 'this is task A'
+    doFirst {
+        println 'this is in execute'
+    }
+}
+
+task B {
+    dependsOn 'A'
+    println 'this is task B'
+    doFirst {
+        println 'task B is executing'
+    }
+}
+
+def getDate() {
+    def sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA)
+    def nowDateStr = "\"" + sdf.format(new Date()) + "\""
+    return nowDateStr
+}
+
+task my_task {
+    doFirst {
+        println 'today is ' + getDate()
+    }
+}*/
