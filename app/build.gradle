@@ -2,6 +2,16 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+//图片压缩插件配置,后文有对配置信息介绍
+apply plugin: 'img-compressor'
+imgCompressOpt{
+    way="pngquant"
+    test = false
+    whiteFiles=["text_pic1.png","test_pic2.jpg"]
+    minSize=5
+    tinyKeys=["your key"]
+}
+
 ext {
     SUPPORT_LIBRARY_VERSION = '27.1.1'
 }
@@ -10,7 +20,7 @@ def javaVersion = JavaVersion.VERSION_1_8
 
 //android{}是Android插件提供的一个扩展类型，可以让我们自定义Android Gradle工程，是Android Gradle工程配置的唯一入口。
 android {
-    compileSdkVersion 28        //是编译所依赖的Android SDK的版本，这里是API Level。
+    compileSdkVersion 30        //是编译所依赖的Android SDK的版本，这里是API Level。
     buildToolsVersion '28.0.3'  //是构建该Android工程所用构建工具的版本。
 
     compileOptions {
@@ -22,7 +32,7 @@ android {
     defaultConfig {
         applicationId "com.xht.androidnote"
         minSdkVersion 15
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -121,3 +131,8 @@ task my_task {
         println 'today is ' + getDate()
     }
 }*/
+
+afterEvaluate {
+    project ->
+        println "app module ---> $project.name"
+}

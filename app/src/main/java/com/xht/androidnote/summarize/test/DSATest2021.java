@@ -8,8 +8,39 @@ import java.util.List;
 public class DSATest2021 {
 
     public static void main(String[] args) {
-        String[] strings = permutation("abcd");
-        System.out.println(Arrays.toString(strings));
+        //        String[] strings = permutation("abcd");
+        //        System.out.println(Arrays.toString(strings));
+
+        testSort();
+    }
+
+    private static void testSort() {
+        int[] array = new int[]{5, 8, 6, 3, 9, 2, 1, 7};
+        System.out.println(Arrays.toString(array));
+
+        //        quickSort(array, 0, array.length - 1);
+        bubbleSort(array);
+        System.out.println(Arrays.toString(array));
+
+
+    }
+
+    private static void bubbleSort(int[] array) {
+        for (int i = 0; i < array.length - 1; i++) {
+            boolean isSorted = true;
+            for(int j = 0; j < array.length - i -1; j++) {
+                int temp;
+                if(array[j]> array[j+1]) {
+                    temp = array[j];
+                    array[j] = array[j+1];
+                    array[j+1] = temp;
+                    isSorted = false;
+                }
+            }
+            if(isSorted) {
+                break;
+            }
+        }
     }
 
     static List<String> res = new LinkedList<>();
