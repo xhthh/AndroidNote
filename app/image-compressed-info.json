@@ -1,0 +1,138 @@
+[
+    {
+        "preSize": 15523,
+        "outputPath": "\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png",
+        "md5": "a4eeeae574f48ffc31bcbb73b0b919a1",
+        "ratio": "47%",
+        "compressedSize": 7421,
+        "path": "\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "preSize": 9250,
+        "outputPath": "\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png",
+        "md5": "e6fe77074f7ec86064607f454aef170f",
+        "ratio": "55%",
+        "compressedSize": 5094,
+        "path": "\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "preSize": -1,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\video_cover.jpg",
+        "md5": "aaa12aeecde02079e8ce701d19aad11c",
+        "ratio": "",
+        "compressedSize": -1,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\video_cover.jpg"
+    },
+    {
+        "preSize": 17076,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\s_tab_selected.png",
+        "md5": "ece0a1b52a30e64095fdac7d3c2cf6f1",
+        "ratio": "95%",
+        "compressedSize": 16280,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\s_tab_selected.png"
+    },
+    {
+        "preSize": -1,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\splash.jpg",
+        "md5": "aba623f6b3eb88e2d42260cbdae2187b",
+        "ratio": "",
+        "compressedSize": -1,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\splash.jpg"
+    },
+    {
+        "preSize": 10676,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png",
+        "md5": "b9305a9d1b30906fbe510ad78a9c7ad2",
+        "ratio": "51%",
+        "compressedSize": 5502,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "preSize": 13494,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_rect.png",
+        "md5": "96e19174ccb7fdf2e6e4f106549dcb9f",
+        "ratio": "40%",
+        "compressedSize": 5493,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_rect.png"
+    },
+    {
+        "preSize": 18825,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_circle.png",
+        "md5": "8134b4de78b455603119edf5d1851421",
+        "ratio": "37%",
+        "compressedSize": 6999,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_circle.png"
+    },
+    {
+        "preSize": 6464,
+        "outputPath": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png",
+        "md5": "f4f616daaeb11f4ee88834147f52719c",
+        "ratio": "59%",
+        "compressedSize": 3852,
+        "path": "\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "preSize": -1,
+        "outputPath": "\\src\\main\\res\\mipmap-xhdpi\\img3.jpg",
+        "md5": "9bc3ca16f707f51cd3fb188c33184d05",
+        "ratio": "",
+        "compressedSize": -1,
+        "path": "\\src\\main\\res\\mipmap-xhdpi\\img3.jpg"
+    },
+    {
+        "preSize": -1,
+        "outputPath": "\\src\\main\\res\\mipmap-xhdpi\\img2.jpg",
+        "md5": "e4dcbb272b24b080551b33fb2bbcbca9",
+        "ratio": "",
+        "compressedSize": -1,
+        "path": "\\src\\main\\res\\mipmap-xhdpi\\img2.jpg"
+    },
+    {
+        "preSize": -1,
+        "outputPath": "\\src\\main\\res\\mipmap-xhdpi\\img1.jpg",
+        "md5": "334fb6b2e27deb81c53e394deccb2130",
+        "ratio": "",
+        "compressedSize": -1,
+        "path": "\\src\\main\\res\\mipmap-xhdpi\\img1.jpg"
+    },
+    {
+        "preSize": 7098,
+        "outputPath": "\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png",
+        "md5": "2656ae7797174ad9b8e7fb803e887f21",
+        "ratio": "56%",
+        "compressedSize": 4001,
+        "path": "\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "preSize": 8159,
+        "outputPath": "\\src\\main\\res\\drawable\\jd_refresh_3.png",
+        "md5": "7b2beb16c4b01bb295d1f94f11713d0d",
+        "ratio": "46%",
+        "compressedSize": 3783,
+        "path": "\\src\\main\\res\\drawable\\jd_refresh_3.png"
+    },
+    {
+        "preSize": 7546,
+        "outputPath": "\\src\\main\\res\\drawable\\jd_refresh_2.png",
+        "md5": "685a4a27b49aebc6c5f9f68b5274b938",
+        "ratio": "46%",
+        "compressedSize": 3543,
+        "path": "\\src\\main\\res\\drawable\\jd_refresh_2.png"
+    },
+    {
+        "preSize": 8191,
+        "outputPath": "\\src\\main\\res\\drawable\\jd_refresh_1.png",
+        "md5": "5044566a133734cf231e03339c3ba631",
+        "ratio": "46%",
+        "compressedSize": 3792,
+        "path": "\\src\\main\\res\\drawable\\jd_refresh_1.png"
+    },
+    {
+        "preSize": 7226,
+        "outputPath": "\\src\\main\\res\\drawable\\jd_refresh_0.png",
+        "md5": "cfbb70bf77f0aa1e795b933405091f89",
+        "ratio": "49%",
+        "compressedSize": 3608,
+        "path": "\\src\\main\\res\\drawable\\jd_refresh_0.png"
+    }
+]

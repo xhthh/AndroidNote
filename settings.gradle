@@ -1,1 +1,28 @@
 include ':app', ':annotations', ':annotations_processor'
+//gradle.addBuildListener(new BuildListener() {
+//    @Override
+//    void buildStarted(Gradle gradle) {
+//        println 'buildStarted()->开始构建'
+//    }
+//
+//    @Override
+//    void settingsEvaluated(Settings settings) {
+//        println 'settingsEvaluated()->settings评估完成（settins.gradle中代码执行完毕）'
+//    }
+//
+//    @Override
+//    void projectsLoaded(Gradle gradle) {
+//        println 'projectsLoaded()->项目结构加载完成（初始化阶段结束）'
+//        println 'projectsLoaded()->初始化结束，可访问根项目：' + gradle.gradle.rootProject
+//    }
+//
+//    @Override
+//    void projectsEvaluated(Gradle gradle) {
+//        println 'projectsEvaluated()->所有项目评估完成（配置阶段结束）'
+//    }
+//
+//    @Override
+//    void buildFinished(BuildResult result) {
+//        println 'buildFinished()->构建结束 '
+//    }
+//})

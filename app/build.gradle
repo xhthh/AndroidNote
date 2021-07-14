@@ -136,3 +136,20 @@ afterEvaluate {
     project ->
         println "app module ---> $project.name"
 }
+
+gradle.getTaskGraph().whenReady {
+    println "whenReady Task依赖关系构建完成，size=${it.allTasks.size()}"
+    it.allTasks.forEach { task ->
+        println "${task.name}"
+    }
+}
+
+//gradle.getTaskGraph().addTaskExecutionGraphListener(new TaskExecutionGraphListener() {
+//    @Override
+//    void graphPopulated(TaskExecutionGraph graph) {
+//        println "graphPopulated Task依赖关系构建完成 size=${graph.allTasks.size()}"
+//        graph.allTasks.forEach { task ->
+//            println "${task.name}"
+//        }
+//    }
+//})
