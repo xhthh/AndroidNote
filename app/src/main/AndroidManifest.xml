@@ -162,6 +162,7 @@
         <activity android:name=".module.customview.CustomViewPagerActivity" />
         <activity android:name=".module.customview.NestedActivity" />
         <activity android:name=".module.customview.CoordinatorActivity" />
+        <activity android:name=".module.kotlin.multiSelect.MultiSelectActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

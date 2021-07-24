@@ -6,8 +6,14 @@
 
     <Button
         android:id="@+id/btnNullTest"
-        android:text="测试数据为空时的异常"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="测试数据为空时的异常" />
+
+    <Button
+        android:id="@+id/btnMultiSelect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="多选列表" />
 
 </LinearLayout>

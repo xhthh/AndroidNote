@@ -31,7 +31,7 @@ android {
     //默认的配置，它是一个ProductFlavor。ProductFlavor允许我们根据不同的情况同时生成多个不同的apk包。
     defaultConfig {
         applicationId "com.xht.androidnote"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -98,6 +98,7 @@ dependencies {
 
     //test buildSrc 统筹管理依赖版本
     //implementation Libs.retrofit
+
 }
 repositories {
     mavenCentral()

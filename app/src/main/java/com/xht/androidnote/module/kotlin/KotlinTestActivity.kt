@@ -1,7 +1,9 @@
 package com.xht.androidnote.module.kotlin
 
+import android.content.Intent
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import kotlinx.android.synthetic.main.activity_kotlin_test.*
 
 class KotlinTestActivity : BaseActivity() {
@@ -21,6 +23,10 @@ class KotlinTestActivity : BaseActivity() {
             //这里没抓到异常，是不是kotlin版本的问题
             setMessage(bean.desc)
 
+        }
+
+        btnMultiSelect.setOnClickListener {
+            startActivity(Intent(this, MultiSelectActivity::class.java))
         }
     }
 
