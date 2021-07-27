@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:background="#eeeeee"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:layout_weight="1"
+        android:background="@drawable/dp_bg_searchbar_selector">
+
+        <ImageView
+            android:id="@+id/ivSearch_dp"
+            android:layout_width="14dip"
+            android:layout_height="14dip"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dip"
+            android:layout_marginRight="8dip"
+            android:src="@mipmap/dp_ic_search" />
+
+
+        <EditText
+            android:id="@+id/search_input_et_dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/ivSearch_dp"
+            android:background="@drawable/dp_search_bar_bg"
+            android:gravity="center_vertical"
+            android:hint="搜索"
+            android:imeActionLabel="搜索"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLength="100"
+            android:paddingRight="40dp"
+            android:textColor="#494b4d"
+            android:textColorHint="#e0e0e0"
+            android:textCursorDrawable="@drawable/dp_cursor_red_color"
+            android:textSize="14sp" />
+
+
+        <ImageView
+            android:id="@+id/clear_input_btn_dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="6dp"
+            android:paddingTop="6dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="6dp"
+            android:src="@mipmap/dp_ic_close"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/search_btn_dp"
+        android:layout_width="62dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dp_bg_searchbtn_selector"
+        android:clickable="false"
+        android:enabled="false"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        android:text="搜索"
+        android:textColor="#666666"
+        android:textSize="14sp" />
+
+</LinearLayout>

@@ -28,6 +28,10 @@ class KotlinTestActivity : BaseActivity() {
         btnMultiSelect.setOnClickListener {
             startActivity(Intent(this, MultiSelectActivity::class.java))
         }
+
+        btnSearch.setOnClickListener {
+            startActivity(Intent(this,SearchActivity::class.java))
+        }
     }
 
     var data: String? = null
