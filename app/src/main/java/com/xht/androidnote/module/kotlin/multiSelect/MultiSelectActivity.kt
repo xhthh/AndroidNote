@@ -45,7 +45,7 @@ class MultiSelectActivity : BaseActivity() {
                 "\t\t\"title\": \"77777\"\n" +
                 "\t},\n" +
                 "\t{\n" +
-                "\t\t\"title\": \"8888888888\"\n" +
+                "\t\t\"title\": \"888888888888888888888888888888888888888888888\"\n" +
                 "\t},\n" +
                 "\t{\n" +
                 "\t\t\"title\": \"9999999\"\n" +
