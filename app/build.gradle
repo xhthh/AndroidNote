@@ -99,6 +99,8 @@ dependencies {
     //test buildSrc 统筹管理依赖版本
     //implementation Libs.retrofit
 
+    implementation 'com.blankj:utilcode:1.22.10'
+
 }
 repositories {
     mavenCentral()

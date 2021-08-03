@@ -465,6 +465,8 @@ Android
         正确获取View宽高的方式：
         ①View.post()
         ②onWindowFocusChanged()
+        ②onWindowFocusChanged()
+        ②onWindowFocusChanged()
         ③OnGlobalLayoutListener
         ④PreDrawListener
         ⑤自定义宽高

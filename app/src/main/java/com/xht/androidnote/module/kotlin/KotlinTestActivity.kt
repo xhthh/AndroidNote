@@ -3,7 +3,11 @@ package com.xht.androidnote.module.kotlin
 import android.content.Intent
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.module.kotlin.deviceId.DeviceIdActivity
+import com.xht.androidnote.module.kotlin.location.LocationActivity2
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
+import com.xht.androidnote.module.kotlin.record.RecordActivity
+import com.xht.androidnote.module.kotlin.widget.ClockActivity
 import kotlinx.android.synthetic.main.activity_kotlin_test.*
 
 class KotlinTestActivity : BaseActivity() {
@@ -30,7 +34,22 @@ class KotlinTestActivity : BaseActivity() {
         }
 
         btnSearch.setOnClickListener {
-            startActivity(Intent(this,SearchActivity::class.java))
+            startActivity(Intent(this, SearchActivity::class.java))
+        }
+
+        btnLocation.setOnClickListener {
+            startActivity(Intent(this,
+                LocationActivity2::class.java))
+        }
+
+        btnDeviceId.setOnClickListener {
+            startActivity(Intent(this, DeviceIdActivity::class.java))
+        }
+        btnClock.setOnClickListener {
+            startActivity(Intent(this, ClockActivity::class.java))
+        }
+        btnRecord.setOnClickListener {
+            startActivity(Intent(this, RecordActivity::class.java))
         }
     }
 

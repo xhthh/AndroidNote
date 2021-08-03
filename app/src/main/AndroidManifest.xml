@@ -11,6 +11,13 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="com.xht.androidnote.permission.ACCESS_BOOK_SERVICE" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <permission
         android:name="com.xht.androidnote.PROVIDER"
         android:protectionLevel="normal" />
@@ -164,6 +171,11 @@
         <activity android:name=".module.customview.CoordinatorActivity" />
         <activity android:name=".module.kotlin.multiSelect.MultiSelectActivity" />
         <activity android:name=".module.kotlin.SearchActivity" />
+        <activity android:name=".module.kotlin.location.LocationActivity" />
+        <activity android:name=".module.kotlin.location.LocationActivity2" />
+        <activity android:name=".module.kotlin.deviceId.DeviceIdActivity" />
+        <activity android:name=".module.kotlin.widget.ClockActivity" />
+        <activity android:name=".module.kotlin.record.RecordActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
