@@ -184,6 +184,7 @@
             android:name=".module.ipc.aidl.BookManagerService"
             android:process=":remote" />
         <service android:name=".module.ipc.binderpool.BinderPoolService" />
+        <service android:name=".module.kotlin.record.RecordingService" />
     </application>
 
 </manifest>

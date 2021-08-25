@@ -100,7 +100,6 @@ dependencies {
     //implementation Libs.retrofit
 
     implementation 'com.blankj:utilcode:1.22.10'
-
 }
 repositories {
     mavenCentral()

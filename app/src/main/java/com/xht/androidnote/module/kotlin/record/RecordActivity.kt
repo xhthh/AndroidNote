@@ -1,77 +1,79 @@
 package com.xht.androidnote.module.kotlin.record
 
-import android.media.MediaRecorder
-import android.text.format.DateFormat
+import android.content.Intent
+import android.os.Environment
+import android.os.SystemClock
+import android.view.WindowManager
+import android.widget.Toast
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_record.*
 import java.io.File
-import java.util.*
 
 class RecordActivity : BaseActivity() {
 
-    private var filePath: String? = null
-    private var fileName: String? = null
-    var mMediaRecorder: MediaRecorder? = null
+    private var mStartRecording = true
+    var timeWhenPaused: Long = 0 //stores time when user clicks pause button
+
+    var beginTime: Long = 0L
 
     override fun getLayoutId(): Int {
         return R.layout.activity_record
     }
 
     override fun initEventAndData() {
-
         val requestPermission = RequestPermission()
         requestPermission.RequestPermission(this)
 
-        btnStart.setOnClickListener {
+        ibSwitch.setOnClickListener {
 
-            startRecord()
-        }
-
-        btnEnd.setOnClickListener {
-            stopRecord()
-        }
-
-        btnPlay.setOnClickListener {
-            play()
-        }
-
-        mMediaRecorder = MediaRecorder()
-    }
-
-    private fun play() {
-
-    }
-
-    private fun stopRecord() {
-        try {
-            mMediaRecorder?.stop()
-            mMediaRecorder?.release()
-            mMediaRecorder = null
-        } catch (e: RuntimeException) {
-            mMediaRecorder?.reset()
-            mMediaRecorder?.release()
-            mMediaRecorder = null
-            val file = File(filePath)
-            if (file.exists()) file.delete()
+            onRecord(mStartRecording)
+            mStartRecording = !mStartRecording
         }
     }
 
-    private fun startRecord() {
-        mMediaRecorder?.setAudioSource(MediaRecorder.AudioSource.MIC)
-        mMediaRecorder?.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-        mMediaRecorder?.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-        fileName = DateFormat.format("yyyyMMdd_HHmmss", Calendar.getInstance(Locale.CHINA))
-            .toString() + ".mp3";
-        val destDir = File((externalCacheDir?.path ?: "") + "/test/")
-        if (!destDir.exists()) {
-            destDir.mkdirs();
-        }
-        filePath = (externalCacheDir?.path ?: "") + "/test/" + fileName
+    private fun onRecord(start: Boolean) {
+        val intent = Intent(this, RecordingService::class.java)
 
-        mMediaRecorder?.setOutputFile(filePath);
-        mMediaRecorder?.prepare();
-        mMediaRecorder?.start();
+        if (start) {
+            // start recording
+            ibSwitch.setBackgroundResource(R.drawable.icon_record_end_white)
+            //mPauseButton.setVisibility(View.VISIBLE);
+            Toast.makeText(this, "开始录音", Toast.LENGTH_SHORT).show()
+            val folder =
+                File(Environment.getExternalStorageDirectory().toString() + "/SoundRecorder")
+            if (!folder.exists()) {
+                //folder /SoundRecorder doesn't exist, create the folder
+                folder.mkdir()
+            }
+
+            //start Chronometer
+            chronometer.base = SystemClock.elapsedRealtime()
+            chronometer.start()
+
+            //start RecordingService
+            startService(intent)
+            //keep screen on while recording
+            window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+            beginTime = System.currentTimeMillis()
+        } else {
+            //stop recording
+            ibSwitch.setBackgroundResource(R.drawable.icon_record_begin_white)
+            //mPauseButton.setVisibility(View.GONE);
+            chronometer.stop()
+            chronometer.base = SystemClock.elapsedRealtime()
+            timeWhenPaused = 0
+            stopService(intent)
+            //allow the screen to turn off again once recording is finished
+            window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
     }
+
+    override fun onResume() {
+        super.onResume()
+
+    }
+
 
 }
