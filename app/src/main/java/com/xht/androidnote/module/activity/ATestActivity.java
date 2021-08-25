@@ -85,11 +85,11 @@ public class ATestActivity extends BaseActivity {
 
 
         //测试ANR
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(10000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         findViewById(R.id.btn_app_jump).setOnClickListener(new View.OnClickListener() {
             @Override
