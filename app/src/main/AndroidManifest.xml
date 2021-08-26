@@ -176,6 +176,7 @@
         <activity android:name=".module.kotlin.deviceId.DeviceIdActivity" />
         <activity android:name=".module.kotlin.widget.ClockActivity" />
         <activity android:name=".module.kotlin.record.RecordActivity" />
+        <activity android:name=".module.kotlin.widget.TextTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

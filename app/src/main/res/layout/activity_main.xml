@@ -23,6 +23,12 @@
             android:text="RecyclerView" />
 
         <Button
+            android:id="@+id/btn_kotlin"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="各种功能控件测试" />
+
+        <Button
             android:id="@+id/btn_fps"
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"
@@ -153,11 +159,7 @@
             android:layout_marginTop="20dp"
             android:text="Java" />
 
-        <Button
-            android:id="@+id/btn_kotlin"
-            style="@style/btnStyle"
-            android:layout_marginTop="20dp"
-            android:text="Kotlin" />
+
 
         <Button
             android:id="@+id/btn_annotation"
