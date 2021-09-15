@@ -9,6 +9,7 @@ import com.xht.androidnote.module.kotlin.location.LocationActivity2
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
 import com.xht.androidnote.module.kotlin.widget.ClockActivity
+import com.xht.androidnote.module.kotlin.widget.TableTestActivity
 import com.xht.androidnote.module.kotlin.widget.TextTestActivity
 import com.xht.androidnote.utils.DateUtils
 import kotlinx.android.synthetic.main.activity_kotlin_test.*
@@ -59,6 +60,10 @@ class KotlinTestActivity : BaseActivity() {
 
         btnText.setOnClickListener {
             startActivity(Intent(this, TextTestActivity::class.java))
+        }
+
+        btnTable.setOnClickListener {
+            startActivity(Intent(this, TableTestActivity::class.java))
         }
     }
 

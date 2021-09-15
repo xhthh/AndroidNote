@@ -100,6 +100,8 @@ dependencies {
     //implementation Libs.retrofit
 
     implementation 'com.blankj:utilcode:1.22.10'
+
+    implementation 'com.github.huangyanbin:SmartTable:2.2.0'
 }
 repositories {
     mavenCentral()
