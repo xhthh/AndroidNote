@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.kotlin
 
+import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.xht.androidnote.R
@@ -42,8 +43,12 @@ class KotlinTestActivity : BaseActivity() {
         }
 
         btnLocation.setOnClickListener {
-            startActivity(Intent(this,
-                LocationActivity2::class.java))
+            startActivity(
+                Intent(
+                    this,
+                    LocationActivity2::class.java
+                )
+            )
         }
 
         btnDeviceId.setOnClickListener {
@@ -63,8 +68,16 @@ class KotlinTestActivity : BaseActivity() {
         }
 
         btnTable.setOnClickListener {
-            startActivity(Intent(this, TableTestActivity::class.java))
+            //startActivity(Intent(this, TableTestActivity::class.java))
+            startActivity<TableTestActivity>(this) {
+            }
         }
+    }
+
+    inline fun <reified T> startActivity(context: Context, block: Intent.() -> Unit) {
+        val intent = Intent(context, T::class.java)
+        intent.block()
+        context.startActivity(intent)
     }
 
     private fun testTime() {
