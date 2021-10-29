@@ -72,6 +72,11 @@ class KotlinTestActivity : BaseActivity() {
             startActivity<TableTestActivity>(this) {
             }
         }
+        btnCoroutines.setOnClickListener {
+            //startActivity(Intent(this, TableTestActivity::class.java))
+            startActivity<CoroutinesTestActivity>(this) {
+            }
+        }
     }
 
     inline fun <reified T> startActivity(context: Context, block: Intent.() -> Unit) {

@@ -178,6 +178,7 @@
         <activity android:name=".module.kotlin.record.RecordActivity" />
         <activity android:name=".module.kotlin.widget.TextTestActivity" />
         <activity android:name=".module.kotlin.widget.TableTestActivity" />
+        <activity android:name=".module.kotlin.CoroutinesTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
