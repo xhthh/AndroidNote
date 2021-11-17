@@ -38,7 +38,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        //multiDexEnabled true
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -64,6 +64,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
 
     //implementation 'com.android.support:multidex:1.0.1'
+
+    api 'androidx.multidex:multidex:2.0.0'
 
     //butterknife
     implementation 'com.jakewharton:butterknife:10.1.0'

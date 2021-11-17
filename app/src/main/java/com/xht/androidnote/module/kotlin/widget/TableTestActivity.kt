@@ -1,23 +1,22 @@
 package com.xht.androidnote.module.kotlin.widget
 
-import android.graphics.Canvas
+import android.content.Context
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.view.GestureDetector
+import android.util.Log
+import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
 import com.bin.david.form.core.SmartTable
 import com.bin.david.form.data.CellInfo
 import com.bin.david.form.data.column.Column
 import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat
-import com.bin.david.form.data.format.bg.ICellBackgroundFormat
 import com.bin.david.form.data.style.FontStyle
 import com.bin.david.form.data.table.TableData
 import com.bin.david.form.listener.OnColumnItemClickListener
-import com.blankj.utilcode.util.ToastUtils
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import com.xht.androidnote.module.kotlin.bean.EmergencyContactInfo
+import com.xht.androidnote.module.kotlin.widget.adapter.CustomSpinnerArrayAdapter
 import kotlinx.android.synthetic.main.activity_table_test.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 
@@ -82,6 +81,46 @@ class TableTestActivity : BaseActivity() {
 //        table.tableData = tableData
 //        table.config.contentStyle = FontStyle(50, Color.BLUE)
         initData()
+        testSpinner()
+    }
+
+    private fun testSpinner() {
+
+        val stringArray = resources.getStringArray(R.array.languages)
+
+        val customSpinnerArrayAdapter = CustomSpinnerArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            stringArray,
+            12f
+        )
+
+//        spinner.adapter = customSpinnerArrayAdapter
+
+        spinner.dropDownWidth = dp2px(this, 90F)
+        spinner.dropDownVerticalOffset = dp2px(this, 30F)
+        spinner.setBackgroundResource(R.drawable.spinner)
+
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                Log.e("xht", "sdafdasdfafd")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
+    }
+
+    fun dp2px(context: Context, dpValue: Float): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dpValue * scale + 0.5f).toInt()
     }
 
     private fun initData() {
@@ -128,9 +167,11 @@ class TableTestActivity : BaseActivity() {
                 }
             }
         mobile.setOnColumnItemClickListener(OnColumnItemClickListener<String?> { column, value, integer, position ->
-            Toast.makeText(this@TableTestActivity,
+            Toast.makeText(
+                this@TableTestActivity,
                 "点击了$value",
-                Toast.LENGTH_SHORT).show()
+                Toast.LENGTH_SHORT
+            ).show()
         })
         table.config.contentStyle = FontStyle(50, Color.BLUE)
         table.config.isShowTableTitle = false

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="languages">
+        <item>姓名</item>
+        <item>案件号</item>
+        <item>手机号</item>
+        <item>身份证号</item>
+    </string-array>
+</resources>
