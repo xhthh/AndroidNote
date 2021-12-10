@@ -231,7 +231,7 @@ fun hsTest() {
 
 //=======================================================================
 fun main() {
-    anyAndAllTest()
+//    anyAndAllTest()
 
 //    var b = B()
 //    println(b.a)
@@ -249,4 +249,39 @@ fun main() {
 
 //    println(a)
 //    filterTest()
+
+    people("Android") { say("World") }
+
+    println(lock("param1", "param2", ::getResult))
 }
+
+fun say(msg: String) {
+    println("Hello $msg")
+}
+
+/**
+ * 当调用的函数有形参时，
+ * 需要在调用的函数声明，并使用声明的形参；
+ * 函数参数中的形参无法使用
+ */
+fun people(arg0: String, hello: (arg1: String) -> Unit) {
+    hello(arg0)
+    // hello(arg1) 这样调用将报错
+}
+
+
+/**
+ * @param str1 参数1
+ * @param str2 参数2
+ */
+fun getResult(str1: String, str2: String): String = "result is {$str1 , $str2}"
+
+/**
+ * @param p1 参数1
+ * @param p2 参数2
+ * @param method 方法名称
+ */
+fun lock(p1: String, p2: String, method: (str1: String, str2: String) -> String): String {
+    return method(p1, p2)
+}
+
