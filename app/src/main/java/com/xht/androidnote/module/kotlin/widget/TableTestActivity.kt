@@ -1,11 +1,17 @@
 package com.xht.androidnote.module.kotlin.widget
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
 import android.widget.AdapterView
+import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentTransaction
 import com.bin.david.form.core.SmartTable
 import com.bin.david.form.data.CellInfo
 import com.bin.david.form.data.column.Column
@@ -17,71 +23,109 @@ import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import com.xht.androidnote.module.kotlin.bean.EmergencyContactInfo
 import com.xht.androidnote.module.kotlin.widget.adapter.CustomSpinnerArrayAdapter
+import com.xht.androidnote.module.kotlin.widget.treeView.Node
+import com.xht.androidnote.module.kotlin.widget.treeView.TreeListView
 import kotlinx.android.synthetic.main.activity_table_test.*
+import kotlinx.android.synthetic.main.fragment_tree.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 
 
 class TableTestActivity : BaseActivity() {
+
+    lateinit var dialogFragment: TreeFragment
+
     override fun getLayoutId(): Int {
         return com.xht.androidnote.R.layout.activity_table_test
     }
 
     override fun initEventAndData() {
-
-
-//        //普通列
-//        //普通列
-//        val city: Column<String> = Column("部门/渠道", "city")
-//        val name: Column<Int> = Column("板块", "name")
-//        val count: Column<Int> = Column("目标值", "count")
-//        val restaurant: Column<Int> = Column("餐饮", "restaurant")
-//        val ka: Column<Int> = Column("KA", "ka")
-//        val wholesale: Column<Int> = Column("流通批发", "wholesale")
-//        val industry: Column<Int> = Column("工业加工", "industry")
-//        val other: Column<Int> = Column("其他", "other")
-//        //设置该列当字段相同时自动合并
-//        //设置该列当字段相同时自动合并
-//        city.isAutoMerge = true
-//
-//
-//        //设置单元格内容
-//        //设置单元格内容
-//        val list: MutableList<User> = ArrayList<User>()
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("乌鲁木齐", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("乌鲁木齐", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("乌鲁木齐", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("乌鲁木齐", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//        list.add(User("沈阳", 100, 150, 50, 240, 1100, 450, 23458))
-//
-//        //表格数据 datas 是需要填充的数据
-//        //表格数据 datas 是需要填充的数据
-//        var tableData: TableData<User> =
-//            TableData<User>("表格名",
-//                list,
-//                city,
-//                name,
-//                count,
-//                restaurant,
-//                ka,
-//                wholesale,
-//                industry,
-//                other)
-//
-////设置数据
-//
-////设置数据
-//        val table = findViewById<SmartTable<User>>(R.id.table)
-//        table.tableData = tableData
-//        table.config.contentStyle = FontStyle(50, Color.BLUE)
         initData()
         testSpinner()
+        btnDialog.setOnClickListener {
+//            showDialogFragment()
+            showDialog()
+        }
+    }
+
+    var list: MutableList<Node> = mutableListOf()
+
+    private var listView: TreeListView? = null
+
+    private var rl: RelativeLayout? = null
+
+    private var dialog: Dialog? = null
+
+    private fun showDialog() {
+        val view = layoutInflater.inflate(R.layout.fragment_tree, null)
+
+        var content = view.findViewById<RelativeLayout>(R.id.content)
+        rl = RelativeLayout(this)
+        rl!!.layoutParams =
+            RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+            )
+        listView = TreeListView(this, initNodeTree())
+        listView!!.layoutParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+        content.addView(listView)
+
+
+        if (dialog == null) {
+            dialog = AlertDialog.Builder(this)
+                .setView(view)
+//                .setNegativeButton(
+//                    "取消"
+//                ) { dialog, which -> Toast.makeText(mContext, "点击取消", Toast.LENGTH_SHORT).show() }
+//                .setPositiveButton(
+//                    "确定"
+//                ) { dialog, which -> Toast.makeText(mContext, "点击确定", Toast.LENGTH_SHORT).show() }
+                .create()
+        }
+        setDialogWidthAndHeight(dialog,500,400)
+        dialog?.show()
+
+
+    }
+
+    fun setDialogWidthAndHeight(dialog: Dialog?, widthDp: Int, heightDp: Int) {
+        val wm = this.getSystemService(WINDOW_SERVICE) as WindowManager
+        val dm = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(dm)
+        val width = dm.widthPixels // 屏幕宽度（像素）
+        val height = dm.heightPixels // 屏幕高度（像素）
+        val density = dm.density //屏幕密度（0.75 / 1.0 / 1.5）
+        val densityDpi = dm.densityDpi //屏幕密度dpi（120 / 160 / 240）
+        val layoutParams = dialog?.window!!.attributes
+        layoutParams.width = (widthDp * densityDpi / 160)
+        layoutParams.height = (heightDp * densityDpi / 160)
+        dialog?.window!!.attributes = layoutParams
+    }
+
+
+    fun initNodeTree(): List<Node?>? {
+        val member_list: MutableList<Node> = java.util.ArrayList()
+        //        -1表示为根节点,id的作用为
+        member_list.add(Node("" + -1, "1", "111"))
+        member_list.add(Node("" + 1, "2", "222"))
+        member_list.add(Node("" + -1, "3", "333"))
+        member_list.add(Node("" + 1, "4", "444"))
+        member_list.add(Node("" + 4, "5", "555"))
+        member_list.add(Node("" + 4, "6", "666"))
+        member_list.add(Node("" + 4, "7", "777"))
+        member_list.add(Node("" + 7, "8", "888"))
+        member_list.add(Node("" + 8, "9", "999"))
+        member_list.add(Node("" + 8, "10", "101010"))
+        list.addAll(member_list)
+        return list
+    }
+
+    private fun showDialogFragment() {
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        dialogFragment = TreeFragment()
+        dialogFragment.show(ft, "dialog")
     }
 
     private fun testSpinner() {
