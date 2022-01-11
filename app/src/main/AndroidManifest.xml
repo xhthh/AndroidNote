@@ -163,7 +163,7 @@
         <activity android:name=".module.customview.CustomViewActivity" />
         <activity android:name=".module.constraint.ConstraintLayoutTestActivity" />
         <activity android:name=".module.view.fps.FpsViewActivity" />
-        <activity android:name=".module.kotlin.KotlinTestActivity" />
+        <activity android:name=".module.kotlin.WidgetTestActivity" />
         <activity android:name=".module.okhttp.scode.OkHttpTestActivity" />
         <activity android:name=".module.fragment.lifecycle.TestFragmentActivity" />
         <activity android:name=".module.customview.CustomViewPagerActivity" />
@@ -179,6 +179,7 @@
         <activity android:name=".module.kotlin.widget.TextTestActivity" />
         <activity android:name=".module.kotlin.widget.TableTestActivity" />
         <activity android:name=".module.kotlin.CoroutinesTestActivity" />
+        <activity android:name=".module.kotlin.KotlinTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

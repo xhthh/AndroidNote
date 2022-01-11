@@ -2,15 +2,12 @@ package com.xht.androidnote;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.xht.androidnote.base.App;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
 import com.xht.androidnote.module.animation.AnimationActivity;
@@ -31,6 +28,7 @@ import com.xht.androidnote.module.hotfix.HotFixTestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.kotlin.KotlinTestActivity;
+import com.xht.androidnote.module.kotlin.WidgetTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.proxy.ProxyActivity;
@@ -42,7 +40,6 @@ import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
 import com.xht.androidnote.module.view.fps.FpsViewActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
-
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -97,26 +94,29 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                finish();
-//                startActivity(new Intent(mContext, MainActivity.class));
-//            }
-//        }, 3000);
+        //        Handler handler = new Handler();
+        //        handler.postDelayed(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                finish();
+        //                startActivity(new Intent(mContext, MainActivity.class));
+        //            }
+        //        }, 3000);
     }
 
-    @OnClick({R.id.btn_fps, R.id.btn_rxjava, R.id.btn_kotlin, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
+    @OnClick({R.id.btn_fps, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
             R.id.btn_service, R.id.btn_broadcast_receiver, R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp,
             R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
-            R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint})
+            R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.btn_kotlin:
+            case R.id.btnKotlin:
                 skip2Activity(KotlinTestActivity.class);
+                break;
+            case R.id.btn_widget_test:
+                skip2Activity(WidgetTestActivity.class);
                 break;
             case R.id.btn_fps:
                 skip2Activity(FpsViewActivity.class);

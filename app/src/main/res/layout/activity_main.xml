@@ -17,13 +17,19 @@
             android:text="数据结构与算法" />
 
         <Button
+            android:id="@+id/btnKotlin"
+            style="@style/btnStyle"
+            android:layout_marginBottom="20dp"
+            android:text="kotlin 测试" />
+
+        <Button
             android:id="@+id/btn_recyclerview"
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"
             android:text="RecyclerView" />
 
         <Button
-            android:id="@+id/btn_kotlin"
+            android:id="@+id/btn_widget_test"
             style="@style/btnStyle"
             android:layout_marginTop="20dp"
             android:text="各种功能控件测试" />
@@ -158,7 +164,6 @@
             style="@style/btnStyle"
             android:layout_marginTop="20dp"
             android:text="Java" />
-
 
 
         <Button
