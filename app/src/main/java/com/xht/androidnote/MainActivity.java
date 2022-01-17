@@ -10,6 +10,7 @@ import android.widget.ScrollView;
 
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
+import com.xht.androidnote.module.adaptation.AndroidAdaptationActivity;
 import com.xht.androidnote.module.animation.AnimationActivity;
 import com.xht.androidnote.module.annotation.AnnotationActivity;
 import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
@@ -109,9 +110,13 @@ public class MainActivity extends BaseActivity {
             R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
-            R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin})
+            R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin,
+            R.id.btn_adaptation_test})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_adaptation_test:
+                skip2Activity(AndroidAdaptationActivity.class);
+                break;
             case R.id.btnKotlin:
                 skip2Activity(KotlinTestActivity.class);
                 break;

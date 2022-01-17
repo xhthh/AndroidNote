@@ -29,6 +29,12 @@
             android:text="RecyclerView" />
 
         <Button
+            android:id="@+id/btn_adaptation_test"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="Android版本适配测试" />
+
+        <Button
             android:id="@+id/btn_widget_test"
             style="@style/btnStyle"
             android:layout_marginTop="20dp"

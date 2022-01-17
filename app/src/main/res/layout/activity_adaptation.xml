@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnSelectPic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取图片" />
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/ic_launcher" />
+
+    <Button
+        android:id="@+id/btnAndroidId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取AndroidId" />
+
+</LinearLayout>
