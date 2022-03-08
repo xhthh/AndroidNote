@@ -2,6 +2,7 @@ package com.xht.androidnote;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.View;
@@ -250,6 +251,31 @@ public class MainActivity extends BaseActivity {
         }*/
     }
 
+    private static final String TAG = "MainActivity";
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.e(TAG, "---onNewIntent()---");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.e(TAG,"---onStart()---");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "---onResume()---");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.e(TAG,"---onRestart()---");
+    }
 
     @Override
     protected void onDestroy() {

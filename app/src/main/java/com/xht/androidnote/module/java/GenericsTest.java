@@ -1,4 +1,6 @@
-package com.xht.androidnote.summarize.test;
+package com.xht.androidnote.module.java;
+
+import com.xht.androidnote.summarize.test.Container;
 
 import java.util.ArrayList;
 
