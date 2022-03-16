@@ -188,7 +188,7 @@ public class BTestActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_start:
-                skip2Activity(ATestActivity.class);
+                skip2Activity(CTestActivity.class);
                 break;
             case R.id.btn_finish:
                 finish();

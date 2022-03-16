@@ -81,9 +81,11 @@ public class MyView extends View {
                 L.i("View---onTouchEvent()---CANCEL");
                 break;
         }
-                return super.onTouchEvent(event);
-//        return true;
-//                        return false;
+        boolean result = super.onTouchEvent(event);
+//        result = false;
+//        result = true;
+        L.i("View---onTouchEvent()---result=" + result);
+        return result;
     }
 
 

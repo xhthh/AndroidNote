@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="B Activity"
+        android:text="D"
         android:textSize="16sp" />
 
     <Button
@@ -68,16 +68,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/btn_app_jump_url"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:textAllCaps="false" />
-
-    <Button
-        android:id="@+id/btn_unbind_service"
-        android:text="解除绑定service"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btn_bind_service"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
         android:textAllCaps="false" />

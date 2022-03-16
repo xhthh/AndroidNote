@@ -23,7 +23,7 @@ public class CTestActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_launch_mode_test;
+        return R.layout.activity_launch_mode_test3;
     }
 
     @Override
@@ -91,7 +91,7 @@ public class CTestActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_start:
-                skip2Activity(BTestActivity.class);
+                skip2Activity(DTestActivity.class);
                 break;
             case R.id.btn_finish:
                 finish();

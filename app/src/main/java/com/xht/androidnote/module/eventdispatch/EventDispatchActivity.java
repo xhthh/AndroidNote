@@ -76,6 +76,18 @@ public class EventDispatchActivity extends BaseActivity {
         });
     }
 
+    /**
+     * 这个方法会在我们以任意的方式开始与Activity进行交互的时候被调用。
+     * 比较常见的场景就是屏保：当我们一段时间没有操作会显示一张图片，当我们开始与Activity交互的时候可在这个方法中取消屏保；
+     * 另外还有没有操作自动隐藏工具栏，可以在这个方法中让工具栏重新显示。
+     *
+     */
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        L.e("------onUserInteraction()------");
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         switch (event.getAction()) {

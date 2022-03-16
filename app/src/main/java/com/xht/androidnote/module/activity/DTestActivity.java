@@ -21,7 +21,7 @@ public class DTestActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_launch_mode_test;
+        return R.layout.activity_launch_mode_test4;
     }
 
     @Override
@@ -86,5 +86,6 @@ public class DTestActivity extends BaseActivity {
 
     @OnClick(R.id.btn_start)
     public void onViewClicked() {
+        skip2Activity(ATestActivity.class);
     }
 }

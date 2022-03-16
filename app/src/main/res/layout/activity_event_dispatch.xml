@@ -17,18 +17,13 @@
         android:layout_height="300dp"
         android:background="@color/colorPrimary">
 
-        <com.xht.androidnote.module.eventdispatch.MyViewGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp">
-
 
             <com.xht.androidnote.module.eventdispatch.MyView
                 android:layout_width="150dp"
+                android:layout_centerInParent="true"
                 android:layout_height="150dp"
                 android:background="@color/colorAccent" />
 
-        </com.xht.androidnote.module.eventdispatch.MyViewGroup>
 
 
     </com.xht.androidnote.module.eventdispatch.MyViewGroup>

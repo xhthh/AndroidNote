@@ -77,9 +77,11 @@
         </activity-alias>
         -->
         <activity android:name=".module.okhttp.OkHttpActivity" /> <!-- ===============Activity=============== -->
-        <activity android:name=".module.activity.ATestActivity" />
-        <activity android:name=".module.activity.BTestActivity" />
-        <activity android:name=".module.activity.CTestActivity" />
+        <activity android:name=".module.activity.ATestActivity"
+            android:launchMode="standard"/>
+        <activity android:name=".module.activity.BTestActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".module.activity.CTestActivity" android:launchMode="singleTask"/>
         <!--            android:allowTaskReparenting="true"-->
         <!--            android:taskAffinity="com.xht.task"-->
         <activity
