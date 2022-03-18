@@ -1,8 +1,23 @@
 ### RecyclerView
 
-https://www.cnblogs.com/dasusu/p/7746946.html
-
-https://www.jianshu.com/p/40820ea48457
+> 基于滑动场景解析RecyclerView的回收复用机制原理 https://www.jianshu.com/p/40820ea48457
+>
+>
+> RecyclerView的回收复用机制解密 https://www.jianshu.com/p/9306b365da57
+>
+> RecyclerView的基本设计结构 https://www.jianshu.com/p/88314f56545d
+>
+> 让你彻底掌握RecyclerView的缓存机制 https://www.jianshu.com/p/3e9aa4bdaefd?utm_source=desktop&utm_medium=timeline
+>
+> RecyclerView源码分析 https://www.jianshu.com/p/f7f8814bd09a
+>
+> [再也不用担心问RecycleView了——面试真题详解 ](https://www.cnblogs.com/jimuzz/p/14040674.html)
+>
+> RecyclerView 和 ListView 使用对比分析 https://www.jianshu.com/p/f592f3715ae2?utm_campaign=haruki&utm_content=note&utm_medium=reader_share&utm_source=weixin&from=singlemessage&isappinstalled=1
+>
+> RecyclerView源码解析 https://www.jianshu.com/p/c52b947fe064
+>
+> RecyclerView 问题汇总 https://juejin.cn/post/6844903837724213256
 
 #### 1、缓存机制
 
