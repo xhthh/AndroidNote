@@ -19,6 +19,192 @@
 >
 > RecyclerView 问题汇总 https://juejin.cn/post/6844903837724213256
 
+
+
+#### 一、基本设计
+
+- **ViewHolder**
+
+  对于`Adapter`来说，一个`ViewHolder`就对应一个`data`。它也是`Recycler缓存池`的基本单元。
+
+- **Adapter**
+
+  它的工作是把`data`和`View`绑定，即上面说的一个`data`对应一个`ViewHolder`。主要负责`ViewHolder`的创建以及数据变化时通知`RecycledView`。
+
+- **AdapterDataObservable**
+
+  `Adapter`是数据源的直接接触者，当数据源发生变化时，它需要通知给`RecyclerView`。这里使用的模式是`观察者模式`。`AdapterDataObservable`是数据源变化时的被观察者。
+
+- **RecyclerViewDataObserver**
+
+  它是`RecycledView`用来监听`Adapter`数据变化的观察者。
+
+- **LayoutManager**
+
+  它是`RecyclerView`的布局管理者，`RecyclerView`在`onLayout`时，会利用它来`layoutChildren`,它决定了`RecyclerView`中的子View的摆放规则。但不止如此, 它做的工作还有:
+
+  1. 测量子View
+  2. 对子View进行布局
+  3. 对子View进行回收
+  4. 子View动画的调度
+  5. 负责`RecyclerView`滚动的实现
+  6. ...
+
+- **Recycler**
+
+  对于`LayoutManager`来说，它是`ViewHolder`的提供者。对于`RecyclerView`来说，它是`ViewHolder`的管理者，是`RecyclerView`最核心的实现。
+
+  - scrap list
+  - mCacheViews
+  - RecycledViewPool
+
+#### 二、刷新机制
+
+> 1、adapter.notifyxxx() 时 RV 的 UI 刷新逻辑，即 子View 是如何添加到 RV 中的？
+>
+> 2、在数据存在的情况下，滑动 RV 时 子View 是如何添加到 RV 并滑动的？
+
+##### 1、adapter.notifyDataSetChanged()引起的刷新
+
+根据观察者模式，adapter.notifyDataSetChanged() 会引起 requestLayout()，会触发 onMeasure() 和 onLayout()，主要逻辑在 onLayout()
+
+##### 2、RecyclerView.onLayout
+
+onLayout() 直接调用了 dispatchLayout()，dispatchLayout() 主要分为3步，dispatchLayoutStep1、2、3()，第一步用来存储当前子 View 的状态并确定是否要执行动画，第三步是用来执行动画的，第二步 dispatchLayoutStep2()，主要调用了 mLayout#onLayoutChildren() 将布局工作交给了 LayoutManager。
+
+onLayoutChildren() 的布局逻辑：
+
+1. 确定锚点，设置好 AnchorInfo；
+
+2. 根据锚点view确定有多少布局空间 mLayoutState.mAvailable 可用；
+
+3. 根据当前设置的 LinearLayoutManager 方向开始摆放子 View；
+
+   使用 fill() 方法填充 view，在填充之前确定有多少布局空间可用。
+
+##### 3、fill() 摆放子 view
+
+`fill towards end` 是从 `锚点view` 向 RV 底部来摆放子 View。
+
+fill() 中核心是调用  layoutChunk() 来不断消耗 mLayoutState.mAvailable，直至消耗完毕。
+
+layoutChunk() 主要逻辑：
+
+1. 从 Recycler 中获取一个 View；
+2. 添加到 RV 中；
+3. 调整 View 的布局参数，调用其 measure、layout 方法；
+
+##### 4、RV 滑动时的刷新逻辑
+
+RecyclerView 在 onTouchEvent() 中对滑动事件做了监听，然后派发到 scrollStep() 中，在 scrollStep() 中将滑动给处理交给了 mLayout，比如竖直方向上的滑动，scrollVerticallBy()，其中调用了 scrollBy() 方法，这个是 LinearLayoutManager 处理滑动的核心。
+
+scrollBy()主要逻辑：
+
+1. 根据布局方向和滑动的距离来确定可用布局空间 mLayoutState.mAvailable；
+
+2. 调用 fill() 来摆放子 View；
+
+3. 滚动 RecyclerView；
+
+   调用了 mOrientationHelper.offsetChildren()，最终调用到了 RecyclerView#offsetChildrenVertical()，主要逻辑就是改变当前子 View 布局的 top 和 bottom 来达到滚动效果；
+
+
+
+#### 三、复用机制
+
+##### 1、从 Recycler 中获取一个 ViewHolder 的逻辑
+
+LayotuManager 会调用 Recycler#getViewForPosition() 来获取一个指定位置的 view，getViewForPosition() 会调用 tryGetViewHolderForPositionByDeadline()，这个方法是从 Recycler 中获取一个 ViewHolder 的核心方法。
+
+tryGetViewHolderForPositionByDeadline() 主要逻辑：
+
+1. 尝试`根据position`从`scrap集合`、`hide的view集合`、`mCacheViews(一级缓存)`中寻找一个`ViewHolder`；
+2. 根据`stable id(用来表示ViewHolder的唯一，即使位置变化了)`从`scrap集合`和`mCacheViews(一级缓存)`中寻找一个`ViewHolder`；
+3. 根据`position和viewType`尝试从用户自定义的`mViewCacheExtension`中获取一个`ViewHolder`；
+4. 根据`ViewType`尝试从`RecyclerViewPool`中获取一个`ViewHolder`；
+5. 调用`mAdapter.createViewHolder()`来创建一个`ViewHolder`；
+6. 如果需要的话调用`mAdapter.bindViewHolder`来设置`ViewHolder`。
+7. 调整`ViewHolder.itemview`的布局参数为`Recycler.LayoutPrams`，并返回Holder；
+
+**即从几个缓存集合中获取`ViewHolder`，如果实在没有就创建。**
+
+##### 2、不同情形下的 ViewHolder 的创建和缓存
+
+- **由无到有**
+
+  所有 ViewHolder 都是新创建的，即会调用 Adapter.createViewHolder() 和 Adapter.bindViewHolder()。
+
+  这时候新创建的 ViewHolder 并不会被缓存起来。
+
+- **在原有数据的情况下进行整体刷新**
+
+  相当于用户做了下拉刷新的操作，此时 Recycler 复用了老的卡牌。
+
+  `Recycler刷新机制`中，`LinearLayoutManager`在确定好`布局锚点View`之后就会把当前`attach`在`RecyclerView`上的`子View`全部设置为`scrap状态`:
+
+  ```java
+  void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
+      ...
+      onAnchorReady(recycler, state, mAnchorInfo, firstLayoutDirection);  // RecyclerView指定锚点，要准备正式布局了
+      detachAndScrapAttachedViews(recycler);   // 在开始布局时，把所有的View都设置为 scrap 状态，即ViewHolder被标记为FLAG_TMP_DETACHED状态，并且其itemview的parent被设置为null。
+      ...
+  }
+  ```
+
+  detachAndScrapAttachedViews() 就是把所有 view 转成 ViewHolder 后保存到 Recycler#mAttachedScrap 集合中。
+
+  复用时，LinearLayoutManager 会根据当前子view 的位置向 Recycler 要一个 view，最终会**尝试`根据position`从`scrap集合`、`hide的view集合`、`mCacheViews(一级缓存)`中寻找一个`ViewHolder`**；
+
+  即如果`mAttachedScrap中holder`的位置和`入参position`相等，并且`holder`是有效的话这个`holder`就是可以复用的。
+
+  情形二下所有的`ViewHolder`几乎都是复用`Recycler中mAttachedScrap集合`中的。
+
+  **并且重新布局完毕后`Recycler`中是不存在可复用的`ViewHolder`的**？？？
+
+- **滚动复用**
+
+  滚出屏幕的 View 优先保存到 mCachedViews，如果 mCachedViews 中保存满了，就会保存到 RecyclerViewPool 中。
+
+  RV 在滑动时会调用 fill() 来根据滚动的距离向 RV 填充子 View，在填充完子 View 后就会把滚出屏幕的 View 进行回收。
+
+  recycleByLayoutState() 层层调用最终到 Recycler#recycleViewHolderInternal(holder)，主要逻辑：
+
+  1. 检查`mCacheViews集合`中是否还有空位，如果有空位，则直接放到`mCacheViews集合`；
+  2. 如果没有的话就把`mCacheViews集合`中最前面的`ViewHolder`拿出来放到`RecyclerViewPool`中，然后再把最新的这个ViewHolder放到`mCacheViews集合`；
+  3. 如果没有成功缓存到`mCacheViews集合`中，就直接放到`RecyclerViewPool`；
+
+  此时用户继续上滑时，会从 mCachedViews 中获取 ViewHolder，并且不需要调用 Adapter.bindViewHolder()。
+
+  **所以在普通的滚动复用的情况下，`ViewHolder`的复用主要来自于`mCacheViews集合`, 旧的`ViewHolder`会被放到`mCacheViews集合`, `mCacheViews集合`挤出来的更老的`ViewHolder`放到了`RecyclerViewPool` 中。**
+
+##### 3、预取功能（Prefetch）
+
+这个功能是rv在版本25之后自带的，也就是说只要你使用了25或者之后版本的rv，那么就自带该功能，并且默认就是处理开启的状态，通过LinearLayoutManager的setItemPrefetchEnabled()我们可以手动控制该功能的开启关闭。
+
+预取的管件类 GapWorker 是一个 Runnable，RV 在 onTouchEvent() 中触发预取的判断逻辑，根据 dx 和 dy 判断是否预取下一个可能要显示的 item 的数据，调用 mGapWorker.postFromTraversal(this, dx, dy);
+
+这个 runnable 执行即将显示的 item 的预取操作。
+
+
+
+##### 4、payload 局部刷新
+
+如果 RV 的 itemView 布局比较复杂，调用 notifyItemChanged(position) 时会造成这个 itemView 所有的视图都重新布局显示，会造成性能损耗。
+
+```java
+public void onBindViewHolder(@NonNull VH holder, int position,
+        @NonNull List<Object> payloads) {
+}
+```
+
+比如 notifyItemChanged(position, payload)，可以根据 payload 去处理只刷新某个控件。
+
+> notifyItemChanged(position) 第一次调用会走 onCreateViewHolder() 和 onBindViewHolder() 后边再次调用只会走 onBindViewHolder()；
+>
+> notifyItemChanged(position, payload) 调用时只会走 onBindViewHolder(holder, position, payloads)；
+
+=======================================================================================
+
 #### 1、缓存机制
 
 通过 Recycler 完成的，主要用来缓存屏幕内 ViewHolder 以及部分屏幕外 ViewHolder；
@@ -45,6 +231,10 @@ Recycler 的缓存根据访问优先级从上到下可以分为 4 级，如下�
   View 的 scrap 状态，是指 View 在 RecyclerView 布局期间进入分离状态的子视图。即它已经被 detach 了。这种 View 是可以立即被复用的。在复用时，如果数据没有更新，是不需要调用 onBindViewHolder() 的，如果数据更新了，则需要调用；
 
   这两个 ArrayList，主要用来缓存屏幕内的 ViewHolder，notify 时会产生很多 scrap 状态的 View。这里是根据 position 来获取缓存的；如果 notifyxxx() 时 data 已经被移除掉，那么其中对应的 ViewHolder 也会被移除掉；
+
+  一般调用adapter的notifyItemRangeChanged被移除的viewholder会保存到mChangedScrap，其余的notify系列方法(不包括notifyDataSetChanged)移除的viewholder会被保存到mAttachedScrap中。
+
+  > 屏幕 16ms 刷新一次，所以屏幕内的view每次都会更新，用的就是 mAttachedScrap。
 
 - 第二级缓存：mCachedViews；
 
@@ -98,6 +288,24 @@ mChangedScrap 按命名，应该是数据发生改变，notifyxx() 的时候会�
 
 
 
+**一共 20 条数据，每页显示 5 个，列表向下滑动至底部，会调用多少次 onCreateViewHolder()？**
+
+> 8次
+>
+> - 关闭 预取 功能；
+>
+> - 首次展示 创建了 5 个 itemView；
+>
+> - 向上滑动 2 个 创建 2 个新的，此时 滑出屏幕的 item 存在 mCachedViews 中，因为这个是按照 position 取的，只能是同位置的 item 才能复用，且 mCachedViews 大小为 2；
+>
+> - 继续向上滑动一个，又会创建一个新的 item，mCachedViews 中取出最早存入的一个，存进 RecycledViewPool 中，刚滑出去的存在 mCachedViews 中；
+>
+>   此时一共调用了 8 次 onCreateViewHolder()，即 5（满屏item数量）+ 2（mCachedViews size）+ 1
+>
+> - 再向上滑动会去 pool 中取；
+
+
+
 #### 2、数据绑定
 
 notifyxxx() 更新数据，使用了观察者模式
@@ -130,3 +338,38 @@ notifyxxx() 更新数据，使用了观察者模式
    - RecyclerView 有动画效果；
    - 点击事件，ListView 有封装好的，RecyclerView 需要自己实现；
    - 嵌套滑动机制，RecyclerView 实现了，ListView 没有；
+
+
+
+#### 5、ListView
+
+ListView 的缓存有两级，RecycleBin 有两个对象 mActiveViews 和 mScrapViews，mActiveViews 是第一级，mScrapViews 是第二级。
+
+- **Active View**：是缓存在屏幕内的ItemView，当列表数据发生变化时，屏幕内的数据可以直接拿来复用，无须进行数据绑定。
+- **Scrap view**：缓存屏幕外的ItemView，这里所有的缓存的数据都是"脏的"，也就是数据需要重新绑定，也就是说屏幕外的所有数据在进入屏幕的时候都要走一遍getView（）方法。
+
+当Active View和Scrap View中都没有缓存的时候就会直接create view。
+
+
+
+
+
+#### 6、RecyclerView 使用中可以优化的地方
+
+- RecycledViewPool 的使用，在 ViewPager + RecyclerView 的使用中可以使用一个 pool；
+
+- 降低 itemView 的布局层次；
+
+- diffUtil
+
+- 视情况设置 imAnimator 动画
+
+  RV 默认支持动画效果，在开启动画的情况下会额外处理很多的逻辑判断，notify 的增删改查操作都会对应相应的动画效果。如果不需要动画效果可以关闭，可以简化 RV 的内部处理逻辑。
+
+- setHasFixedSize
+
+  设置 RV 的固定高度，可以避免 RV 重复 measure 调用。
+
+  在调用 notifyxxx() 方法的时候（除了 notifyDataSetChanged()）会执行到一个 triggerUpdateProcessor()，如果没有设置 hasFixedSize，会进行 requestLayout()，导致 View 树进行重绘，onMeasure、onLayout() 都会调用。
+
+  最大的一个好处是，嵌套的 RV 不会触发 requestLayout()，从而不会导致外层的 RV 重绘。

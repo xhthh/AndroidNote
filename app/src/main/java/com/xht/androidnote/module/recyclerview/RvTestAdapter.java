@@ -41,6 +41,19 @@ public class RvTestAdapter extends RecyclerView.Adapter<RvTestAdapter.RvTestView
     }
 
     @Override
+    public void onBindViewHolder(@NonNull RvTestViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            String payload = payloads.get(0).toString();
+            Log.i("xht", "Adapter---onBindViewHolder---position=" + position + "   payload=" + payload);
+            if ("aaa".equals(payload)) {
+                holder.tvTitle.setText(list.get(position));
+            }
+        }
+    }
+
+    @Override
     public int getItemCount() {
         return list == null ? 0 : list.size();
     }
