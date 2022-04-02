@@ -1,6 +1,8 @@
 package com.xht.androidnote.module.recyclerview
 
 import android.util.Log
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.DiffUtil.DiffResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
@@ -87,6 +89,44 @@ class RecyclerViewActivity : BaseActivity() {
         }
     }
 
+    private fun testDiffUtil() {
+        val oldDatas: MutableList<String> = mutableListOf()
+        val newDatas: MutableList<String> = mutableListOf()
+        val calculateDiff = DiffUtil.calculateDiff(DiffUtilCallback(oldDatas, newDatas), true)
+        //更新
+        calculateDiff.dispatchUpdatesTo(adapter)
+
+        //将新数据赋值给列表数据
+        list = newDatas
+        //adapter.setDatas(list)
+
+
+        //如果 RV 带有 headerView， 使用 DiffUtil 会错位，自定义 RecyclerView.AdapterDataObservable，在
+        //各个增删改查方法中调用方法里的 positionStart 参数中，将 headerView 的数量加进去
+        //adapter.registerAdapterDataObserver(observer)
+    }
+
+    class DiffUtilCallback(val oldDatas: List<String>, val newDatas: List<String>) :
+        DiffUtil.Callback() {
+        override fun getOldListSize(): Int {
+            return oldDatas.size
+        }
+
+        override fun getNewListSize(): Int {
+            return newDatas.size
+        }
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldDatas[oldItemPosition] == newDatas[newItemPosition];
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            //根据新旧位置获取新旧数据，写个判断依据，比如实体中哪个字段两者不相等，就返回 false，否则 true
+            return true
+        }
+    }
+
+
     class Recycler {
         //一级缓存
         //存储的是当前还在屏幕中的 ViewHolder；按照 id 和 position 来查找 ViewHolder
@@ -118,4 +158,5 @@ class RecyclerViewActivity : BaseActivity() {
             const val DEFAULT_CACHE_SIZE = 2
         }
     }
+
 }

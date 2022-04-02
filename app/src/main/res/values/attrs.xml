@@ -19,4 +19,6 @@
 
 
 
+    <attr name="enable" format="boolean"/>
+
 </resources>

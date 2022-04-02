@@ -306,6 +306,10 @@ mChangedScrap 按命名，应该是数据发生改变，notifyxx() 的时候会�
 
 
 
+**RecyclerView 缓存复用流程：**
+
+![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/5/3/171d878fdd157587~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
+
 #### 2、数据绑定
 
 notifyxxx() 更新数据，使用了观察者模式

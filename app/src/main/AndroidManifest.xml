@@ -182,6 +182,7 @@
         <activity android:name=".module.kotlin.CoroutinesTestActivity" />
         <activity android:name=".module.kotlin.KotlinTestActivity" />
         <activity android:name=".module.adaptation.AndroidAdaptationActivity" />
+        <activity android:name=".module.inflate.Factory2TestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

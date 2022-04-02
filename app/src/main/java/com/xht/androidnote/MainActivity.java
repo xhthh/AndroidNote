@@ -27,6 +27,7 @@ import com.xht.androidnote.module.fragment.FragmentTestActivity;
 import com.xht.androidnote.module.glide.GlideActivity;
 import com.xht.androidnote.module.handler.HandlerActivity;
 import com.xht.androidnote.module.hotfix.HotFixTestActivity;
+import com.xht.androidnote.module.inflate.Factory2TestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.kotlin.KotlinTestActivity;
@@ -112,9 +113,12 @@ public class MainActivity extends BaseActivity {
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin,
-            R.id.btn_adaptation_test})
+            R.id.btn_adaptation_test, R.id.btn_inflater})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_inflater:
+                skip2Activity(Factory2TestActivity.class);
+                break;
             case R.id.btn_adaptation_test:
                 skip2Activity(AndroidAdaptationActivity.class);
                 break;
@@ -262,7 +266,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e(TAG,"---onStart()---");
+        Log.e(TAG, "---onStart()---");
     }
 
     @Override
@@ -274,7 +278,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.e(TAG,"---onRestart()---");
+        Log.e(TAG, "---onRestart()---");
     }
 
     @Override

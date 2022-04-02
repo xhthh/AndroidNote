@@ -57,6 +57,12 @@
             android:layout_marginBottom="20dp"
             android:text="时间选择器" />
 
+
+        <Button
+            android:id="@+id/btn_inflater"
+            style="@style/btnStyle"
+            android:text="inflater" />
+
         <Button
             android:id="@+id/btn_activity"
             style="@style/btnStyle"

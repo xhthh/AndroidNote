@@ -1551,3 +1551,75 @@ test
 
 
 
+#### 十、LayoutInflater、布局解析优化、动态换肤
+
+##### 1、Inflater
+
+
+
+
+
+
+
+##### 2、Factory2
+
+**应用场景**：
+
+- 全局替换字体等属性
+
+- 动态换肤功能
+
+  对做了标记的View进行识别，然后在onCreateView遍历到它的时候，更改它的一些属性，比如背景色等，然后再交给系统去生成View。
+
+- 无需编写 shape、selector，直接在 xml 设置值
+
+  自定义Factory类，只需要在onCreateView方法里面，判断attrs的参数名字，比如发现名字是我们制定的stroke_color属性，就去通过代码手动帮他去设置这个值
+
+
+
+##### 3、动态换肤
+
+**换肤实现思路：**
+
+- 资源打包静态替换方案
+
+  指定资源路径地址，在打包时将对应资源打包进去；
+
+  在 build.gradle 中进行对应配置：
+
+  ```groovy
+  sourceSets {
+  // 测试版本和线上版本用同一套资源
+    YymTest {
+        res.srcDirs = ["src/Yym/res", "src/YymTest/res"]
+        assets.srcDirs = ["src/Yym/assets"]
+     }
+   }
+  ```
+
+  适合发布马甲版本的app需求。
+
+- 动态换肤方案
+
+  应用运行时，选择皮肤后，在主 app 中拿到对应皮肤包的 Resource，将皮肤包中的资源动态加载到应用中展示。
+
+  动态换肤一般步骤：
+
+  - 下载并加载皮肤包；
+  - 拿到皮肤包 Resource 对象；
+    - 根据皮肤包路径，通过 PackageManager 得到皮肤包包名；
+    - 通过 AssetManager 反射调用 "addAssetPath"，传入皮肤包路径，加载皮肤资源；
+    - 传入 assetManager 构建 Resources 对象；
+  - 标记需要换肤的 View；
+    - 在 xml 中通过 skin:enable="true"  进行标记需要换肤的 View；
+    - 通过 LayoutInflater.setFactory2() 设置自定义 Factory2，在接口回调 onCreateView() 中可以拦截从 xml 中映射的 View，进行相关 View 的创建操作，包括对 View 属性的设置，以实现换肤效果；
+    - 如果 onCreateView() 返回 null 的话，会将创建 View 的操作交给系统默认的 Factory2 处理；
+    - 如果 skin:enable 为 true，则创建 View， 并将这个 View 的所有属性与支持换肤的属性进行对比，在换肤时如果存在某个属性，则替换，同时将这个需要换肤的 View 进行保存；
+  - 切换时即时刷新页面；
+  - 制作皮肤包；
+  - 换肤整体框架的搭建；
+
+
+
+
+
