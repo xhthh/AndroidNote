@@ -203,6 +203,20 @@ Activity A 跳转B B跳转C，A不能直接跳转到C，A如何传递消息给C�
 
 
 
+##### 11、SharedPreferences 使用及原理
+
+SharedPreferences只能保存简单类型的数据，例如，String、int等。一般会将复杂类型的数据转换成Base64编码，然后将转换后的数据以字符串的形式保存在 XML文件中，再用SharedPreferences保存。
+
+getSharedPreferences()方法本身是Context这个接口中定义的一个抽象方法，由ContextImpl类负责实现。SharedPreferences 是一个接口，声明抽象方法，具体实现是由 SharedPreferencesImpl 来完成。
+
+
+
+> - SP 不能跨进程使用；
+> - commit 是同步操作，apply 是异步操作
+> - commit 有返回值，apply 没有返回值
+
+
+
 #### 二、Service
 
 ##### 1、Service 的两种启动方式及其生命周期？原理？
