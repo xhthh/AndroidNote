@@ -388,6 +388,38 @@ BROADCAST_BG_TIMEOUT：60s
 
 
 
+##### 7、本地广播原理
+
+- 核心 LocalBroadcastManager，初始化时构建了 Handler；
+
+- 两个静态内部类
+
+  - ReceiverRecord
+
+    用来标识注册的单个广播，包括intentFilter和receiver，每次注册就会生成一个ReceiverRecord。
+
+  - BroadcastRecord
+
+    BroadcastRecord记录一个意图对应的多个接收者，发送回复信息给Receiver时可以通过这个结构查找接收者。
+
+- 注册广播 registerReceiver(receiver, filter)
+
+  将广播接收器构建成 ReceiverRecord 保存到 HashMap 中；
+
+- 发送广播 sendBroadcast(intent)
+
+  调用 handler 发送消息，遍历广播接收器，调用其 onReceive()；
+
+
+
+
+
+
+
+
+
+
+
 #### 四、Fragment
 
 ##### 1、Fragment 的生命周期？与 Activity 的声明周期比对？
