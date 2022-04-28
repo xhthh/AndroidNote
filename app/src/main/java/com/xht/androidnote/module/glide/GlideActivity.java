@@ -4,6 +4,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 
@@ -47,5 +48,17 @@ public class GlideActivity extends BaseActivity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)//禁用缓存功能（杀死进程后会重新加载占位图，否则再次点击还是会直接加载图片）
                 .override(500,500)
                 .into(mIvGlideTest1);*/
+    }
+
+    private void test() {
+        RequestOptions options = new RequestOptions()
+                .placeholder(R.drawable.ic_launcher_background)
+                .error(R.mipmap.ic_launcher)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .override(200, 100);
+        Glide.with(this)
+                .load("")
+                .apply(options)
+                .into(mIvGlideTest1);
     }
 }

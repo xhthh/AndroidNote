@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'android-aspectjx'
+
 
 //图片压缩插件配置,后文有对配置信息介绍
 apply plugin: 'img-compressor'

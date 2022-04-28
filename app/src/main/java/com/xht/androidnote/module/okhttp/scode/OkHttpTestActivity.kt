@@ -16,8 +16,14 @@ class OkHttpTestActivity : AppCompatActivity() {
     }
 
     private fun test1() {
-        val client = OkHttpClient().newBuilder().build()
-        val request = Request.Builder().url("https://www.baidu.com").build()
+        val client = OkHttpClient()
+            .newBuilder()
+//            .dns(httpdns)
+            .build()
+        val request = Request.Builder()
+            .url("https://www.baidu.com")
+            .tag("")//cancel call
+            .build()
         val call = client.newCall(request)
         call.enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {

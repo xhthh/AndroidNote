@@ -21,8 +21,17 @@ class KotlinTestActivity : BaseActivity() {
     }
 
     private fun testCoroutines4() {
-        
+
     }
+
+    @get:Synchronized
+    var maxRequests = 64
+        set(maxRequests) {
+            synchronized(this) {
+                field = maxRequests
+            }
+        }
+
 
     private fun testCoroutines3() {
         GlobalScope.launch(Dispatchers.IO) {

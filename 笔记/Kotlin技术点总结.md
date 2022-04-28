@@ -648,3 +648,50 @@ lateinit 和 lazy 是 Kotlin 中的两种不同的延迟初始化的实现。
 
 > ##### lateinit 则用于只能生命周期流程中进行获取或者初始化的变量，比如 Android 的 onCreate()
 
+
+
+
+
+
+
+
+
+=======================================================================================
+
+#### kotlin 常见写法总结
+
+1. **@Synchronized**
+
+   ```java
+   public synchronized int getMaxRequests() {
+   	return maxRequests;
+   }
+   ```
+
+   ```kotlin
+   //①注解形式
+   @Synchronized
+   fun getMaxRequests(): Int {
+   	return maxRequests
+   }
+   
+   @get:Synchronized var maxRequests = 64
+   set(maxRequests) {
+       //②代码块形式
+       synchronized(this){
+           field = maxRequests
+       }
+   }
+   ```
+
+2. **@JvmName**
+
+   注解说明：**更改方法名，更改get方法名，更改set方法名，更改文件名**
+
+   使用说明：该注解可以用在方法前， 文件前（package声明前），get 和 set 方法前。需要传入替换的name。
+
+   > @get:JvmName("XXX")  把get 方法名改为 XXX
+
+3. **注解使用处目标**
+
+   
