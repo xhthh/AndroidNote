@@ -26,13 +26,27 @@ Android 与 JS 通过 WebView 互相调用方法，实际上是：
 ![img](https://upload-images.jianshu.io/upload_images/944365-613b57c93dff2eb8.png)
 
 > 1. 常用的拦截是：拦截 JS的输入框（即`prompt（）`方法）
+>
 > 2. 因为只有`prompt（）`可以返回任意类型的值，操作最全面方便、更加灵活；而alert（）对话框没有返回值；confirm（）对话框只能返回两种状态（确定 / 取消）两个值
+>
+>    **这是 JS 调用 Android 方法，所以需要 JS 主动调用 prompt()，这样才会走 WebChromeClient#onJsPrompt() 方法，我们在 onJsPrompt() 中根据协议处理逻辑，将 result 返回给 JS**；
 
 
 
 <font color='red'>带回调的调用</font>：
 
 在一端调用的时候在参数中加一个 callbackId 标记对应的回调，对端接收到调用请求后，进行实际操作，如果带有 callbackId，对端再进行一次调用，将结果、callbackId 回传回来，这端根据 callbackId 匹配相应的回调，将结果传入执行就可以了。
+
+
+
+**关于 shouldOverrideUrlLoading()**：
+
+- shouldOverrideUrlLoading() 接口，主要是给WebView提供时机，让其选择是否对UrlLoading进行拦截。
+- 关于该接口的返回值，True（拦截WebView加载Url），False（允许WebView加载Url）
+- shouldOverrideUrlLoading() 调用时机：
+  - 当我们点击页面中的一个link时，先调用shouldOverrideUrlLoading再调用onPageStarted。
+  - 当我们通过loadUrl的方式加载一个页面时，先调用onPageStarted再调用shouldOverrideUrlLoading。
+  - 不过shouldOverrideUrlLoading不一定每次都被调用，只有需要的时候才会被调用。比如，一开始页面加载时（没有重定向）不调用，reload不调用，返回上一页面不调用。
 
 
 
