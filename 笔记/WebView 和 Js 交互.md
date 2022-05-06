@@ -187,6 +187,26 @@ https://github.com/lzyzsd/JsBridge
 
 ![img](https://upload-images.jianshu.io/upload_images/6456061-3d41d9295cac7c00.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 
+##### 5、Web 发送 URL 请求的方法
+
+- a标签
+
+  需要用户操作
+
+- location.href
+
+  可能会引起页面的跳转丢失调用
+
+- 使用 iframe.src
+
+  安卓提供了`shouldOverrideUrlLoading`方法拦截
+
+- 发送 ajax 请求
+
+  Android 没有相应的拦截方法
+
+
+
 
 
 #### 四、WebView 内存泄漏
