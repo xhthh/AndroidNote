@@ -185,7 +185,14 @@ ServiceMethod<?> loadServiceMethod(Method method) {
 
 动态代理
 
-
+> ```
+> Proxy.newProxyInstance最终会调用一个 native 方法，动态生成一个 ApiService（我们前面声明的接口）的实现类；
+> newProxyInstance 方法中会传入一个 InvocationHandler 对象，即源码中的 new InvocationHandler() {...}
+> 在Java动态生成的ApiService的实现类中，有我们定义的各种api调用方法，其中，会调用 super.h.invoke(this,m3,null)，
+> 就是调用父类的h的invoke()，它的父类是Proxy，h即上面我们传入的 InvocationHandler对象。
+> 
+> 最后就是源码中 invoke()中的代码，serviceMethod之类获取注解信息，方法参数等，然后构建一个OkHttpCall
+> ```
 
 
 
@@ -441,8 +448,6 @@ public <T> Converter<ResponseBody, T> nextResponseBodyConverter(
 
 - 调用 apiService.getXXX() 得到一个 Call，调用其 enqueue()，异步请求，会走到 delegate.enqueu() 中，当 OkHttp 请求完成，得到响应后，通过 callbackExecutor 将数据切回 UI 线程，最终走到我们请求接口的回调当中；
 
-sss
-
 ```java
 public interface CallAdapter<R, T> {
   //接口实体，即 Call<Repo> 中的 Repo
@@ -460,7 +465,7 @@ public interface CallAdapter<R, T> {
 }
 ```
 
-sss
+
 
 #### 四、创建网络请求接口实例，并执行请求过程
 

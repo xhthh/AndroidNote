@@ -31,16 +31,21 @@ Jetpack 只是让 MVVM 更简单、更安全
 
     ```java
     public void handleLifecycleEvent(@NonNull Lifecycle.Event event) {
-        State next = getStateAfter(event);//获取event发生之后的将要处于的状态
-        moveToState(next);//移动到这个状态，
+        moveToState(event.getTargetState());//移动到这个状态，
     }
     ```
-
-    - 使用 getStateAfter() 获取 event 发生之后将要处于的状态；
+  
+  - 使用 event.getTargetState() 获取 event 发生之后将要处于的状态；
+  
     - moveToState() 移动到这个状态；
-    - 最后使用 sync() 把生命周期状态同步给所有的观察者；
-
-  - 最终通过反射，调用在注册时，保存的数据找到对应的方法，进行调用；
+  
+  - 最后使用 sync() 把生命周期状态同步给所有的观察者；
+  
+       observer.dispatchEvent(lifeCycleOwner, event)
+  
+    - ObserverWithState#dispatchEvent() 中会回调 mLifecycleObserver.onStateChanged(owner, event)
+  
+  - 最终在实现类的回调中，通过反射，调用在注册时，保存的数据找到对应的方法，进行调用；
 
 
 
@@ -193,7 +198,7 @@ ViewModel，视图模型，即为界面准备数据的模型。
 
 ###### 3.3.2 总结
 
-- ViewModel 是为界面准备数据的模型，特点是配置更改界面销毁后依然存在、不持有UI的引用；
+- ViewModel 是为界面准备数据的模型，分担 `Activity`/`Fragment` 的逻辑，同时会维护自己独立的生命周期，特点是配置更改界面销毁后依然存在、不持有UI的引用；
 - 用途：
   - 可以和 LiveData 搭配使用，代替 MVP 中的 Presenter；
   - 也可用于 Fragment 间的数据共享；
@@ -240,9 +245,38 @@ View 产生事件，使用 ViewModel 进行逻辑处理后，通知 Model 更新
 
   Repository 仓库，包含本地持久性数据和服务端数据；
 
+##### 3、与 MVP 的区别
+
+MVVM 采用双向绑定，数据的修改直接反应到 Model 上，View 的修改也会导致数据的变更，ViewModel 不持有 View 的引用；
+
+MVP 中 Presenter 和 View 互相持有对方的引用；
 
 
-#### 五、DataBinding
+
+> 双向绑定是 DataBinding 吧，
+
+
+
+#### 五、MVP
+
+MVP 的缺点：
+
+- 接口爆炸
+
+  写一个Contract接口，然后把与MVP相关接口全部列入到里面去；
+
+- 内存泄漏问题
+
+  当用户关闭了View层，但这时Model层如果仍然在进行耗时操作，因为Presenter层也持有View层的引用，所以造成垃圾回收器无法对View层进行回收，这样一来，就造成了内存泄漏。
+
+  解决方法：
+
+  - 可以重写onDestroy()方法，在View销毁时强制回收掉Presenter；
+  - 或是采用弱引用的方式；
+
+
+
+#### 六、DataBinding
 
 ##### 1、定义概念
 
@@ -323,7 +357,19 @@ binding.setVm(mUserViewModel);
 android:text='@{"user的name:"+bean.name}'  
 ```
 
-这种容易出问题。并且，DataBinding报错并不会指向错误源，事后很难排除。
+这种容易出问题。并且，DataBinding报错并不会指向错误源，事后很难排查。
+
+
+
+
+
+##### 4、原理
+
+DataBinding 使用了 apt 技术，在编译期生成对应的类，所有的layout都会生成一个Binding类，这个类继承ViewDataBinding，然后实现了execute*方法。
+
+我们在activity中把 mUser对象传入了binding类，在每次对它进行set操作的时候都会触发notify， 之后DataBinding框架会回调execute方法， 框架通过注解拿到get方法，然后拿到和UI所对应的数据，之后结合layout中对应的标注去更新UI。
+
+DataBinding通过布局中的tag将控件查找出来，然后根据生成的配置文件将V与M进行对应的同步操作，设置一个全局的布局变化监听来实时更新，M通过他的set方法进行同步。
 
 
 

@@ -406,7 +406,7 @@ Java将可抛出(Throwable)的结构分为三种类型：**被检查的异常(Ch
 内部主要通过反射来实现的。
 
 - java.lang.reflect.Proxy，这是生成代理类的主类，通过 Proxy 类生成的代理类都继承了 Proxy 类。Proxy 提供了用户创建动态代理类和代理对象的静态方法，它是所有动态代理的父类。
-- java.lang.reflect.InvocationHandler，这里称他为“调用处理器”，它是一个借口。当调用动态代理类中的方法时，将会直接转接到执行自定义的 InvocationHandler 中的 invoke() 方法。即我们动态生成的代理类需要完成的具体内容需要自己定义一个类，而这个类必须实现 InvocationHandler 接口，通过重写 invoke() 方法来执行具体内容。
+- java.lang.reflect.InvocationHandler，这里称他为“调用处理器”，它是一个接口。当调用动态代理类中的方法时，将会直接转接到执行自定义的 InvocationHandler 中的 invoke() 方法。即我们动态生成的代理类需要完成的具体内容需要自己定义一个类，而这个类必须实现 InvocationHandler 接口，通过重写 invoke() 方法来执行具体内容。
 
 Proxy提供了如下两个方法来创建动态代理类和动态代理实例。
 
@@ -491,30 +491,191 @@ Set、List、Queue 均继承自 Collection接口，Collection 继承自 Iterable
 
 - Vector：相比 ArrayList 使用了 synchronized 同步机制
 - Hashtable：相比 HashMap 使用了synchronized 同步机制
-- ConcurrentHashMap：使用 ReentrantLock + CAS 实现线程安全
+- ConcurrentHashMap：JDK 1.7 使用 ReentrantLock 分段加锁，JDK 1.8 使用 synchronized + CAS 实现线程安全
 - Stack：栈，继承自 Vector，用数组实现，使用 synchronized 同步机制
 
 
 
-#### 4、ArrayList 扩容机制
+#### 4、ArrayList 
 
-```java
-private void grow(int minCapacity) {
-    // overflow-conscious code
-    int oldCapacity = elementData.length;
-    int newCapacity = oldCapacity + (oldCapacity >> 1);//1.5倍
-    if (newCapacity - minCapacity < 0)
-        newCapacity = minCapacity;
-    if (newCapacity - MAX_ARRAY_SIZE > 0)
-        newCapacity = hugeCapacity(minCapacity);
-    // minCapacity is usually close to size, so this is a win:
-    elementData = Arrays.copyOf(elementData, newCapacity);
-}
-```
+- **ArrayList有用过吗？它是一个什么东西？可以用来干嘛？**
 
-ArrayList 在第一个添加元素时，创建一个长度为10的数组，之后随着元素的增加，以1.5倍原数组的长度创建一个新数组，即10， 15， 22， 33,。。这样序列建立，将原来的元素拷贝到新数组之中，如果数组长度达到上限，则会以
+  ArrayList就是数组列表，主要用来装载数据，当我们装载的是基本类型的数据int，long，boolean，short，byte…的时候我们只能存储他们对应的包装类，它的主要底层实现是数组Object[] elementData。
 
-MAX_ARRAY_SIZE 或者 Integer.MAX_VALUE作为最大长度，而多余的元素就会被舍弃掉。
+  与它类似的是LinkedList，和LinkedList相比，它的查找和访问元素的速度较快，但新增，删除的速度较慢。
+
+  > **特点：查询效率高，增删效率低，线程不安全。使用频率很高。**
+
+- **底层实现是数组，但是数组的大小是定长的，如果我们不断的往里面添加数据的话，不会有问题吗？**
+
+  ArrayList可以通过构造方法在初始化的时候指定底层数组的大小。
+
+  通过无参构造方法的方式ArrayList()初始化，则赋值底层数Object[] elementData为一个默认空数组Object[] DEFAULTCAPACITY_EMPTY_ELEMENTDATA = {}所以数组容量为0，只有真正对数据进行添加add时，才分配默认DEFAULT_CAPACITY = 10的初始容量。
+
+  ```java
+  public ArrayList(int initialCapacity) {
+      if (initialCapacity > 0) {
+          this.elementData = new Object[initialCapacity];
+      } else if (initialCapacity == 0) {
+          this.elementData = EMPTY_ELEMENTDATA;
+      } else {
+          throw new IllegalArgumentException("Illegal Capacity: "+
+                                             initialCapacity);
+      }
+  }
+  ```
+
+- **数组的长度是有限制的，而ArrayList是可以存放任意数量对象，长度不受限制，那么他是怎么实现的呢？**
+
+  - 通过数组扩容的方式去实现的；
+
+  - ArrayList 在添加第一个元素时，创建一个长度为10的数组，之后随着元素的增加，以1.5倍原数组的长度创建一个新数组，即10， 15， 22， 33,。。这样序列建立，将原来的元素拷贝到新数组之中，再把指向原数的地址换到新数组，如果数组长度达到上限，则会以 MAX_ARRAY_SIZE 或者 Integer.MAX_VALUE 作为最大长度，而多余的元素就会被舍弃掉。
+
+    ```java
+    private void grow(int minCapacity) {
+        // overflow-conscious code
+        int oldCapacity = elementData.length;
+        int newCapacity = oldCapacity + (oldCapacity >> 1);//1.5倍
+        if (newCapacity - minCapacity < 0)
+            newCapacity = minCapacity;
+        if (newCapacity - MAX_ARRAY_SIZE > 0)
+            newCapacity = hugeCapacity(minCapacity);
+        // minCapacity is usually close to size, so this is a win:
+        elementData = Arrays.copyOf(elementData, newCapacity);
+    }
+    ```
+
+- **1.7和1.8版本初始化的时候的区别么？**
+
+  初始化的时候，1.7以前会调用this(10)才是真正的容量为10，1.7即本身以后是默认走了空数组，只有第一次add的时候容量会变成10。
+
+- **增删很慢，你能说一下ArrayList在增删的时候是怎么做的么？主要说一下他为啥慢？**
+
+  ArrayList 有指定index新增，也有直接新增的，在这之前他会有一步校验长度的判断 **ensureCapacityInternal**，就是说如果长度不够，是需要扩容的。在扩容的时候，老版本的jdk和8以后的版本是有区别的，8之后的效率更高了，采用了位运算，**右移**一位，其实就是除以2这个操作。
+
+  - 直接新增
+
+    ```java
+    public boolean add(E e) {
+        ensureCapacityInternal(size + 1);  // Increments modCount!!
+        elementData[size++] = e;
+        return true;
+    }
+    ```
+
+  - 指定位置新增
+
+    ```java
+    public void add(int index, E element) {
+        if (index > size || index < 0)
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    
+        ensureCapacityInternal(size + 1);  // Increments modCount!!
+        System.arraycopy(elementData, index, elementData, index + 1,
+                         size - index);
+        elementData[index] = element;
+        size++;
+    }
+    ```
+
+  > 效率低，主要是新增涉及到数组复制，如果涉及到扩容，那会更慢；
+
+- **ArrayList（int initialCapacity）会不会初始化数组大小？**
+
+  - **会初始化数组大小！但是List的大小没有变，因为list的大小是返回size的。**
+
+  - 将构造函数与initialCapacity结合使用，然后使用 set() 会抛出异常，尽管该数组已创建，但是大小设置不正确。
+
+    set() 方法会比较 index 和 size
+
+    ```java
+    private static void arrayListTest() {
+        ArrayList<Integer> arrayList = new ArrayList<>(10);
+        System.out.println(arrayList.size());
+        arrayList.set(5, 1);
+        //Exception in thread "main" java.lang.IndexOutOfBoundsException: Index 5 out of bounds for length 0
+    }
+    //ArrayList.java
+    public E set(int index, E element) {
+        if (index >= size)
+            throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+    
+        E oldValue = (E) elementData[index];
+        elementData[index] = element;
+        return oldValue;
+    }
+    ```
+
+- **ArrayList 是怎样实现删除的？删除一定很慢吗？** 
+
+  删除还是用到了 copy 数组
+
+  ```java
+  public E remove(int index) {
+      if (index >= size)
+          throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
+  
+      modCount++;
+      E oldValue = (E) elementData[index];
+  
+      int numMoved = size - index - 1;
+      if (numMoved > 0)
+          System.arraycopy(elementData, index+1, elementData, index,
+                           numMoved);
+      elementData[--size] = null; // clear to let GC do its work
+  
+      return oldValue;
+  }
+  ```
+
+  > System.copy() 参数：
+  >
+  > - Object src : 原数组
+  > - int srcPos : 从元数据的起始位置开始
+  > - Object dest : 目标数组
+  > - int destPos : 目标数组的开始起始位置
+  > - int length : 要copy的数组的长度
+
+  比方，我们现在要删除下面这个数组中的 index 为 5 的这个元素：
+
+  ![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/1/8/16f80e37714701d0~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
+
+  那代码他就复制一个 index 5+1 开始到最后的数组，然后把它放到index开始的位置；index 5 的位置就成功被”删除“了其实就是被覆盖了，给了你被删除的感觉。
+
+  同理他的效率也低，因为数组如果很大的话，一样需要复制和移动的位置就大了。
+
+  > - 删除慢不慢取决于要删除的元素离数组末端有多远。
+  > - ArrayList拿来作为堆栈来用还是挺合适的，push和pop操作完全不涉及数据移动操作。
+
+- **是否线程安全？**
+
+  ArrayList 是线程不安全的，线程安全的数组容器是 Vector。
+
+  Vector的实现很简单，就是把所有的方法统统加上synchronized就完事了。
+
+  你也可以不使用Vector，用Collections.synchronizedList把一个普通ArrayList包装成一个线程安全版本的数组容器也可以，原理同Vector是一样的，就是给所有的方法套上一层synchronized。
+
+- **ArrayList 适合用来做队列吗？**
+
+  队列一般是FIFO（先入先出）的，如果用ArrayList做队列，就需要在数组尾部追加数据，数组头部删除数组，反过来也可以。
+
+  但是无论如何总会有一个操作会涉及到数组的数据搬迁，这个是比较耗费性能的。
+
+  **所以不适合做队列。**
+
+- **数组适合做队列吗？**
+
+  数组是非常合适的。
+
+  比如ArrayBlockingQueue内部实现就是一个环形队列，它是一个定长队列，内部是用一个定长数组来实现的。
+
+  另外著名的Disruptor开源Library也是用环形数组来实现的超高性能队列，具体原理不做解释，比较复杂。
+
+  简单点说就是使用两个偏移量来标记数组的读位置和写位置，如果超过长度就折回到数组开头，前提是它们是定长数组。
+
+- **ArrayList 和 LinkedList 遍历性能比较？**
+
+  论遍历ArrayList要比LinkedList快得多，ArrayList遍历最大的优势在于内存的连续性，CPU的内部缓存结构会缓存连续的内存片段，可以大幅降低读取内存的性能开销。
 
 
 
@@ -523,7 +684,7 @@ MAX_ARRAY_SIZE 或者 Integer.MAX_VALUE作为最大长度，而多余的元素�
 ##### 5.1 HashMap的优势？
 
 - 查询速度快，时间复杂度最快可达到O(1)
-- 动态的可边长存储数据
+- 动态的可变长存储数据
 
 ##### 5.2 HashMap 底层原理
 
@@ -810,7 +971,29 @@ JDK 1.8 之前是头插法，1.8 之后是尾插法。
 
 
 
+> 一、JDK1.7中的ConcurrentHashMap
+> 实现线程安全的原理：分段加锁
+>
+> 将原集合底层的数组拆分成很多个小数组：
+> [数组]——>[数组1]，[数组2]，[数组3]，[数组4]…
+> 每个数组都会对应一把不同的锁；
+> 只有当多个线程操作同一个小数组时，才会发生线程串行的情形。
+>
+> 二、JDK1.8中的ConcurrentHashMap
+> JDK1.8之后，进行了锁粒度的细化
+>
+> 又变成了一个大数组，假设两个线程同时对数组的第一个位置进行put操作，则会采取CAS策略，保证线程并发的安全性，同一时间只有一个线程成功执行CAS操作；
+> 在插入元素的过程中，会给插入的数组元素加上synchronized锁，再基于链表和红黑树插入数据，也就是数组的一个元素对应了一把锁。
 
+
+
+
+
+#### 7、LinkedList
+
+- LinkedList 是基于链表的数据结构，地址是任意的，其在开辟内存空间的时候不需要等一个连续的地址，对新增和删除操作，LinkedList 比较占优势。
+- LinkedList 适用于要头尾操作或插入指定位置的场景。
+- 因为 LinkedList 要移动指针，所以查询操作性能比较低。
 
 
 
