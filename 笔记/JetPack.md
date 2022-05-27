@@ -253,7 +253,7 @@ MVP 中 Presenter 和 View 互相持有对方的引用；
 
 
 
-> 双向绑定是 DataBinding 吧，
+> 双向绑定是 DataBinding 吧
 
 
 
