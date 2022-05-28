@@ -25,6 +25,9 @@ public class EventDispatchActivity extends BaseActivity {
     @BindView(R.id.testCount)
     MyViewGroup testCount;
 
+    @BindView(R.id.view)
+    MyView view;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_event_dispatch;
@@ -33,13 +36,27 @@ public class EventDispatchActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
 
+        viewgroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("------viewgroup------onclick");
+            }
+        });
 
-        int maxDeep = maxDeep(testCount);
-        L.i("maxDeep = " + maxDeep);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("------view------onclick");
+            }
+        });
 
-        //int count = traversal2(testCount);
-        int count = traversal3(testCount);
-        L.i("count = " + count);
+
+//        int maxDeep = maxDeep(testCount);
+//        L.i("maxDeep = " + maxDeep);
+//
+//        //int count = traversal2(testCount);
+//        int count = traversal3(testCount);
+//        L.i("count = " + count);
     }
 
     private int traversal3(View view) {
