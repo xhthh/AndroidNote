@@ -9,6 +9,7 @@ import com.xht.androidnote.module.kotlin.deviceId.DeviceIdActivity
 import com.xht.androidnote.module.kotlin.location.LocationActivity2
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
+import com.xht.androidnote.module.kotlin.screenshot.ScreenShotActivity
 import com.xht.androidnote.module.kotlin.widget.ClockActivity
 import com.xht.androidnote.module.kotlin.widget.TableTestActivity
 import com.xht.androidnote.module.kotlin.widget.TextTestActivity
@@ -76,6 +77,10 @@ class WidgetTestActivity : BaseActivity() {
             //startActivity(Intent(this, TableTestActivity::class.java))
             startActivity<CoroutinesTestActivity>(this) {
             }
+        }
+
+        btnScreenShotTest.setOnClickListener {
+            skip2Activity(ScreenShotActivity::class.java)
         }
     }
 

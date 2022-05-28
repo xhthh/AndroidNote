@@ -215,6 +215,16 @@ getSharedPreferences()方法本身是Context这个接口中定义的一个抽象
 > - commit 是同步操作，apply 是异步操作
 > - commit 有返回值，apply 没有返回值
 
+原理：
+
+> SharedPreference的数据本质上是保存在一个xml文件中，这个xml文件存放在/data/data/应用包名/shared_prefs/目录下。
+>
+> SharedPreferences是一个接口，里面定义了很多数据存储与获取的接口。
+>
+> getSharedPreferences() 实现在 ContextImpl 中，创建一个 SharedPreferences 对象，其中会先判断是否存在对应 xml 文件，如果发现存在则会有一个预加载操作，这个操作是把 xml 文件的内容通过 I/O 操作和 XmlUitl 解析后存入一个 map 对象中，所以我们调用 SharedPreferences::getString();等 get 操作实际上是不会对文件做 I/O 操作，而是直接访问刚刚的 map 集合的内容，这提高了效率，如果对应的 xml 不存在则重新创建一个对应的 xml 文件。
+>
+> put 写操作:写操作也有两步，一是把数据先写入内存中，即 map 集合，二是把数据写入硬盘文件中。
+
 
 
 #### 二、Service
@@ -270,6 +280,10 @@ bindService()启动的service当调用者生命结束了，系统会自动调用
   Activity 中注册广播接收器，接收 Service 发送的消息。
 
   比如Service要向多个Activity发送同样的消息的话，用这种方法就更好
+
+##### 4、一个 service 和 5 个 activity 绑定，有几个 service实例？ 4 个 activity 退出，service 还在吗？
+
+多个activity与service绑定只会在第一个activity绑定时走 onCreate、onBind() 回调，service的实例是在多个activity之间共享的，当一个activity 解除绑定或者退出销毁时，只要还有其他activity与service绑定是不会走 onBind() 和 onDestroy() 方法的，但是会走 serviceConnection() 中的回调，只有最后一个activity解除绑定、退出销毁时 service 才会走 onBind() 和 onDestroy() 方法。
 
 
 
@@ -386,7 +400,7 @@ BROADCAST_BG_TIMEOUT：60s
 
 ##### 6、广播可以请求网络数据吗？
 
-
+不建议，网络请求一般都是耗时操作，而广播实在主线程运行的，耗时操作会导致线程阻塞，很容易导致ANR。可以在广播中使用子线程进行网络请求，但不建议，更建议在Service中进行。广播可以用于监听网络变化。
 
 ##### 7、本地广播原理
 
@@ -409,14 +423,6 @@ BROADCAST_BG_TIMEOUT：60s
 - 发送广播 sendBroadcast(intent)
 
   调用 handler 发送消息，遍历广播接收器，调用其 onReceive()；
-
-
-
-
-
-
-
-
 
 
 
@@ -485,10 +491,23 @@ Activity---onDestroy()
 ##### 6、Fragment之间怎样进行通信？
 
 1. 通过宿主 Activity
+
 2. getActivity() 根据 tag 找到对应的 Fragment，调用其方法
+
 3. 接口回调
+
 4. Eventbus
+
 5. 广播
+
+6. kotlin Fragment.kt 中的扩展函数 Fragment.setFragmentResult，通过 onFragmentResult() 回调接收返回信息
+
+   Result API的原理非常简单，FragmentA 通过 Key 向 FragmentManager 注册 ResultListener，FragmentB 返回 result 时， FM 通过 Key 将结果回调给FragmentA 。需要特别注意的是只有当 FragmentB 返回时，result才会被真正回传，如果 setFragmentResult 多次，则只会保留最后一次结果。
+
+7. ViewModel
+
+> - ResultAPI 主要适用于那些一次性的通信场景（FragmentB返回结果后结束自己）。如果使用 ViewModel，需要上提到的 Fragment 共同的父级 Scope，而 Scope 的放大不利于数据的管理。
+> - 非一次性的通信场景，由于 FragmentA 和 FragmentB 在通信过程中共存，推荐通过共享 ViewModel 的方式，再借助 LiveData 等进行响应式通信。
 
 ##### 7、ViewPager+三个Fragment的生命周期？加载第一个的时候，第一第二的生命周期，第三个会不会走？怎样实现懒加载？
 
@@ -683,6 +702,27 @@ Message通过静态单链表来全局完成消息的复用，而在每次回收�
 因为Looper的消息在使用完都会自动调用recycle的，但是一旦消息链表到达上限，那么如果大量发送消息 ，
 仍然存在大量Message对象需要在堆中回收的问题。
 
+```java
+private static Message sPool;
+private static int sPoolSize = 0;
+
+private static final int MAX_POOL_SIZE = 50;//消息链表上限50
+
+public static Message obtain() {
+    synchronized (sPoolSync) {
+        if (sPool != null) {
+            Message m = sPool;
+            sPool = m.next;
+            m.next = null;
+            m.flags = 0; // clear in-use flag
+            sPoolSize--;
+            return m;
+        }
+    }
+    return new Message();
+}
+```
+
 
 
 不管是 MessageQueue 的 quit() 还是 removeMessage()   最终都是调用的 Message 的 recycleUnchecked() 该方法对 Message 进行回收，将一个 message 对象的属性置为空（如 target、callback），用以复用。
@@ -763,6 +803,10 @@ ANR，全名Application Not Responding。当我发送一个绘制UI 的消息到
 
 后面两种方式均是通过 Handler 来实现的。
 
+> 这个说法就不太严谨，应该说UI线程才能更新UI，非UI线程不能更新。 UI线程指的是ViewRootImpl创建时的线程，通常activity关联的ViewRootImpl是在主线程创建的，所以便有了这个不严谨的说法。
+>
+> 试想一下自己启动一个Thread 并且实现looper， 在这个子线程里弹出个dialog。那么这个dialog理论上就只能在这个子线程里才能更新，主线程更新就会crash（基本上没有人这样干）。SurefaceView就是在子线程去创建了一个新的ViewRootImpl,所有它只能在独立的线程里更新。
+
 ##### 8、子线程中可以弹 Toast 和 Dialog 吗？怎么实现？
 
 可以
@@ -815,14 +859,25 @@ Looper 提供了 quit() 和 quitSafely() 来退出一个 Looper。
 
 <font color='red'>主线程不能退出，主线程退出应用就停止了。</font>
 
-MessageQueue#quit()：
-
 ```java
+//Looper.java
+//该方法由 ActivityThread#main 调用
+public static void prepareMainLooper() {
+    prepare(false);//这个false 即是否允许退出
+    synchronized (Looper.class) {
+        if (sMainLooper != null) {
+            throw new IllegalStateException("The main Looper has already been prepared.");
+        }
+        sMainLooper = myLooper();
+    }
+}
+
+//MessageQueue.java
 void quit(boolean safe) {
     if (!mQuitAllowed) {
         throw new IllegalStateException("Main thread not allowed to quit.");
     }
-    //......
+    //....
 }
 ```
 
@@ -919,10 +974,6 @@ ThreadLocalMap 结构是数组，用来保存 key-value 的组合 Entry。key �
 用于执行后台耗时的任务，当任务执行后它会自动停止，同时由于 IntentService 是服务的原因，它的优先级比单纯的线程要高很多，所以 IntentService 适合执行一些高优先级的后台任务，不容易被系统杀死。
 
 <font color='red'>若启动IntentService多次，那么每个耗时操作则以队列的方式在IntentService的onHandleIntent回调方法中依次执行，执行完自动结束。</font>
-
-
-
-##### 15、
 
 
 
@@ -1158,9 +1209,57 @@ public boolean dispatchTouchEvent(MotionEvent event) {
 
 ##### 6、cancel 事件什么情况下会发生？
 
-当子 view 的 onTouchEvent() 返回 true，而父 View 在 MOVE 事件中进行拦截，即 onInterceptTouchEvent() 返回 true，此时子 View 会收到一个 CANCEL 事件。
+- 在子View处理事件的过程中，父View对事件拦截
 
-比如在一个 ScrollView 中，点击一个 Button 后不抬起手，直接滑动，就会产生 CANCEL 事件。
+  当子 view 的 onTouchEvent() 返回 true，而父 View 在 MOVE 事件中进行拦截，即 onInterceptTouchEvent() 返回 true，此时子 View 会收到一个 CANCEL 事件。
+
+  比如在一个 ScrollView 中，点击一个 Button 后不抬起手，直接滑动，就会产生 CANCEL 事件。
+
+- 子View被设置了PFLAG_CANCEL_NEXT_UP_EVENT标记时
+
+- 在子View处理事件的过程中被从父View中移除时
+
+- 当View从Window中分离时
+
+```java
+// ViewGroup.dispatchTouchEvent()
+public boolean dispatchTouchEvent(MotionEvent ev) {
+    if (mFirstTouchTarget == null) {
+    } else {
+        // 有子 View 获取了事件
+        TouchTarget target = mFirstTouchTarget;
+        while (target != null) {
+            final TouchTarget next = target.next;
+            final boolean cancelChild = resetCancelNextUpFlag(target.child)
+                    || intercepted;
+            // 父 View 此时如果拦截了事件，cancelChild 是 true
+            if (dispatchTransformedTouchEvent(ev, cancelChild,
+                    target.child, target.pointerIdBits)) {
+                handled = true;
+            }
+        }
+    }
+}
+
+private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
+        View child, int desiredPointerIdBits) {
+    final int oldAction = event.getAction();
+    // 如果 cancel 是 true，则发送 ACTION_CANCEL 事件
+    if (cancel || oldAction == MotionEvent.ACTION_CANCEL) {
+        event.setAction(MotionEvent.ACTION_CANCEL);
+        if (child == null) {
+            handled = super.dispatchTouchEvent(event);
+        } else {
+            handled = child.dispatchTouchEvent(event);
+        }
+        event.setAction(oldAction);
+        return handled;
+    }
+}
+
+```
+
+
 
 ##### 7、父view中两个button，点击一个然后手指不抬起，一直滑出屏幕
 
@@ -1172,8 +1271,6 @@ public boolean dispatchTouchEvent(MotionEvent event) {
 
 子 View
 子 View 处理后，就不会在走父 View 的 onTouchEvent() 也就不会再走到父 View 的点击事件。
-
-<font color='red'>但是为什么，在子 View 的 onTouchEvent() 中 返回 true，就不会走到  onClick() 事件。</font>
 
 
 
@@ -1215,19 +1312,15 @@ RecyclerView1滑动到底部的时候，交由外层View来处理
 
    点击事件都先经过父容器的拦截处理，通过重写父容器的 onInterceptTouchEvent() 根据需求做相应的拦截。
 
+   - ACTION_DOWN 这个事件里父容器必须返回 false，即不拦截ACTION_DOWN事件，因为一旦拦截了那么后续的 ACTION_MOVE、ACTION_UP都由父容器去处理，事件就无法传到子view了
+   - ACTION_MOVE 事件可以根据需要来进行拦截或者不拦截
+   - ACTION_UP 这个事件必须返回false，就会导致子View无法接受到UP事件，这个时候子元素中的onClick()事件就无法处触发。
+
 2. 内部拦截法
 
    父容器不拦截任何事件，如果子元素需要此事件就直接消耗掉，否则就交由父容器进行处理。配合 requestDisallowInterceptTouchEvent()。
 
    重写子元素的 dispatchTouchEvent()，根据需求条件调用 requestDisallowInterceptTouchEvent()，父容器不能拦截 DOWN 事件，否则子类接收不到任何事件。
-
-
-
-
-
-
-
-
 
 
 
@@ -1295,6 +1388,8 @@ ViewGroup 是一个抽象类，没有实现 onMeasure，具体测量过程由各
 
    通过 post() 可以将一个 runnable 投递到消息队列的尾部，然后等待 Looper 调用此 runnable 的时候，View 已经初始化好了。
 
+   > 因为 View.post() 将 runnable 存到了 HandlerActionQueue#mActions 数组中，而执行这些任务的方法在 ViewRootImpl#performTraversals() 中被调用 getRunQueue().executeActions(mAttachInfo.mHandler)，而 perfromTraversals() 同样是被封装到 Runnable 中通过 Handler 执行，根据消息机制，消息执行的先后顺序，所以当执行 View.post() 中的 runnable 时，View已经绘制完成，所以能够拿到 View 的宽高。
+
 3. ViewTreeObserver#addOnGlobalLayoutListener，当 View 树的状态发生改变或者 View 树内部的 View 的可见性生改变时，onGlobalLayout() 将会被回调。
 
 4. View.measure(int widthMeasureSpec, int heightMeasureSpec)
@@ -1355,6 +1450,8 @@ View 中的 layout() 流程如下：
 2. 绘制内容     onDraw(canvas)
 3. 绘制子元素 dispatchDraw(canvas)
 4. 绘制装饰     onDrawForeground(canvas)
+
+> setVillNotDraw() 如果一个 View 不需要绘制任何内容，那么设置这个标记位为 true 后，系统会进行相应的优化。默认情况下，View 没有启用，ViewGroup 默认启用了这个标志；
 
 
 
@@ -1583,25 +1680,16 @@ private int maxDeep(View view) {
 - 在 Dialog 中的 show() 中，通过 mWindow.getDecorView() 获取 DecorView 实例，
   调用 mWindowManager.addView(mDecor) 进行添加，WindowManager 实现类 WindowManagerImpl，它委托给 WindowManagerGlobal 处理 添加、更新、移除等操作
   在 addView() 方法中，生成 ViewRootImpl，并调用其 setView() 方法，最终进行 View 的绘制流程
+- Dialog 构造函数中，会调用 context.getSystemService() 来获取 windowManager，Dialog 只能由 Activity 类型的上下文调用，因为有个 token 需要校验，只有 Activity 重写了 getSystemService() 将其赋值了；
 
 
 mWindowManager.addView(mDecor) --->ViewRootImpl.setView()--->IWindowSession.addToDisplay()--->WindowManagerService.addWindow()
 
 
 
-test
-
-
-
-
-
-
-
 #### 十、LayoutInflater、布局解析优化、动态换肤
 
-##### 1、Inflater
-
-
+##### 1、LayoutInflater.inflate()
 
 
 
@@ -1667,5 +1755,117 @@ test
 
 
 
+### Android 进阶
+
+#### 一、自定义控件
+
+##### 1、自定义控件的分类
+
+- 自定义组合控件：多个控件组合成为一个新的控件，方便多处复用；
+- 继承系统 View 控件：继承自 TextView 等系统控件，在系统控件的基础功能上进行扩展；
+- 继承 View：不复用系统控件逻辑，继承 View 进行功能定义；
+- 继承系统 ViewGroup：继承自 LinearLayout 等系统控件，在系统控件的基础上进行扩展；
+- 继承 ViewGroup：不复用系统控件逻辑，继承 ViewGroup 进行功能定义；
+
+##### 2、View 的绘制流程
+
+View的绘制基本由measure()、layout()、draw()这个三个函数完成：
+
+- measure：测量View的宽高，主要是View中的 measure()，setMeasuredDimension()，onMeasure() 方法。
+- layout：计算当前View以及子View的位置，主要是View中的 layout()，onLayout()，setFrame() 方法。
+- draw：视图的绘制工作，主要是View中的 draw()，onDraw() 方法。
 
 
+
+##### 3、Android 屏幕坐标系
+
+在Android坐标系中，以屏幕左上角作为原点，这个原点向右是X轴的正轴，向下是Y轴正轴。
+
+| **方法**                        | **描述**                                         |
+| ------------------------------- | ------------------------------------------------ |
+| **View的获取坐标的方法：**      |                                                  |
+| getTop()                        | 获取View自身的定边到其父布局顶边的距离。         |
+| getLeft()                       | 获取View自身的左边到父布局左边的距离。           |
+| getRight()                      | 获取View自身的右边到父布局左边的距离。           |
+| getBottom()                     | 获取View自身的底边到父布局顶边的距离。           |
+| **MotionEvent获取坐标的方法：** |                                                  |
+| getX()                          | 获取点击事件距离控件左边的距离，即视图坐标。     |
+| getY()                          | 获取点击事件距离控件顶边的距离，即视图坐标。     |
+| getRawX()                       | 获取点击事件距离整个屏幕左边的距离，即绝对坐标。 |
+| getRawY()                       | 获取点击事件距离屏幕顶边的距离，即绝对坐标。     |
+
+视图的宽度和高度，可以使用如下方式计算：
+
+- width = getRight – getLeft
+- height = getBottom – getTop
+
+
+
+##### 4、自定义 View 流程
+
+![img](https://img-blog.csdnimg.cn/img_convert/3f3504af3d6d3cd6f300f84f3a9aeee8.png)
+
+- 自定义属性
+
+- 重写构造函数
+
+  - 解析获取自定义属性
+  - 初始化画笔
+
+- onMeasure
+
+  - ViewGroup--->child.measure()
+  - View--->setMeasuredDimension()
+
+- onLayout
+
+  ViewGroup--->child.layout，View 不操作
+
+- onDraw
+
+  - ViewGroup--->dispatchDraw()
+  - View--->canvas 绘制
+
+- dispatchTouchEvent、onTouchEvent() 处理事件
+
+  当事件触发时，则要重新布局，改变其位置。
+
+- 数据更新
+
+  数据更新以后，UI也要重新布局，而View则需要重新绘制。
+
+
+
+重点有以下几个：
+
+- 控件属性的定义、设置和使用
+- 交互处理：事件交互和处理属于重中之重，常常要和事件分发结合在一起研究。
+- Canvas和Paint：在进行自定义View开发时，往往会通过画布自己使用画笔进行绘制，这就要求要对Paint、Path、Canvas要做着重的掌握。
+
+
+
+#### 二、setVisibility() 源码
+
+总结：
+
+- setVisibility=View.VISIBLE
+
+  invalidate自己，parent，child
+
+- setVisibility=View.INVISIBLE
+
+  改变标记位 PFLAG_DRAWN，以便下次 invalidate() 
+
+- setVisibility=View.GONE
+
+  requestLayout，invalidate parent，然后设置 PFLAG_DRAWN 以便下次 invalidate
+
+
+
+- invisible
+
+  view设置为invisible时，view在layout布局文件中会占用位置，但是view为不可见，该view还是会创建对象，会被初始化，会占用资源。
+
+- gone
+
+  view设置gone时，view在layout布局文件中不占用位置，但是该view还是会创建对象，会被初始化，会占用资源。
