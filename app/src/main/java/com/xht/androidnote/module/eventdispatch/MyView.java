@@ -83,7 +83,7 @@ public class MyView extends View {
         }
         boolean result = super.onTouchEvent(event);
 //        result = false;
-//        result = true;
+        result = true;
         L.i("View---onTouchEvent()---result=" + result);
         return result;
     }

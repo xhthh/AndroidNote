@@ -51,7 +51,7 @@ public class MyViewGroup extends RelativeLayout {
         }
 
         boolean result = super.dispatchTouchEvent(ev);
-        L.i("ViewGrouup---dispatchTouchEvent()---result=" + result);
+//        L.i("ViewGrouup---dispatchTouchEvent()---result=" + result);
         return result;
 //                return true;//ViewGroup会接收后续事件
 //                return false;//ViewGroup只能接收DWON事件
@@ -62,8 +62,8 @@ public class MyViewGroup extends RelativeLayout {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 L.i("ViewGroup---onInterceptTouchEvent()---DOWN");
-                return true;
-//                break;
+//                return true;
+                break;
             case MotionEvent.ACTION_MOVE:
                 L.i("ViewGroup---onInterceptTouchEvent()---MOVE");
                 break;
@@ -78,7 +78,7 @@ public class MyViewGroup extends RelativeLayout {
                 break;
         }
         boolean result = super.onInterceptTouchEvent(ev);
-        L.i("ViewGrouup---onInterceptTouchEvent()---result=" + result);
+//        L.i("ViewGrouup---onInterceptTouchEvent()---result=" + result);
 
         return result;
     }
@@ -159,7 +159,7 @@ public class MyViewGroup extends RelativeLayout {
                 break;
         }
         boolean result = super.onTouchEvent(event);
-        L.i("ViewGrouup---onTouchEvent()---result=" + result);
+//        L.i("ViewGrouup---onTouchEvent()---result=" + result);
 
         return result;
     }

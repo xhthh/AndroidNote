@@ -76,6 +76,16 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        int height = scrollView.getHeight();
+        int measuredHeight = scrollView.getMeasuredHeight();
+
+        Log.i("xht", "height=" + height + "  measuredHeight=" + measuredHeight);
+        Log.i("xht", "height2=" + llContent.getHeight() + "  measuredHeight2=" + llContent.getMeasuredHeight());
+    }
+
+    @Override
     protected void initEventAndData() {
 
         /*
@@ -93,7 +103,7 @@ public class MainActivity extends BaseActivity {
                 int measuredHeight = scrollView.getMeasuredHeight();
 
                 Log.i("xht", "height=" + height + "  measuredHeight=" + measuredHeight);
-                Log.i("xht", "height2=" + llContent.getHeight() + "  measuredHeight1=" + llContent.getMeasuredHeight());
+                Log.i("xht", "height2=" + llContent.getHeight() + "  measuredHeight2=" + llContent.getMeasuredHeight());
             }
         });
 
