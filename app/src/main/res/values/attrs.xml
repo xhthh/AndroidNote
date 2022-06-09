@@ -2,7 +2,6 @@
 <resources>
 
 
-
     <!--pickerView-->
     <declare-styleable name="pickerview">
         <attr name="pickerview_gravity">
@@ -18,7 +17,13 @@
     </declare-styleable>
 
 
+    <attr name="enable" format="boolean" />
 
-    <attr name="enable" format="boolean"/>
+    <declare-styleable name="FlowLayout">
+        <!--横纵向的间距-->
+        <attr name="h_space" format="dimension" />
+        <attr name="v_space" format="dimension" />
+        <attr name="maxlines" format="integer" />
+    </declare-styleable>
 
 </resources>

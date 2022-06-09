@@ -24,6 +24,13 @@
         android:text="CoordinatorLayout"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btn_flowlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="流式布局FlowLayout"
+        android:textAllCaps="false" />
+
     <com.xht.androidnote.module.customview.MyViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

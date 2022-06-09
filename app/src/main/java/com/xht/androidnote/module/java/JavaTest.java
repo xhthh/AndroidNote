@@ -36,6 +36,8 @@ public class JavaTest {
         /**
          * Integer.Java 类，有一个内部私有类，IntegerCache.java，它缓存了从-128到127之间的所有的整数对象。
          */
+
+        System.out.println(1<<30);
     }
 
 }

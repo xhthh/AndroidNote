@@ -187,6 +187,7 @@
         <activity android:name=".module.adaptation.AndroidAdaptationActivity" />
         <activity android:name=".module.inflate.Factory2TestActivity" />
         <activity android:name=".module.kotlin.screenshot.ScreenShotActivity" />
+        <activity android:name=".module.customview.FlowLayoutActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
