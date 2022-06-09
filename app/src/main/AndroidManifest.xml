@@ -27,9 +27,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:name=".base.TestActivity"
-            android:exported="false" />
         <activity android:name=".module.dsa.manhuasuanfa.DsaActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
