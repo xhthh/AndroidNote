@@ -187,7 +187,7 @@ https://github.com/lzyzsd/JsBridge
 
 ![img](https://upload-images.jianshu.io/upload_images/6456061-3d41d9295cac7c00.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 
-##### 5、Web 发送 URL 请求的方法
+##### 4、Web 发送 URL 请求的方法
 
 - a标签
 
@@ -205,7 +205,83 @@ https://github.com/lzyzsd/JsBridge
 
   Android 没有相应的拦截方法
 
+##### 5、Java 代码调 JS
 
+![img](https://upload-images.jianshu.io/upload_images/3881353-011e5c02531b69e8.png?imageMogr2/auto-orient/strip|imageView2/2/w/794/format/webp)
+
+- callHandler(String handlerName, String data, CallBackFunction callBack)
+
+  - 方法名
+  - 一般为和服务器约定的gson对象
+  - 回调函数
+
+- doSend()
+
+  - 组装 message 对象
+  - 将回调函数保存在 responseCallbacks 中
+
+- queueMessage()
+
+  将消息加入消息队列，如果队列为空，则直接分发运行
+
+  > startupMessage队列主要是用来在JsBridge的js库注入之前，保存Java调用JS的消息，避免消息的丢失或失效。待页面加载完成后，后续CallHandler的调用，可直接使用loadUrl方法而不需入队。究其根本，是因为Js代码库必须在onPageFinished（页面加载完成）中才能注入导致的。
+  >
+  > **必须在主线程中调用CallHandler方法**。
+
+- dispatchMessage()
+
+  - 将 message 对象转为 JS 语句
+  - 通过loadUrl执行JS代码，触发lib库中的_handleMessageFromNative方法（即 assets 中的 js 文件）
+
+- _handleMessageFromNative() 
+
+- _dispatchMessageFromNative()
+
+  - js 文件中有个 messageHandlers，用来保存 js 代码端注册的方法，可以根据 handlerName 方法名查找；
+  - 调用 js 相应方法，处理回调
+
+##### 6、JS 代码调 Java
+
+![img](https://upload-images.jianshu.io/upload_images/3881353-f7e52c151ade2032.png?imageMogr2/auto-orient/strip|imageView2/2/w/901/format/webp)
+
+> 实现原理：利用js的iFrame（不显示）的src动态变化，触发java层WebViewClient的shouldOverrideUrlLoading方法，然后让本地去调用javasript。
+>  JS代码执行完成后，最终调用_doSend方法处理回调。
+
+- callHandler(handlerName, data, responseCallback)
+
+- WebViewJavascriptBridge.js#_doSend()
+
+  该方法中修改一个不可见的 iframe 的 src 用于触发  Android 端的 shouldOverrideUrlLoading()
+
+- BridgeWebViewClient#shouldOverrideUrlLoading()
+
+  - iFrame变更后，java部分触发shouldOverrideUrlLoading方法；
+  - 根据scheme不同，进入webview的flushMessageQueue方法，该方法最终调用JS的_fetchQueue方法。
+  - BridgeWebview#flushMessageQueue() 中在主线程中调用了 loadUrl(url, returnCallback)，将回调保存到 responseCallbacks 这个 Map 中；
+
+- _fetchQueue()
+
+  获取sendMessageQueue返回给native,由于android不能直接获取返回的内容,所以使用url shouldOverrideUrlLoading 的方式返回内容；
+
+- BridgeWebViewClient#shouldOverrideUrlLoading()
+
+  拦截 url，scheme 为 “yy://return“
+
+- BridgeWebView#handlerReturnData(url)
+
+  - 从 url 中获取方法名，根据方法名从 responseCallbacks 里获取对应的 callbackFunction 回调；
+  - 从 url 中获取 js 传来的 data，作为参数执行其回调 onCallback(data)，即 flushMessageQueue() 中 loadUrl() 参数中的 onCallBack()；
+
+- 回到 BridgeWebView#flushMessageQueue() 中
+
+  1. 将 js 传来的数据解析为 Message 集合，遍历；
+  2. 根据 js 传递的 callbackId，构建一个 responseFunction 回调；
+  3. 通过 handlerName 即方法名，获取到对应的 handler 调用其 handler() 方法，将 data 和 responseFunction 回调传过去，最终执行到 Android 端注册本地方法的回调；
+  4. 注册本地方法的回调中，我们进行原生方法的执行，并将 js 需要的回调数据通过 responseFunction 返回；
+  5. 这里返回到的地方即 步骤2 中构建的 responseFunction 的 onCallback() 回调中，这里我们构建 responseMsg，设置 js 传给我们的 callbackId，将要返回的数据设置进去，通过 queueMessage(responseMsg) 
+  6. queueMessage(responseMsg) 即是通过Android 调 Js，即 loadUrl() 最终将数据返回给 JS；
+
+  
 
 
 
