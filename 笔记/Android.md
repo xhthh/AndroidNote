@@ -1869,3 +1869,88 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
 - gone
 
   view设置gone时，view在layout布局文件中不占用位置，但是该view还是会创建对象，会被初始化，会占用资源。
+
+
+
+#### 三、Activity 启动流程，关键点
+
+- **Activity#startActivity(intent)**
+
+  - startActivityForResult() ---> Instrumentation#execStartActivity()
+  - 传入参数 mMainThread.getApplicationThread()，这是 ActivityThread 内部类 ApplicationThread 对象，其继承自 IApplicationThread.Stub，是个Binder对象；
+  - Instrumentation具有跟踪application及activity生命周期的功能，用于android 应用测试框架中代码检测。
+
+- **Instrumentation#execStartActivity()**
+
+  - 这里 Activity 的启动又交给了 ActivityTaskManager.getService()，它是获取一个跨进程服务，ActivityTaskManagerService（ATMS）；
+
+  - 它继承于IActivityTaskManager.Stub，是个Binder对象，并且是通过单例提供服务的。 ATMS是用于**管理Activity及其容器**（任务、堆栈、显示等）的系统服务，运行在系统服务进程（system_server）之中。
+
+    > **ATMS是在Android10中新增的，分担了之前ActivityManagerService（AMS）的一部分功能（activity task相关）。 在Android10 之前 ，这个地方获取的是服务是AMS。理解上，ATMS就隶属于AMS。**
+
+  - ActivityTaskManager.getService().startActivity() 有个返回值 result，且调用了checkStartActivityResult(result, intent)
+
+    这是用来检查Activity启动的结果，如果发生致命错误，就会抛出对应的异常。看到第一个case中就抛出了 have you declared this activity in your AndroidManifest.xml?——如果Activity没在Manifest中注册就会有这个错误。
+
+- **ActivityTaskManagerService#startActivity()**
+
+  - 通过 getActivityStartController().obtainStarter() 方法获取 ActivityStarter 实例 然后调用一系列方法，最后的execute()方法是开始启动 activity；
+  - executeRequest(mRequest)
+  - startActivityUnchecked()
+  - startActivityInner()
+  - ActivityStack#startActivityLocked()
+  - 根据变量 mDoResume，决定是否调用 RootWindowContainer.resumeFocusedStacksTopActivities() 将其置于栈顶显示处于活动状态
+
+  > **ActivityStack**：`Activity`在`AMS`的栈管理类，`activity`的单个堆栈的状态和管理在这个类里。
+
+- **RootWindowContainer#resumeFocusedStacksTopActivities()**
+
+  > 在API29中这个方法位于`RootActivityContainer`类中。
+
+- **ActivityStack#resumeTopActivityUncheckedLocked()**
+
+  - resumeTopActivityInnerLocked()
+
+  > ActivityStackSupervisor：负责所有Activity栈的管理。内部管理了mRunningTasks和mRecentTasks两个Activity栈。其中，mRunningTasks是Helper类抽象出用于获取当前运行的任务集的逻辑；mRecentTasks管理的是最近任务的历史列表，包括非活动任务。]
+
+- **ActivityStack#resumeTopActivityInnerLocked()**
+
+  - **startPausingLocked() 执行上一个 Activity 的 onPause()**
+
+    - mAtmService.getLifecycleManager().scheduleTransaction()
+    - `mAtmService`即是`ActivityTaskManagerService`，`mAtmService.getLifecycleManager()`返回的是`ClientLifecycleManager`的实例。
+    - **ClientLifecycleManager**：该类能够组合多个生命周期转换请求和/或回调，并将它们作为单个事务执行。
+
+  - 启动了的Activity就发送ResumeActivityItem事务给客户端了
+
+  - **next.showStartingWindow(null , false ,false)，这里就是 冷启动时 出现白屏 的原因了：取根activity的主题背景 展示StartingWindow**
+
+  - mStackSupervisor.startSpecificActivity(next, true, true);
+
+    普通activity的正常启动
+
+- **ActivityStackSupervisor.startSpecificActivity()**
+
+  判断应用是否启动了，如果是，就启动 Activity，没有就启动进程
+
+  ```java
+  void startSpecificActivity(ActivityRecord r, boolean andResume, boolean checkConfig) {
+      if (wpc != null && wpc.hasThread()) {
+          realStartActivityLocked(r, wpc, andResume, checkConfig);
+      }
+      mService.startProcessAsync()
+      //ActivityTaskManagerService
+  }
+  ```
+
+  
+
+- s
+
+- s
+
+- s
+
+  
+
+  

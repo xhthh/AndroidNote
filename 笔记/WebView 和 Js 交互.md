@@ -291,6 +291,9 @@ https://github.com/lzyzsd/JsBridge
 
 1. **不在xml 中定义 WebView，而是在需要的时候在 Activity 中创建，并且 Context 使用 getApplicationContext()。** 
 2. **在 Activity 销毁（WebView）的时候，先让 WebView 加载 null 内容，然后移除 WebView，再销毁 WebView，最后置空。**
+3. 动态添加webview，通过布局的viewgroup，使用viewgroup.add方式添加webview，销毁的时候先通过viewgroup.removeView(webview)删除webview，然后webview.destroy；另外传入webview的Context采用弱引用的方式。
+
+> 内存泄漏的主要原因是引用了 Activity/Fragment 的 Context，导致 Activity/Fragment 无法被释放。
 
 
 
