@@ -1874,6 +1874,8 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
 
 #### 三、Activity 启动流程，关键点
 
+##### 1、Activity 启动发起
+
 - **Activity#startActivity(intent)**
 
   - startActivityForResult() ---> Instrumentation#execStartActivity()
@@ -1891,6 +1893,8 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
   - ActivityTaskManager.getService().startActivity() 有个返回值 result，且调用了checkStartActivityResult(result, intent)
 
     这是用来检查Activity启动的结果，如果发生致命错误，就会抛出对应的异常。看到第一个case中就抛出了 have you declared this activity in your AndroidManifest.xml?——如果Activity没在Manifest中注册就会有这个错误。
+
+##### 2、Activity  的管理，ATMS
 
 - **ActivityTaskManagerService#startActivity()**
 
@@ -1931,7 +1935,7 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
 
 - **ActivityStackSupervisor.startSpecificActivity()**
 
-  判断应用是否启动了，如果是，就启动 Activity，没有就启动进程
+  判断应用是否启动了，如果是，就启动 Activity，没有就创建应用进程
 
   ```java
   void startSpecificActivity(ActivityRecord r, boolean andResume, boolean checkConfig) {
@@ -1943,14 +1947,411 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
   }
   ```
 
+- **realStartActivityLocked**()
+
+  ```java
+  boolean realStartActivityLocked() {
+      // Create activity launch transaction.
+      final ClientTransaction clientTransaction = ClientTransaction.obtain(
+          	proc.getThread(), r.appToken);
+      clientTransaction.addCallback(LaunchActivityItem.obtain(new Intent(r.intent),...);
+      // Set desired final state.
+      clientTransaction.setLifecycleStateRequest(lifecycleItem);
+      // Schedule transaction.
+      mService.getLifecycleManager().scheduleTransaction(clientTransaction);
+  }
+  ```
+
+  - 通过 ClientTransaction.obtain( proc.getThread(), r.appToken)获取了clientTransaction，其中参数proc.getThread()是IApplicationThread，就是前面提到的ApplicationThread在系统进程的代理。
+
+  - **ClientTransaction** 是包含一系列的待客户端处理的事务的容器，客户端接收后取出事务并执行。包括一个回调列表和一个最终的生命周期状态。
+
+  - **ActivityLifecycleItem**：用以请求Activity应该到达的生命周期状态。继承自ClientTransctionItem，主要的子类有DestoryActivityItem、PauseActivityItem、StopActivityItem、ResumeActivityItem等。
+
+    LaunchActivityItem 是用来启动 Activity 的。
+
+  - mService.getLifecycleManager().scheduleTransaction(clientTransaction)
+
+- **ClientLifecycleManager#scheduleTransaction()**
+
+  - 执行的是参数 ClientTransaction 对象的 schedule()
+  - **ClientTransaction#schedule()** 中 调用 **mClient.scheduleTransaction(this)**，mClient 即通过 ClientTransaction.obtain(proc.getThread, r.appToken) 构建 ClientTransaction 时传入的 IApplicationThread；
+  - 由于 IApplicationThread 是 **ApplicationThread** 在系统进程的代理，所以真正执行的地方就是 客户端的ApplicationThread 中了。也就是说，**Activity启动的操作又跨进程的还给了客户端**。
+
+- 启动Activity的操作从客户端 跨进程 转移到 ATMS，ATMS 通过 ActivityStarter、ActivityStack、ActivityStackSupervisor 对 Activity 任务、activity 栈、Activity 记录 管理后，又用过跨进程把正在启动过程又转移到了客户端。
+
+##### 3、线程切换及消息处理
+
+- ApplicationThread#scheduleTransaction()
+
+  - 执行 ActivityThread.this.scheduleTransaction(transaction);
+
+  - 由于 ActivityThread 继承自 ClientTransactionHandler，scheduleTransaction() 方法是调用其父类的；
+
+    ```java
+    void scheduleTransaction(ClientTransaction transaction) {
+        transaction.preExecute(this);
+        sendMessage(ActivityThread.H.EXECUTE_TRANSACTION, transaction);
+    }
+    ```
+
+  > 这里通过 ActivityThread 中的自定义 Handler 把消息发送到主线程；
+  >
+  > 那么是从哪个线程发送的呢？那就要看看ApplicationThread的scheduleTransaction方法是执行在哪个线程了。根据[IPC](https://link.juejin.cn?target=https%3A%2F%2Fblog.csdn.net%2Fhfy8971613%2Farticle%2Fdetails%2F79688664)知识，我们知道，服务器的Binder方法运行在Binder的线程池中，也就是说系统进行跨进程调用ApplicationThread的scheduleTransaction就是执行在Binder的线程池中的了。
+
+- ActivityThread#H#handleMessage()
+
+  ```java
+  final ClientTransaction transaction = (ClientTransaction) msg.obj;
+  mTransactionExecutor.execute(transaction);
+  ```
+
+- **TransactionExecutor#execute()**
+
+  ```java
+  public void execute(ClientTransaction transaction) {
+      if (DEBUG_RESOLVER) Slog.d(TAG, tId(transaction) + "Start resolving transaction");
+      final IBinder token = transaction.getActivityToken();
+      //...
+      executeCallbacks(transaction);
+      executeLifecycleState(transaction);
+      //...
+  }
+  ```
+
+- **executeCallbacks(transaction)**
+
+  遍历callbacks，调用ClientTransactionItem的execute方法
+
+- **LaunchActivityItem#execute()**
+
+  ```java
+  public void execute(ClientTransactionHandler client, IBinder token,
+          PendingTransactionActions pendingActions) {
+      ActivityClientRecord r = new ActivityClientRecord(token, mIntent, ...);
+      client.handleLaunchActivity(r, pendingActions, null /* customIntent */);
+      Trace.traceEnd(TRACE_TAG_ACTIVITY_MANAGER);
+  }
+  ```
+
+  - 里面调用了 client.handleLaunchActivity 方法，client 是 ClientTransactionHandler的实例，是在TransactionExecutor 构造方法传入的，TransactionExecutor 创建是在 ActivityThread 中， 传入的是 ActivityThread 本身 this，
+  - 所以，client.handleLaunchActivity 方法就是 ActivityThread 的 handleLaunchActivity() 方法。
+
+- 到这里 **ApplicationThread 把启动 Activity 的操作，通过 mH 切到了主线程，走到了 ActivityThread 的 handleLaunchActivity() 方法**。
+
+##### 3、Activity启动核心实现——初始化及生命周期
+
+- **ActivityThread#handleLaunchActivity()**
+
+- **ActivityThread#performLaunchActivity()**
+
+  ```java
+/**  activity 启动的核心实现. */
+  private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+      //1、从ActivityClientRecord获取待启动的Activity的组件信息
+      ActivityInfo aInfo = r.activityInfo;
+      ComponentName component = r.intent.getComponent();
+      //创建ContextImpl对象
+      ContextImpl appContext = createBaseContextForActivity(r);
+      //2、反射创建activity实例
+      Activity activity = null;
+      try {
+          java.lang.ClassLoader cl = appContext.getClassLoader();
+          activity = mInstrumentation.newActivity(
+              	cl, component.getClassName(), r.intent);
+      }
+      try {
+          //3、创建Application对象（如果没有的话）
+          Application app = r.packageInfo.makeApplication(false, mInstrumentation);
+          if (activity != null) {
+              appContext.setOuterContext(activity);
+              //4、attach方法为activity关联上下文环境
+              activity.attach(appContext, this, getInstrumentation(),...);
+              //5、调用生命周期onCreate
+              if (r.isPersistable()) {
+                  mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);
+              } else {
+                  mInstrumentation.callActivityOnCreate(activity, r.state);
+              }
+          }
+      }
+  }
+  ```
   
-
-- s
-
-- s
-
-- s
-
+  performLaunchActivity主要完成以下事情：
   
-
+  1. 从ActivityClientRecord获取待启动的Activity的组件信息
+  2. 通过mInstrumentation.newActivity方法使用类加载器创建activity实例
+  3. 通过LoadedApk的makeApplication方法创建Application对象，内部也是通过mInstrumentation使用类加载器，创建后就调用了instrumentation.callApplicationOnCreate方法，也就是Application的onCreate方法。
+  4. 创建ContextImpl对象并通过activity.attach方法对重要数据初始化，关联了Context的具体实现ContextImpl，attach方法内部还完成了window创建，这样Window接收到外部事件后就能传递给Activity了。
+  5. 调用Activity的onCreate方法，是通过 mInstrumentation.callActivityOnCreate方法完成。
   
+  **到这里Activity的onCreate方法执行完，那么onStart、onResume呢？**
+  
+  - LaunchActivityItem 远程App端的onCreate生命周期事务
+  - ResumeActivityItem 远程App端的onResume生命周期事务
+  - PauseActivityItem 远程App端的onPause生命周期事务
+  - StopActivityItem 远程App端的onStop生命周期事务
+  - DestroyActivityItem 远程App端onDestroy生命周期事务
+  - ClientTransaction 客户端事务控制者
+  - ClientLifecycleManager 客户端的生命周期事务控制者
+  - TransactionExecutor 远程通信事务执行者
+  
+- 回到 ActivityStackSupervisor#realStartActivityLocked()
+
+  - 通过 clientTransaction.addCallback() 添加 LaunchActivityItem 实例；
+
+  - 接着调用了 clientTransaction.setLifecycleStateRequest(lifecycleItem) 方法，lifecycleItem 是 ResumeActivityItem 或PauseActivityItem 实例；
+  
+  - 通过 clientTransaction.setLifecycleStateRequest(lifecycleItem); 进行设置；
+  
+    mLifecycleStateRequest 表示执行 transaction 后的最终的生命周期状态。
+  
+    ```java
+    /**
+     * Final lifecycle state in which the client activity should be after the transaction is executed.
+     */
+    private ActivityLifecycleItem mLifecycleStateRequest;
+    public void setLifecycleStateRequest(ActivityLifecycleItem stateRequest) {
+        mLifecycleStateRequest = stateRequest;
+    }
+    ```
+  
+- 继续 mService.getLifecycleManager().scheduleTransaction(clientTransaction) 流程；
+
+  一路追踪回到 TransactionExecutor#execute()，之前看的是 executeCallbacks(transaction)，现在看 executeLifecycleState(transaction)
+
+- **TransactionExecutor#executeLifecycleState()**
+
+  这里取出了 ActivityLifecycleItem 并且调用了它的 execute 方法，实际就是 ResumeActivityItem 的方法。
+
+  ```java
+  @Override
+  public void execute(ClientTransactionHandler client, IBinder token,
+          PendingTransactionActions pendingActions) {
+      Trace.traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "activityResume");
+      client.handleResumeActivity(token, true /* finalStateRequest */, mIsForward,
+              "RESUME_ACTIVITY");
+      Trace.traceEnd(TRACE_TAG_ACTIVITY_MANAGER);
+  }
+  ```
+  
+- **进入 ActivityThread#handleResumeActivity()**
+
+  handleResumeActivity() 主要做了以下事情：
+
+  1. 调用生命周期：通过 performResumeActivity() 方法，内部调用生命周期 onStart、onResume 方法
+  2. 设置视图可见：通过 activity.makeVisible() 方法，添加 [window](https://link.juejin.cn?target=https%3A%2F%2Fblog.csdn.net%2Fhfy8971613%2Farticle%2Fdetails%2F103241153)、设置可见。（所以视图的真正可见是在onResume方法之后）
+  
+- **performResumeActivity()**
+
+  - 调用 r.activity.performResume(r.startsNotResumed, reason);
+
+  - 进入 Activity#performResume()
+  
+    ```java
+    final void performResume(boolean followedByPause, String reason) {
+        performRestart(true /* start */, reason);
+        // mResumed is set by the instrumentation
+        mInstrumentation.callActivityOnResume(this);
+        //这里是走fragment的onResume
+        mFragments.dispatchResume();
+        mFragments.execPendingActions();
+    }
+    ```
+  
+    - performStart() 内部调用了 mInstrumentation.callActivityOnStart(this)，也就是 **Activity 的 onStart()** 方法了。
+    - 然后是 mInstrumentation.callActivityOnResume，也就是 **Activity 的 onResume()** 方法了。到这里启动后的生命周期走完了。
+  
+- **设置视图可见，即activity.makeVisible()方法**
+
+  ```java
+//Activity
+  void makeVisible() {
+      if (!mWindowAdded) {
+          ViewManager wm = getWindowManager();
+          wm.addView(mDecor, getWindow().getAttributes());
+          mWindowAdded = true;
+      }
+      mDecor.setVisibility(View.VISIBLE);
+  }
+  ```
+  
+  - 这里把 activity 的顶级布局 mDecor 通过 windowManager.addView() 方法，把视图添加到[window](https://link.juejin.cn/?target=https%3A%2F%2Fblog.csdn.net%2Fhfy8971613%2Farticle%2Fdetails%2F103241153)，并设置 mDecor可见。到这里视图是真正可见了。值得注意的是，视图的真正可见是在 onResume 方法之后的。
+  - 另外一点，Activity 视图渲染到 Window 后，会设置 window 焦点变化，先走到 DecorView 的 onWindowFocusChanged() 方法，最后是到 Activity 的 onWindowFocusChanged() 方法，表示首帧绘制完成，此时Activity可交互。
+
+![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/12/17343b491419f3e9~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
+
+**涉及的类梳理如下：**
+
+| 类名                                   | 作用                                                         |
+| -------------------------------------- | ------------------------------------------------------------ |
+| ActivityThread                         | 应用的入口类，系统通过调用main函数，开启消息循环队列。ActivityThread所在线程被称为应用的主线程（UI线程） |
+| ApplicationThread                      | 是ActivityThread的内部类，继承IApplicationThread.Stub，是一个IBinder，是ActiivtyThread和AMS通信的桥梁，AMS则通过代理调用此App进程的本地方法，运行在Binder线程池 |
+| H                                      | 继承Handler，在ActivityThread中初始化，即主线程Handler，用于主线程所有消息的处理。本片中主要用于把消息从Binder线程池切换到主线程 |
+| Intrumentation                         | 具有跟踪application及activity生命周期的功能，用于监控app和系统的交互 |
+| ActivityManagerService                 | Android中最核心的服务之一，负责系统中四大组件的启动、切换、调度及应用进程的管理和调度等工作，其职责与操作系统中的进程管理和调度模块相类似，因此它在Android中非常重要，它本身也是一个Binder的实现类。 |
+| ActivityTaskManagerService             | 管理activity及其容器（task, stacks, displays）的系统服务（Android10中新增，分担了AMS的部分职责） |
+| ActivityStarter                        | 用于解释如何启动活动。该类收集所有逻辑，用于确定Intent和flag应如何转换为活动以及相关的任务和堆栈 |
+| ActivityStack                          | 用来管理系统所有的Activity，内部维护了Activity的所有状态和Activity相关的列表等数据 |
+| ActivityStackSupervisor                | 负责所有Activity栈的管理。AMS的stack管理主要有三个类，ActivityStackSupervisor，ActivityStack和TaskRecord |
+| ClientLifecycleManager                 | 客户端生命周期执行请求管理                                   |
+| ClientTransaction                      | 是包含一系列的 待客户端处理的事务 的容器，客户端接收后取出事务并执行 |
+| LaunchActivityItem、ResumeActivityItem | 继承ClientTransactionItem，客户端要执行的事务信息，启动activity |
+
+以上就是一个 **普通Activity** 启动的完整流程。
+
+##### 4、根 Activity 的启动
+
+我们知道，想要启动一个应用程序（App），需要点击手机桌面的应用图标。Android系统的桌面叫做**Launcher**，有以下作用：
+
+- 作为Android系统的启动器，用于启动应用程序。
+- 作为Android系统的桌面，用于显示和管理应用程序的快捷图标和其他桌面组件。
+
+Launcher本身也是一个应用程序，它在启动过程中会请求PackageManageService（系统的包管理服务）返回系统中已经安装的app的信息，并将其用快捷图标展示在桌面屏幕上，用户可以点击图标启动app。
+
+
+
+###### 4.1 应用进程的创建
+
+- 当点击 app 图标后，Launcher 会在桌面 activity（此activity就叫[Launcher](https://link.juejin.cn?target=https%3A%2F%2Fgithub.com%2Famirzaidi%2FLauncher3%2Fblob%2Ff7951c32984036eef2f2130f21abded3ddf6160a%2Fsrc%2Fcom%2Fandroid%2Flauncher3%2FLauncher.java)）内调用 startActivitySafely() 方法，startActivitySafely() 方法会调用 startActivity() 方法。接下来的部分就和上面分析的 Activity 启动的发起 过程一致了，即通过 IPC 走到了 ATMS，直到 ActivityStackSupervisor 的 startSpecificActivityLocked() 方法中对应用进程是否存在的判断。
+
+  > 应用进程存在的判断条件是：wpc != null && wpc.hasThread()，这里判断 **IApplicationThread不为空 就代表进程已存在**，为啥这么判断呢？这里先猜测，进程创建后，一定会有给IApplicationThread赋值的操作。
+
+- 创建进程是通过 ActivityTaskManagerService 的mH（继承handler）发送了一个消息，消息中第一个参数是ActivityManagerInternal::startProcess，ActivityManagerInternal 的实现是 AMS 的内部类 LocalService，LocalService 的 startProcess() 方法调用了 AMS 的 startProcessLocked() 方法。
+
+- AMS#startProcessLocked() 方法一路向下，最终调用了 **Process.start()** 来创建进程；
+
+- Process.start()
+
+  - 调用了 ZYGOTE_PROCESS.start()
+  - ZYGOTE_PROCESS 是用于保持与 Zygote 进程的通信状态，发送 socket 请求与 Zygote 进程通信。**Zygote 进程**是**进程孵化器**，用于创建进程。
+    - Zygote 通过 fork 创建了一个进程
+    - 在新建的进程中创建 Binder 线程池（此进程就支持了 Binder IPC）
+    - 最终是通过反射获取到了 ActivityThread 类并执行了 main 方法
+
+###### 4.2 根 Activity 的启动
+
+- Zygote 进程 fork 出一个子进程后，通过反射最终调用到了 ActivityThread#main()；
+
+  ```java
+  public static void main(String[] args) {
+      Looper.prepareMainLooper();
+      ActivityThread thread = new ActivityThread();
+      thread.attach(false, startSeq);
+      Looper.loop();
+  }
+  ```
+
+- 创建 ActivityThread 实例，调用 attach() 方法
+
+  ```java
+  private void attach(boolean system, long startSeq) {
+      if (!system) {
+          final IActivityManager mgr = ActivityManager.getService();
+          try {
+              //把ApplicationThread实例关联到AMS中
+              mgr.attachApplication(mAppThread, startSeq);
+          } catch (RemoteException ex) {
+              throw ex.rethrowFromSystemServer();
+          }
+      }
+  }
+  ```
+
+  > mgr 就是 AMS 在客户端的代理，所以 mgr 的 attachApplication 方法，就是 IPC 的走到 AMS 的attachApplication() 方法。
+
+- AMS#attachApplication()
+
+  调用 attachApplicationLocked()
+
+- AMS#attachApplicationLocked()
+
+  ```java
+  private boolean attachApplicationLocked(@NonNull IApplicationThread thread,
+          int pid, int callingUid, long startSeq) {
+      //1、IPC操作，创建绑定Application
+      thread.bindApplication(processName, appInfo, providerList, ...);
+      //2、赋值IApplicationThread
+      app.makeActive(thread, mProcessStats);
+      // See if the top visible activity is waiting to run in this process...
+      if (normalMode) {
+          try {
+              //3、通过ATMS启动 根activity
+              didSomething = mAtmInternal.attachApplication(...);
+          } catch (Exception e) {
+              Slog.wtf(TAG, "Exception thrown launching activities in " + app, e);
+              badApp = true;
+          }
+      }
+  }
+  ```
+
+  AMS的attachApplicationLocked方法主要三件事：
+
+  - 调用IApplicationThread的bindApplication方法，IPC操作，创建绑定Application；
+  - 通过makeActive方法赋值IApplicationThread，即验证了上面的猜测（创建进程后赋值）；
+  - 通过ATMS启动 **根activity**
+
+- **ProcessRecord#makeActive()**
+
+  ```java
+  public void makeActive(IApplicationThread _thread, ProcessStatsService tracker) {
+      //...
+      thread = _thread;
+      mWindowProcessController.setThread(thread);
+  }
+  ```
+
+  > 使用 mWindowProcessController.setThread(thread) 确实完成了 IApplicationThread 的赋值。这样就可以依据 IApplicationThread 是否为空判断进程是否存在了。
+
+- **创建绑定 Application 的过程**
+
+  IApplicationThread 的 bindApplication 方法实现是客户端的 ApplicationThread 的 bindApplication 方法，它又使用 H 转移到了 ActivityThread 的 handleBindApplication 方法（从Binder线程池转移到主线程）
+
+  ```java
+  private void handleBindApplication(AppBindData data) {
+      final LoadedApk pi = getPackageInfo(instrApp, data.compatInfo,
+              appContext.getClassLoader(),...);
+      final ContextImpl instrContext = ContextImpl.createAppContext(this, pi,
+              appContext.getOpPackageName());
+      try {
+          final ClassLoader cl = instrContext.getClassLoader();
+          //创建Instrumentation
+          mInstrumentation = (Instrumentation)
+              cl.loadClass(data.instrumentationName.getClassName()).newInstance();
+      }
+      try {
+          //创建Application
+          app = data.info.makeApplication(data.restrictedBackupMode, null);
+      }
+      try {
+          //内部调用Application的onCreate方法
+          mInstrumentation.callApplicationOnCreate(app);
+      }
+  }
+  ```
+
+  - 主要就是创建 Application，并且调用生命周期 onCreate 方法。你会发现在前面介绍的 ActivityThread 的 performLaunchActivity 方法中，也有同样的操作，只不过会先判断 Application 是否已存在。也就是说，**正常情况下 Application 的初始化是在 handleBindApplication 方法中的，并且是创建进程后调用的。performLaunchActivity 中只是做了一个检测，异常情况 Application 不存在时才会创建。**
+  - 创建 Application 后，内部会 attach() 方法，attach() 内部会调用 attachBaseContext() 方法，**attachBaseContext()** 方法是我们能接触到的一个方法，接着才是 onCreate() 方法。
+
+- 根activity 的启动，回到上面 AMS 的 attachApplicationLocked() 方法
+
+  - 调用了 mAtmInternal.attachApplication() 方法，mAtmInternal 是 ActivityTaskManagerInternal 实例，具体实现是在 ActivityTaskManagerService 的内部类 LocalService；
+  - 调用了 mRootWindowContainer.attachApplication(wpc)；
+
+- **RootWindowContainer#attachApplication()**
+
+  - 遍历 Activity 栈，此时理论上应该只有一个根 activity
+  - 然后调用 mStackSupervisor.realStartActivityLocked() 方法
+  - 通过 ClientTransaction 跨进程交给客户端处理，和上边普通 Activity 的启动一样
+
+- **根 activity 的启动前需要创建应用进程，然后走到 ActivityThread 的 main 方法，开启主线程循环，初始化并绑定 Application、赋值 IApplicationThread，最后真正的启动过程和普通 Activity 是一致的。**
+
+![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/7/12/17343b49162452f3~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
+
+##### 5、总结
+
+关于 普通Activity 启动的流程的讲解，我们分成了几个阶段：启动的发起、AMS的管理、线程切换、启动核心实现，知道了启动过程经历了两次IPC，客户端到AMS、AMS到客户端，以及Activity创建和生命周期的执行。 然后又在此基础上 补充的根activity的启动：先创建应用进程，再绑定Application，最后真正启动跟Activity。
+链接：https://juejin.cn/post/6847902222294990862
+
