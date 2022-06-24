@@ -1,13 +1,37 @@
 package com.xht.androidnote.summarize.test;
 
-import java.util.Arrays;
-
 public class ArrayTest {
     public static void main(String[] args) {
         int[] a = {1, 2, 3, 0, 0, 0};
         int[] b = {4, 5, 6};
-        merge2Array(a, 3, b, 3);
-        System.out.println(Arrays.toString(a));
+        //        merge2Array(a, 3, b, 3);
+        //        System.out.println(Arrays.toString(a));
+
+        int[] nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+        int maxSubArray = maxSubArray(nums);
+        System.out.println(maxSubArray);
+    }
+
+    /**
+     * 给你一个整数数组 nums ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
+     * 子数组 是数组中的一个连续部分。
+     * 假设sum<=0，那么后面的子序列肯定不包含目前的子序列，所以令sum = num；
+     * 如果sum > 0对于后面的子序列是有好处的。res = Math.max(res, sum)保证可以找到最大的子序和。
+     * @param nums
+     * @return
+     */
+    private static int maxSubArray(int[] nums) {
+        int res = nums[0];
+        int sum = 0;
+        for (int num : nums) {
+            if (sum > 0) {
+                sum += num;
+            } else {
+                sum = num;
+            }
+            res = Math.max(res, sum);
+        }
+        return res;
     }
 
     /**

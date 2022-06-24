@@ -4,6 +4,7 @@ import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -38,6 +39,9 @@ public class JavaTest {
          */
 
         System.out.println(1<<30);
+
+        HashMap<Integer, Integer> map = new HashMap<>();
+        map.size();
     }
 
 }

@@ -588,7 +588,9 @@ OkHttp 的连接管理管理分成两个步骤：
 
 
 
-##### 2、超时
+##### 2、超时时间
+
+https://blog.csdn.net/vistaup/article/details/120492458
 
 ```kotlin
 //OkHttpClient.kt

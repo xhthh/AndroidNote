@@ -932,6 +932,8 @@ protected void onResume() {
 
 ##### 13、ThreadLocal
 
+https://blog.csdn.net/weixin_39646018/article/details/113364069
+
 ThreadLocal 是一个线程内部的数据存储类，通过它可以在指定的线程中存储数据，数据存储以后，只有在指定线程中可以获取到存储的数据。
 
 Thread 类中有个成员变量 threadLocals
@@ -940,7 +942,7 @@ Thread 类中有个成员变量 threadLocals
 ThreadLocal.ThreadLocalMap threadLocals = null;
 ```
 
-ThreadLocal#set() 方法：
+###### 1、ThreadLocal#set() 方法：
 
 ```java
 public void set(T value) {
@@ -951,9 +953,118 @@ public void set(T value) {
     else
         createMap(t, value);
 }
+
+//ThreadLocalMap.java
+private void set(ThreadLocal<?> key, Object value) {
+	Entry[] tab = table;
+	int len = tab.length;
+	int i = key.threadLocalHashCode & (len-1);
+
+	for (Entry e = tab[i];
+		 e != null;
+		 e = tab[i = nextIndex(i, len)]) {
+		ThreadLocal<?> k = e.get();
+
+		if (k == key) {
+			e.value = value;
+			return;
+		}
+
+		if (k == null) {
+			replaceStaleEntry(key, value, i);
+			return;
+		}
+	}
+
+	tab[i] = new Entry(key, value);
+	int sz = ++size;
+	if (!cleanSomeSlots(i, sz) && sz >= threshold)
+		rehash();
+}
 ```
 
-ThreadLocalMap 结构是数组，用来保存 key-value 的组合 Entry。key 是 ThreadLocal，value 是要存入的值。
+- ThreadLocalMap 结构是数组，用来保存 key-value 的组合 Entry。key 是 ThreadLocal，value 是要存入的值。
+- Entry 数组，在 ThreadLocalMap 构造函数中初始化，初始长度为 16，扩容是扩大为原来的 2 倍；
+- Entry对象里面也是设计成key/value的形式解决hash冲突的。所以你可以想象成ThreadLocalMap是个数组，而存储在数组里面的各个对象是以key/value形式的Entry对象。
+- ThreadLocalMap#set(ThreadLocal<?> key, Object value)
+  - 数组位置计算方式和 HashMap 一样，int i = key.threadLocalHashCode & (len-1)；
+  - 再往下是个for循环，里面是寻找可插入的位置，
+    - 如果需要插入的key在数组中已存在，则直接把需要插入的value覆盖到数组中的vaule上；
+    - 如果 key 为空，则创建出Entry对象，放在该位置上；
+    - 如果上面两种情况都不满足，那就寻找下一个位置i，继续循环上面的两个判断，直到找到可以插入或者刷新的位置。
+
+###### 2、ThreadLocal#get()
+
+```java
+public T get() {
+    Thread t = Thread.currentThread();
+    ThreadLocalMap map = getMap(t);
+    if (map != null) {
+        ThreadLocalMap.Entry e = map.getEntry(this);
+        if (e != null) {
+            @SuppressWarnings("unchecked")
+            T result = (T)e.value;
+            return result;
+        }
+    }
+    return setInitialValue();
+}
+//ThreadLocalMap.java
+private Entry getEntry(ThreadLocal<?> key) {
+    int i = key.threadLocalHashCode & (table.length - 1);
+    Entry e = table[i];
+    if (e != null && e.get() == key)
+        return e;
+    else
+        return getEntryAfterMiss(key, i, e);
+}
+
+private Entry getEntryAfterMiss(ThreadLocal<?> key, int i, Entry e) {
+    Entry[] tab = table;
+    int len = tab.length;
+
+    while (e != null) {
+        ThreadLocal<?> k = e.get();
+        if (k == key)
+            return e;
+        if (k == null)
+            expungeStaleEntry(i);
+        else
+            i = nextIndex(i, len);
+        e = tab[i];
+    }
+    return null;
+}
+```
+
+- 先获取到当前线程t，随后通过getMap方法获取ThreadLocalMap对象，再通过getEntry获取到Enety对象；
+
+- 根据 hashCode 获取数组中的位置；
+
+- 如果该位置的Entry对象中的key跟当前的TreadLocal一致，则返回该Entry对象；否则继续执行getEntryAfterMiss方法；
+
+- getEntryAfterMiss() 开启循环查找
+
+  - 如果当前ThreadLocal跟数组下标i对应的Entry对象的key相等，则返回当前Entry对象；
+
+  - 如果数组下标I对应的Entry对象的key为空，则执行expungeStaleEntry(i)方法，从方法命名就知道，删除废弃的Entry对应，其实就是做了次内存回收；
+
+    如果数组中，某个Entry对象的key为空，该方法会释放掉value对象和Entry对象。
+
+  - 如果ThreadLocal跟数组下标i对应的Entry对象的key既不相等，也不为空，则调用nextIndex方法，向下查找，跟set方法的nextIndex方法一致。
+
+
+
+###### 3、为什么Entry对象要key设置成弱引用呢？还有ThreadLocal是否存在内存泄露呢？
+
+key如果不是WeakReference弱引用，则如果某个线程死循环，则ThreadLocalMap一直存在，引用住了ThreadLocal，导致ThreadLocal无法释放，同时导致value无法释放；当是WeakReference弱引用时，即使线程死循环，当创建ThreadLocal的地方释放了，ThreadLocalMap的key会同样被被释放，在调用getEntry时，会判断如果key为null，则会释放value，内存泄露则不存在。当然ThreadLocalMap类也提供remove方法，该方法会帮我们把当前ThreadLocal对应的Entry对象清除，从而不会内存泄露，所以如果我个人觉得如果每次在不需要使用ThreadLocal的时候，手动调用remove方法，也不存在内存泄露。
+
+###### 4、为什么Looper对象要存在ThreadLocal中，为什么不能公用一个呢，或者每个线程持有一个呢？
+
+- 共用一个的话，需要处理线程同步问题，加锁会降低运行效率，增加 ANR 的几率；
+- 每一个线程都持有 Looper 的话，会造成内存的浪费；
+
+
 
 ##### 14、HandlerThread、IntentService
 

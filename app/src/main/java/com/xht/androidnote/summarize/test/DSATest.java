@@ -10,7 +10,7 @@ public class DSATest {
         //测试链表
         //        testLinkedList();
         //测试字符串
-        testString();
+//        testString();
 
         //测试数组
         //testArray();
@@ -22,6 +22,70 @@ public class DSATest {
 
         //测试栈、队列
         //        testStack();
+
+        //最大公约数
+        int i = gcd3(100, 40);
+        System.out.println(i);
+    }
+
+    /**
+     * 求两个数的最大公约数
+     * 辗转相除法：两个正整数a和b（a>b），它们的最大公约数等于a除以b的余数c和b之间的最大公约数。
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    private static int getGreatestCommonDivisor1(int a, int b) {
+        int big = a > b ? a : b;
+        int small = a < b ? a : b;
+
+        if (big % small == 0) {
+            return small;
+        }
+
+        return getGreatestCommonDivisor1(b, a % b);
+    }
+
+    /**
+     * 更相减损术：两个正整数a和b（a>b），它们的最大公约数等于a-b的差值c和较小数b的最大公约数。
+     * 更相减损术避免了大整数取模可能出现的性能问题
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    private static int gcd2(int a, int b) {
+        if (a == b) {
+            return a;
+        }
+        int big = a > b ? a : b;
+        int small = a < b ? a : b;
+        return gcd2(big - small, small);
+    }
+
+    /**
+     * 如果(a&1)==0，则说明整数a是偶数；如果(a&1)!=0，则说明整数a是奇数。
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    private static int gcd3(int a, int b) {
+        if (a == b) {
+            return a;
+        }
+        if ((a & 1) == 0 && (b & 1) == 0) {
+            return gcd3(a >> 1, b >> 1) << 1;
+        } else if ((a & 1) == 0 && (b & 1) != 0) {
+            return gcd3(a >> 1, b);
+        } else if ((a & 1) != 0 && (b & 1) == 0) {
+            return gcd3(a, b >> 1);
+        } else {
+            int big = a > b ? a : b;
+            int small = a < b ? a : b;
+            return gcd3(big - small, small);
+        }
     }
 
 
