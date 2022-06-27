@@ -2466,3 +2466,110 @@ Launcher本身也是一个应用程序，它在启动过程中会请求PackageMa
 关于 普通Activity 启动的流程的讲解，我们分成了几个阶段：启动的发起、AMS的管理、线程切换、启动核心实现，知道了启动过程经历了两次IPC，客户端到AMS、AMS到客户端，以及Activity创建和生命周期的执行。 然后又在此基础上 补充的根activity的启动：先创建应用进程，再绑定Application，最后真正启动跟Activity。
 链接：https://juejin.cn/post/6847902222294990862
 
+
+
+#### 四、HTTP请求加密
+
+https://www.jianshu.com/p/cd69f9b031f2
+
+https://www.freesion.com/article/1283256934/
+
+https://blog.csdn.net/qq_41701363/article/details/115876339
+
+![img](https://www.freesion.com/images/213/62c98d72bcbbd26b7f82809d02a8cafd.JPEG)
+
+##### 1、加密算法
+
+> [加密算法](https://so.csdn.net/so/search?q=加密算法&spm=1001.2101.3001.7020)整体可以分为：可逆加密、不可逆加密
+>
+> 可逆[加密](https://so.csdn.net/so/search?q=加密&spm=1001.2101.3001.7020)又可以分为对称加密和非对称加密
+
+- URLEncode/URLDecode URL 编码传输
+
+- Base64
+
+- 对称加密
+
+  对称加密算法，又称为共享密钥加密算法。在数据加密和解密时使用的是同一个密钥，这就导致密钥管理困难的问题。常见的对称加密算法有DES, 3DES, AES128, AES192, AES256。其中AES后面的数字代表的是密钥长度。对称加密算法的安全性相对较低，比较适合内网环境中加解密。
+
+  - DES
+
+    > DES加密算法是一种**分组密码**，以64位为分组对数据加密，它的密钥长度是56位，加解密用同一算法。
+
+  - 3DES
+
+    > 基于DES的加密算法，3DES（即Triple DES）是`DES`向`AES`过渡的加密算法，它使用**3个不同的56位的密钥对一块数据进行三次加密**，强度更高。
+
+  - AES
+
+    > `AES` 高级数据加密标准，能够有效抵御已知的针对`DES`算法的所有攻击，默认密钥长度为`128`位，还可以供选择`192`位，`256`位。这里顺便提一句这个位指的是bit。
+
+- 非对称加密
+
+  非对称加密算法，又称为公开密钥加密算法。这两个密钥完全不同但又完全匹配，只有使用匹配的一堆公钥和私钥，才能完成对明文的加密和解密过程。常见的非对称加密有`RSA`, `SM2` 等。
+
+  > 非对称加密的特点是1 v n，服务器只需要一个私钥就能和多个客户端进行加密通信。而对称加密则需要针对每个客户端保存一个密钥。
+
+  - RSA
+
+    > `RSA` **加密算法** 基于一个十分简单的数论事实：将两个大 **素数** 相乘十分容易，但想要对其乘积进行 **因式分解** 却极其困难，因此可以将 **乘积** 公开作为 **加密密钥**。
+
+  - ECC 算法
+
+    > `ECC` 也是一种 **非对称加密算法**，主要优势是在某些情况下，它比其他的方法使用 **更小的密钥**，比如 `RSA` **加密算法**，提供 **相当的或更高等级** 的安全级别。不过一个缺点是 **加密和解密操作** 的实现比其他机制 **时间长** (相比 `RSA` 算法，该算法对 `CPU` 消耗严重)。
+
+- 不可逆加密
+
+  - MD5
+
+    > MD5信息摘要算法（Message-Digest Algorithm），一种被广泛使用的密码散列函数，可以产生出一个128位（16字节）的散列值（hash value），用于确保信息传输完整一致。本质上，其就是一种哈希函数，用于对一段信息产生摘要，以**防止被篡改**。
+
+  - SHA 系列
+
+    > SHA1 是和 MD5 一样流行的 消息摘要算法，然而 SHA1 比 MD5 的 安全性更强。对于长度小于 2 ^ 64 位的消息，SHA1 会产生一个 160 位的 消息摘要。基于 MD5、SHA1 的信息摘要特性以及 不可逆 (一般而言)，可以被应用在检查 文件完整性 以及 数字签名 等场景。
+
+##### 2、HTTPS 的工作流程
+
+![img](https://img-blog.csdnimg.cn/20210419222407733.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxNzAxMzYz,size_16,color_FFFFFF,t_70)
+
+
+
+##### 3、Android 端 AES + RSA 加密
+
+![img](https://upload-images.jianshu.io/upload_images/13750253-2cac4aa3e9b5c5b8.png?imageMogr2/auto-orient/strip|imageView2/2/w/700/format/webp)
+
+Android端
+
+> 服务器端(server)分别生成自己的RSA密钥对,并提供接口给Android客户端获取RSA公钥(rsaPublicKey)
+>
+> client生成AES密钥(aesKey)
+>
+> client使用自己的AES密钥(aesKey)对转换为json格式的请求明文数据(data)进行加密，得到加密后的请求数据encryptData
+>
+> client提供server提供的接口获取RSA公钥(rsaPublicKey)
+>
+> client使用获取RSA公钥(rsaPublicKey)对AES密钥(aesKey)进行加密，得到encryptAesKey
+>
+> client将encryptAesKey作为http请求头参数，将加密后的请求数据encryptData作为请求体一起传输给服务器端
+
+服务器端
+
+> server响应client的http请求，读取http请求头。获得client传过来的加密后的AES密钥(encryptAesKey)，读取http请求体，获得client传过来的加密后的请求数据(encryptData)。
+>
+> server使用自己的RSA私钥(rsaPrivateKey)对加密后的AES密钥(encryptAesKey)进行RSA解密，得到AES密钥(aesKey)
+>
+> 使用解密后的AES密钥(aesKey)对加密后的请求数据(encryptData),进行AES解密操作，得到解密后的请求数据(data)，该数据为json格式
+>
+> 对解密后的请求数据(data)进行json解析，然后做相关的响应操作。
+
+
+
+##### 4、实际项目中的加密
+
+- 违章查询
+
+  对参数使用 MD5 加密，公共参数统一处理
+
+- 悟空、普惠
+
+  登录相关参数使用 RSA 加密
