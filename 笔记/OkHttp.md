@@ -293,6 +293,30 @@ override fun proceed(request: Request): Response {
 }
 ```
 
+**责任链调用原理：**
+
+- 首先，所有的拦截器都实现Interceptor中接口，接口中只有一个方法intercept()。每个拦截器都通过这个方法通知到下一层，也是通过这个方法的返回值接受来自下一层级的响应。
+
+- 请求开始流程开始。请求流程中会先构建一个List集合，这个List集合中装载了所使用到的所有的interceptor拦截器。
+
+- 构建链表对象Chain，其实现类为RealInterceptorChain。RealInterceptorChain实现了Interceptor.Chain的接口。Chain接口中有很多方法，其中proceed方法负责流程的向下分发。
+
+  RealInterceptorChain构造方法中有很多参数，我们这里只看interceptors和index，interceptors代表所有的拦截器，index代表执行到第几个。可以这么理解，Chain负责调度，interceptor负责执行。
+
+- 调用proceed方法开始责任链流程。
+
+  该方法中，index+1，构建下一层级的chain对象。
+
+  然后获取当前的拦截器，因为此时的index=0，所以对应的拦截器是RetryAndFollowUpInterceptor，则会调用其中的intercept()方法。
+
+- intercept方法中。通过上面创建的chain对象，使用其proceed方法继续向下分发。
+
+  我们这里以RetryAndFollowUpInterceptor中的intercept方法为例。可以看到通过上面一步构建的Chain对象继续向下一层分发，同时获取response返回值，进行一定的处理后，最终返回response。其他的intercept流程上也是一样的。
+
+- Interceptor一层一层的向下分发，执行到最后一层拦截器CallServerInterceptor时，由于不需要继续向下分发，所以可以是直接返回response的。
+
+
+
 > 注意点：
 >
 > - 当创建一个责任链 `RealInterceptorChain` 的时候，我们传入的第 5 个参数是 0。该参数名为 `index`，会被赋值给 `RealInterceptorChain` 实例内部的同名全局变量。
@@ -339,6 +363,12 @@ override fun proceed(request: Request): Response {
 
 - **ConnectInterceptor**
 
+  https://blog.csdn.net/followYouself/article/details/121086869
+
+  https://blog.csdn.net/weixin_45519487/article/details/122418383
+
+  ConnectInterceptor拦截器的主要功能是复用连接池里面的连接，创建新的连接，并把读写数据流的对象交由下一个拦截器处理。
+
   总的来说就是做了这么几个工作:
 
   1. RetryAndFollowUpInterceptor中定义的ExchangeFinder对象，它里面包含了一个连接池，用于在连接池中取得连接对象。
@@ -355,23 +385,25 @@ override fun proceed(request: Request): Response {
 
   服务器请求拦截器 CallServerInterceptor 用来向服务器发起请求并获取数据。这是整个责任链的最后一个拦截器，拿到响应后直接返回给上一级的拦截器，不用再调用 proceed() 方法。
 
-  主要就是创建了Socket对象，并且使用Socket对象建立了连接，然后使用OKio中的接口获得输入/输出流。
-
   流程大致为
 
   1. 先写入请求头，如果是GET请求的话就已经请求完毕，POST请求的话是先发送请求头再发送请求体，会发送两个TCP包
-  2. 然后读取响应头，接着判断过后，读取响应体。
+2. 然后读取响应头，接着判断过后，读取响应体。
   3. 最终将响应的结果返回，这个结果会层层的向上传递，经过上面所有的拦截器。
   4. 最终走到了我们自定义的回调处。
-
+  
   > 这个拦截器里会进行 IO 操作与服务器交互，底层使用了 OKIO 来进行 IO 操作。
-  >
+>
   > 1. 根据 Request 的配置写入请求头
   > 2. 根据 Method 判断是否支持请求体，如果支持则尝试写入请求体并发送请求报文，否则直接发送
   > 3. 读取响应头，构建 Response
   > 4. 读取响应体，为 Response 写入 ResponseBody
   > 5. 判断是否要关闭连接
   > 6. 返回 Response
+  >
+  > 总体就是写入http的请求，读取响应的head和body
+  >
+  > 无论是读写，都是使用Exchange对应的方法。Exchange理解上是对ExchangeCodec的包装，这写方法内部除了事件回调和一些参数获取外，核心工作都由 ExchangeCodec 对象完成，而 ExchangeCodec实际上利用的是 Okio，而 Okio 实际上还是用的 Socket。
 
 
 
@@ -385,7 +417,7 @@ override fun proceed(request: Request): Response {
 - ConnectInterceptor拦截器是负责建立连接的，最终是通过RealConnection对象建立的Socket连接，并且获得了输入输出流为下一步读写做准备。RealConnection对象的获取是优先复用的，没有复用的就从连接池里取，连接池也没的话在创建新的，并加入连接池；
 - CallServerInterceptor拦截器就是最终的拦截器了，它将负责数据真正的读取和写入。
 
-
+https://blog.csdn.net/rzleilei/article/details/123557335
 
 #### 四、缓存策略
 
@@ -498,6 +530,8 @@ Okhttp的磁盘缓存机制是基于DiskLruCache做的，即最近最少使用�
 
 #### 五、连接池
 
+https://zhuanlan.zhihu.com/p/425232575
+
 因为HTTP是基于TCP，TCP连接时需要经过三次握手，为了加快网络访问速度，我们可以Reuqst的header中将Connection设置为keepalive来复用连接。
 
 Okhttp支持5个并发KeepAlive，默认链路生命为5分钟(链路空闲后，保持存活的时间)，连接池有ConectionPool实现，对连接进行回收和管理。
@@ -532,9 +566,13 @@ class RealConnectionPool(
 
 OkHttp 的连接管理管理分成两个步骤：
 
-1. 当我们创建了一个新的连接的时候，通过调用双端队列的 add() 方法，将其加入到队列中；
+1. 在连接池中找连接的时候会对比连接池中相同host的连接。
 
-2. 清理连接缓存的操作由线程池来定时执行；
+2. 如果在连接池中找不到连接的话，会创建连接，创建完后会存储到连接池中。
+
+3. 当我们创建了一个新的连接的时候，通过调用双端队列的 add() 方法，将其加入到队列中；
+
+4. 清理连接缓存的操作由线程池来定时执行；
 
    每当向连接池插入一个连接之前都会调用线程池执行清理缓存的任务 executor.execute(cleanupRunnable)，cleanupRunnable 是一个 Runnable 实例，它在内部会调用 cleanup() 方法来清理无效的连接。
 
@@ -876,7 +914,7 @@ HTTP/1.1 206 Partial Content
 - 然后在页面销毁时，进行取消请求
 - 然后通过Dispatcher获取正在执行和等待执行的请求队列，如果tag相符，则call.cancel()
 
-
+###### 7.1 取消方式
 
 > 如果项目没有用mvp和[mvvm](https://so.csdn.net/so/search?q=mvvm&spm=1001.2101.3001.7020)这种框架自带解决网络请求内存泄漏，用的mvc处理内存泄漏的时候可以考虑rxjava解绑或直接取消okhttp的请求。
 
@@ -919,6 +957,134 @@ public void cancelTag(Object tag) {
     }
 }
 ```
+
+###### 7.2 回调处理
+
+https://www.jianshu.com/p/b74466039b84
+
+如果调用 cancel()，会回调到 onFailure() 方法中：
+
+```java
+/**
+  * Called when the request could not be executed due to cancellation, a connectivity       * problem or timeout. Because networks can fail during an exchange, it is possible that   * the remote server accepted the request before the failure.
+  */
+void onFailure(Call call, IOException e);
+```
+
+当取消一个请求，网络连接错误，或者超时都会回调到这个方法中来，如果想对取消请求做一下单独处理，这个时候就需要区分不同的失败类型了。
+
+测试发现不同的失败类型返回的IOException e 不一样，所以可以通过e.toString 中的关键字来区分不同的错误类型。
+
+> 自己主动取消的错误的 java.net.SocketException: Socket closed
+> 超时的错误是 java.net.SocketTimeoutException
+> 网络出错的错误是java.net.ConnectException: Failed to connect to xxxxx
+
+可以在 onFailure() 回调中进行判断：
+
+```java
+ call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if(e.toString().contains("closed")) {
+                 //如果是主动取消的情况下
+                }else{
+                  //其他情况下
+            }
+     ....
+```
+
+###### 7.3 Retrofit + OkHttp 取消请求
+
+https://www.jianshu.com/p/b1c9259cb2bc
+
+因为 Retrofit 并没有提供可以直接发访问 Call 的方法，所以需要通过自定义 header 和自定义拦截器来处理。
+
+- 给每个与页面（Activity，Fragment）相关的request加入自定义header，[参考](https://links.jianshu.com/go?to=https%3A%2F%2Fpublicobject.com%2F2016%2F01%2F17%2Fsneaking-data-into-an-okhttp-interceptor%2F)。
+   给OkHttpClient添加拦截器。标记出页面的生存状态。如果页面销毁了，则取消对应的request。
+
+- 写一个工具类，持有一个ConcurrentHashMap<String, Boolean>来标记页面存活状态。
+
+  ```java
+  private static ConcurrentHashMap<String, Boolean> actLiveMap = new ConcurrentHashMap<>(); // 标记Activity是否存活
+  
+  public static void markPageAlive(String actName) {
+      actLiveMap.put(actName, true);
+  }
+  
+  public static void markPageDestroy(String actName) {
+      actLiveMap.put(actName, false);
+  }
+  ```
+
+- 在每个 Activity 中登记界面状态
+
+  给当前Activity起名字。每个Activity的标记名必须唯一。
+
+  ```java
+  private static final String MY_ACT_NAME = "xxx1Activity";
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      NetworkCenter.markPageAlive(MY_ACT_NAME);
+      // ...
+  }
+  
+  @Override
+  protected void onDestroy() {
+      super.onDestroy();
+      NetworkCenter.markPageDestroy(MY_ACT_NAME);
+      // ...
+  }
+  ```
+
+- OkHttpClient 添加拦截器
+
+  给OkHttpClient添加拦截器，在拦截器中检查页面的存活情况。检查后，把这个自定义header移除掉。
+
+  ```java
+  public static final String HEADER_ACT_NAME = "Activity-Name"; // 标记Activity界面名字
+  
+  private Interceptor lifeInterceptor = new Interceptor() {
+      @Override
+      public Response intercept(Chain chain) throws IOException {
+          Request request = chain.request();
+          String actName = request.header(HEADER_ACT_NAME);
+          if (!TextUtils.isEmpty(actName)) {
+              Log.d(TAG, "lifeInterceptor: actName: " + actName);
+              Boolean actLive = actLiveMap.get(actName);
+              if (actLive == null || !actLive) {
+                  chain.call().cancel();
+                  Log.d(TAG, "lifeInterceptor: 取消请求, actName: " + actName);
+              } else {
+                  Log.d(TAG, "lifeInterceptor: 发起请求, actName: " + actName);
+              }
+          }
+          Request newRequest = request.newBuilder().removeHeader(HEADER_ACT_NAME).build();
+          return chain.proceed(newRequest);
+      }
+  };
+  
+  
+  OkHttpClient = new OkHttpClient.Builder()
+      .readTimeout(10, TimeUnit.SECONDS)
+      .connectTimeout(10, TimeUnit.SECONDS)
+      .addInterceptor(lifeInterceptor) // 添加拦截器
+      .build();
+  ```
+
+  
+
+- 添加 header
+
+  ```java
+  @GET("users/{owner}/repos")
+  Observable<List<UserRepo>> userRepo(
+      @Header(NetworkCenter.HEADER_ACT_NAME) @Nullable String actName,
+      @Path("owner") String owner,
+      @Query("sort") String sortType);
+  ```
+
+  
 
 ##### 8、HTTPDNS
 
