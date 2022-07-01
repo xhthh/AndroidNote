@@ -536,7 +536,7 @@ Retrofit 充当一个适配器的角色，将Java接口翻译成http请求，然
 #### 2、Retrofit 怎样将 Call 转换成 Observable
 
 - 构建 Retrofit 时，通过 builder 设置 addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-- RxJavaCallAdapterFactory 继承自 CallAdapterFactory，在 loadServiceMethod() 中会 createCallAdapter()，这里调用 callAdapterFactories.get(i).get() 方法中创建了 RxJavaCallAdapter 实例；
+- RxJavaCallAdapterFactory 继承自 CallAdapter.Factory，在 loadServiceMethod() 中会 createCallAdapter()，这里调用 callAdapterFactories.get(i).get() 方法中创建了 RxJavaCallAdapter 实例；
 - 在调用 serviceMethod.adapt() 时，RxJavaCallAdapter 中的 adapt() 中返回了 Observable 类型；
 
 
