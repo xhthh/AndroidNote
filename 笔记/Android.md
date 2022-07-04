@@ -486,6 +486,66 @@ Activity---onDestroy()
 
 ##### 5、Fragment 怎样监听返回？
 
+https://blog.csdn.net/harvic880925/article/details/45013501#
+
+- 在 Fragment 类中定义一个 onBackPressed() 方法，来处理回调事件；
+- 利用回调将要处理回退事件的 Fragment 实例传给 Activity；
+- 拿到 Fragment 实例后，就可以在 Activity 的 onBackPress() 方法中，调用这个 fragment 实例的 onBackPressed() 方法了；
+
+```java
+public class Fragment3 extends Fragment {
+	//定义回调函数及变量
+    protected BackHandlerInterface backHandlerInterface;
+    public interface BackHandlerInterface {
+        public void setSelectedFragment(Fragment3 backHandledFragment);
+    }
+   
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+		//回调函数赋值
+        if(!(getActivity()  instanceof BackHandlerInterface)) {
+            throw new ClassCastException("Hosting activity must implement BackHandlerInterface");
+        } else {
+            backHandlerInterface = (BackHandlerInterface) getActivity();
+        }
+    }
+ 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //将自己的实例传出去
+        backHandlerInterface.setSelectedFragment(this);
+    }
+    
+    public boolean onBackPressed(){  
+        if (!mHandledPress){  
+            tv.setText("Fragment3 \n 捕捉到了回退事件哦！");  
+            mHandledPress = true;  
+            return true;  
+        }  
+        return false;  
+    }
+}
+
+public class MainActivity extends FragmentActivity implements Fragment3.BackHandlerInterface {
+    private Fragment3 selectedFragment;
+	…………
+    @Override
+    public void setSelectedFragment(Fragment3 backHandledFragment) {
+        this.selectedFragment = backHandledFragment;
+    }
+ 
+    @Override
+    public void onBackPressed() {
+        if(selectedFragment == null || !selectedFragment.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+ 
+}
+```
+
 
 
 ##### 6、Fragment之间怎样进行通信？

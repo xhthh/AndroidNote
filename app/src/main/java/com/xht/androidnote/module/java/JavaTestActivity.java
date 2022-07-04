@@ -2,6 +2,7 @@ package com.xht.androidnote.module.java;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
+import com.xht.androidnote.module.kotlin.User;
 import com.xht.androidnote.utils.L;
 
 import java.util.ArrayList;
@@ -50,6 +51,16 @@ public class JavaTestActivity extends BaseActivity {
         //test();
 
         threadTest();
+
+        test(new User());
+    }
+
+    /**
+     * final 修饰参数，基本数据类型值不能被修改，引用数据类型所指向的引用不能变，但是可以修改该参数对象里的属性
+     * @param user
+     */
+    private void test(final User user) {
+        user.setName("");
     }
 
     /**

@@ -7,6 +7,7 @@ import android.app.Service;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -14,6 +15,8 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.widget.RemoteViews;
 
 import com.xht.androidnote.R;
@@ -70,6 +73,17 @@ public class MyService extends Service {
     public void onCreate() {
         super.onCreate();
         L.i("MyService---onCreate()");
+
+
+        //监听电话状态用于暂停和恢复播放
+//        TelephonyManager tmgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+//        tmgr.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+//        IntentFilter filter = new IntentFilter();
+//
+//        filter.addAction(SERVICECMD);
+//        filter.addAction(PAUSE_ACTION);
+//        receiver = new MusicServiceReceiver();
+//        registerReceiver(receiver, filter);
     }
 
     @Nullable

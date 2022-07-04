@@ -1,10 +1,13 @@
 package com.xht.androidnote.module.animation;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -24,6 +27,9 @@ public class AnimationActivity extends BaseActivity {
     ImageView mIvAnimation;
     private AnimationDrawable mAnimationDrawable;
 
+    private TextView tvShare;
+    private ObjectAnimator mAnimator;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_animation;
@@ -31,8 +37,19 @@ public class AnimationActivity extends BaseActivity {
 
     @Override
     protected void initEventAndData() {
+        tvShare = findViewById(R.id.tvShare);
 
+        tvShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAnimator.start();
+            }
+        });
 
+        Drawable drawable = getResources().getDrawable(R.drawable.rotate);
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        tvShare.setCompoundDrawables(null, null, drawable, null);
+        mAnimator = ObjectAnimator.ofInt(drawable, "level", 0, 10000).setDuration(1000);
     }
 
     @OnClick({R.id.btn_frame_animation, R.id.btn_view_animation_translate, R.id
