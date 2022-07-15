@@ -48,12 +48,13 @@ public class MyView extends View {
                 L.i("View---dispatchTouchEvent()---CANCEL");
                 break;
         }
-        boolean result = super.dispatchTouchEvent(event);
-        L.i("View---dispatchTouchEvent()---result=" + result);
-        return result;
+//        boolean result = super.dispatchTouchEvent(event);
+//        L.i("View---dispatchTouchEvent()---result=" + result);
+//        return result;
+        return false;
 //        return true;
 //                        return true;//父view和子view的事件都会走到，不会走子view的onTouchEvent()，如果需要两个都处理，可以在这里返回true
-        //        return false;//如果返回false，子view不会接收到其它事件，父view也只能接收到DOWN事件，
+        //        return false;//如果返回false，子view不会接收到其它事件，父view可以接收到其他事件，
         // 因为父view的dispatchTransformedTouchEvent()的返回值由子view的dispatchTouchEvent()决定，如果子view返回false，则不能对mFirstTouchTarget进行赋值
         //如果mFirstTouchTarget为空，后续事件调用 dispatchTransformedTouchEvent()时，传入的view为null，就会调用父view的dispatchTouchEvent()
 
@@ -83,7 +84,7 @@ public class MyView extends View {
         }
         boolean result = super.onTouchEvent(event);
 //        result = false;
-        result = true;
+//        result = true;
         L.i("View---onTouchEvent()---result=" + result);
         return result;
     }

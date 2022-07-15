@@ -13,8 +13,59 @@ import java.util.List;
 
 public class JavaTest {
 
+    private final Object tail;
+
+    public JavaTest() {
+        tail = null;
+    }
+
     public static void main(String[] args) {
 
+        //extracted();
+        testJoin();
+    }
+
+    private static void testJoin() {
+        final Thread t1 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                System.out.println("t1");
+            }
+        });
+        final Thread t2 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    //引用t1线程，等待t1线程执行完
+                    t1.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("t2");
+            }
+        });
+        Thread t3 = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    //引用t2线程，等待t2线程执行完
+                    t2.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("t3");
+            }
+        });
+        t3.start();
+        t2.start();
+        t1.start();
+
+    }
+
+    private static void extracted() {
         List<Integer> list = new ArrayList<>();
         list.add(00);
         list.add(11);

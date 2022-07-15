@@ -273,6 +273,8 @@ MVP 的缺点：
 
   - 可以重写onDestroy()方法，在View销毁时强制回收掉Presenter；
   - 或是采用弱引用的方式；
+  
+- 视图和Presenter的交互会过于频繁，使得他们的联系过于紧密。也就是说，一旦视图变更了，presenter也要变更。
 
 
 

@@ -18,6 +18,12 @@
 > RecyclerView源码解析 https://www.jianshu.com/p/c52b947fe064
 >
 > RecyclerView 问题汇总 https://juejin.cn/post/6844903837724213256
+>
+> 深入理解 RecyclerView 的缓存机制 https://blog.csdn.net/qq_21118431/article/details/106102184
+>
+> 详细聊聊 RecyclerView 缓存机制 https://jishuin.proginn.com/p/763bfbd55a86
+>
+> [深入理解Android RecyclerView的缓存机制](https://segmentfault.com/a/1190000040421118)
 
 
 
@@ -234,7 +240,11 @@ Recycler 的缓存根据访问优先级从上到下可以分为 4 级，如下�
 
   一般调用adapter的notifyItemRangeChanged被移除的viewholder会保存到mChangedScrap，其余的notify系列方法(不包括notifyDataSetChanged)移除的viewholder会被保存到mAttachedScrap中。
 
-  > 屏幕 16ms 刷新一次，所以屏幕内的view每次都会更新，用的就是 mAttachedScrap。
+  > ViewHolder 只有在满足下面情况才会被添加到 mChangedScrap：当它关联的 item 发生了变化（notifyItemChanged 或者 notifyItemRangeChanged 被调用），并且 ItemAnimator 调用 ViewHolder#canReuseUpdatedViewHolder 方法时，返回了 false。否则，ViewHolder 会被添加到AttachedScrap 中。
+  >
+  > canReuseUpdatedViewHolder 返回 “false” 表示我们要执行用一个 view 替换另一个 view 的动画，例如淡入淡出动画。 “true”表示动画在 view 内部发生。
+  >
+  > mAttachedScrap 在 整个布局过程中都能使用，但是 changed scrap — 只能在预布局阶段使用。
 
 - 第二级缓存：mCachedViews；
 

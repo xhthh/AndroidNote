@@ -1261,6 +1261,8 @@ if (actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null) {
 
 <font color='red'>所以 onInterceptTouchEvent() 不是每次都会被调用，如果想提前处理所有的点击事件，要选择 dispatchTouchEvent()。</font>
 
+> 如果 子 View 的 dispatchTouchEvent() 返回 false，则 mFirstTouchTarget 不会被赋值，则后续事件序列来临时，不会再走 onInterceptTouchEvent()；
+
 **2）不拦截**
 
 ```java
@@ -1350,6 +1352,10 @@ if (!canceled && !intercepted) {
   ```
 
   此处 child 传入的是 null，会调用 super.dispatchTouchEvent()，这样就走到了 View 的 dispatchTouchEvent()。
+  
+  > - 如果子 View dispatchTouchEvent() 返回 false，mFirstTouchTarget 就不会被赋值，dispatchTransformedTouchEvent() 中 child 传 null，走 super.dispatchTouchEvent() 即父 View 的父类即其本身作为 View 的 dispatchTouchEvent() 方法；
+  > - 且后续事件序列 MOVE、UP 不会再传递给子 View，因为父 View 的 dispatchTouchEvent() 方法中，开始处判断，if (actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null)    MOVE 和 UP 且 mFirstTouchTarget 为 null，所以走 else 分支，intercept 赋为 true；
+  > - intercept 为 true，也就不会再进入 dispatchTransformedTouchEvent() 所在的这段代码，即不会再将 MOVE 和 UP 事件传递给子 View；
 
 ##### 5、View 的分发
 
