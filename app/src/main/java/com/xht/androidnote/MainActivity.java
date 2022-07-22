@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -115,6 +116,15 @@ public class MainActivity extends BaseActivity {
         //                startActivity(new Intent(mContext, MainActivity.class));
         //            }
         //        }, 3000);
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Looper.prepare();
+//                Looper.loop();
+//                Log.e("xht","===========Looper Test==============");
+//            }
+//        }).start();
     }
 
     @OnClick({R.id.btn_fps, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
