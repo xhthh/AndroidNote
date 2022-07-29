@@ -2,7 +2,6 @@ package com.xht.androidnote.module.eventdispatch;
 
 import android.os.Looper;
 import android.os.MessageQueue;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,11 @@ public class EventDispatchActivity extends BaseActivity {
     @BindView(R.id.view)
     MyView view;
 
+    @BindView(R.id.button1)
+    TestButton1 mButton1;
+    @BindView(R.id.button2)
+    TestButton2 mButton2;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_event_dispatch;
@@ -51,12 +55,26 @@ public class EventDispatchActivity extends BaseActivity {
         });
 
 
-//        int maxDeep = maxDeep(testCount);
-//        L.i("maxDeep = " + maxDeep);
-//
-//        //int count = traversal2(testCount);
-//        int count = traversal3(testCount);
-//        L.i("count = " + count);
+        //        int maxDeep = maxDeep(testCount);
+        //        L.i("maxDeep = " + maxDeep);
+        //
+        //        //int count = traversal2(testCount);
+        //        int count = traversal3(testCount);
+        //        L.i("count = " + count);
+
+        mButton1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("TestButton1------onClickListener---");
+            }
+        });
+
+        mButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("TestButton2------onClickListener---");
+            }
+        });
     }
 
     private int traversal3(View view) {
@@ -97,7 +115,6 @@ public class EventDispatchActivity extends BaseActivity {
      * 这个方法会在我们以任意的方式开始与Activity进行交互的时候被调用。
      * 比较常见的场景就是屏保：当我们一段时间没有操作会显示一张图片，当我们开始与Activity交互的时候可在这个方法中取消屏保；
      * 另外还有没有操作自动隐藏工具栏，可以在这个方法中让工具栏重新显示。
-     *
      */
     @Override
     public void onUserInteraction() {

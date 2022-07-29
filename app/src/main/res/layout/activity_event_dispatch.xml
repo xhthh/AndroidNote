@@ -18,13 +18,12 @@
         android:background="@color/colorPrimary">
 
 
-            <com.xht.androidnote.module.eventdispatch.MyView
-                android:layout_width="150dp"
-                android:layout_centerInParent="true"
-                android:layout_height="150dp"
-                android:id="@+id/view"
-                android:background="@color/colorAccent" />
-
+        <com.xht.androidnote.module.eventdispatch.MyView
+            android:id="@+id/view"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:background="@color/colorAccent" />
 
 
     </com.xht.androidnote.module.eventdispatch.MyViewGroup>
@@ -38,35 +37,39 @@
         android:background="@color/colorPrimary"
         android:padding="30dp">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:padding="10dp">
+<!--        <RelativeLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@color/colorAccent"-->
+<!--            android:padding="10dp">-->
 
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="10dp">
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:padding="10dp">-->
 
                 <com.xht.androidnote.module.eventdispatch.TestButton1
+                    android:id="@+id/button1"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:background="#ff0000"
+                    android:focusable="true"
                     android:clickable="true" />
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
 
             <com.xht.androidnote.module.eventdispatch.TestButton2
+                android:id="@+id/button2"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:background="#ffff00"
+                android:focusable="true"
                 android:clickable="true" />
-        </RelativeLayout>
+<!--        </RelativeLayout>-->
 
 
     </com.xht.androidnote.module.eventdispatch.MyViewGroup>

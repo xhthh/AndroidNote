@@ -85,4 +85,17 @@ class KotlinTest {
         fun b()
     }
 
+
+
+    fun testLambdaMethod(a:Int):()->Int{
+        var b = 3
+        return fun():Int{
+            b++
+            return a+b
+        }
+    }
+
+    fun testttt() {
+        testLambdaMethod(3)
+    }
 }
