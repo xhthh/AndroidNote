@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'android-aspectjx'
+apply plugin: 'android-aspectjx'
+
 
 
 //图片压缩插件配置,后文有对配置信息介绍
@@ -112,6 +113,12 @@ dependencies {
     implementation 'com.blankj:utilcode:1.22.10'
 
     implementation 'com.github.huangyanbin:SmartTable:2.2.0'
+
+    implementation 'org.aspectj:aspectjrt:1.8.9'
+}
+aspectjx {
+    exclude 'versions.9'
+    exclude 'leakcanary'
 }
 repositories {
     mavenCentral()

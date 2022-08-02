@@ -1,7 +1,9 @@
 package com.xht.androidnote.module.eventdispatch;
 
 import android.content.Context;
+
 import androidx.appcompat.widget.AppCompatButton;
+
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 
@@ -39,7 +41,9 @@ public class TestButton1 extends AppCompatButton {
                 L.i("TestButton1---dispatchTouchEvent---CANCEL");
                 break;
         }
-        return super.dispatchTouchEvent(event);
+        boolean result = super.dispatchTouchEvent(event);
+        L.i("TestButton1---dispatchTouchEvent()---result=" + result);
+        return result;
     }
 
     @Override
@@ -58,6 +62,10 @@ public class TestButton1 extends AppCompatButton {
                 L.i("TestButton1---onTouchEvent()---CANCEL");
                 break;
         }
-        return super.onTouchEvent(event);
+        //return super.onTouchEvent(event);
+
+        boolean result = super.onTouchEvent(event);
+        L.i("TestButton1---onTouchEvent()---result=" + result);
+        return result;
     }
 }

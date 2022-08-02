@@ -3,9 +3,13 @@ package com.xht.androidnote.base;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.view.Window;
+
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
-import android.view.Window;
+
+import com.xht.androidnote.module.hook.click_stat.ViewClickHookUtil;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -51,7 +55,7 @@ public abstract class BaseActivity extends FragmentActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if(mBind != null) {
+        if (mBind != null) {
             mBind.unbind();
         }
     }
@@ -60,4 +64,11 @@ public abstract class BaseActivity extends FragmentActivity {
     public void onEventMainThread(Class<?> event) {
 
     }*/
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+//        ViewClickHookUtil.INSTANCE.hookAllChildView(decorView);
+    }
 }
