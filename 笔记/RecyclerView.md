@@ -27,7 +27,7 @@
 
 
 
-#### 一、基本设计
+### 一、基本设计
 
 - **ViewHolder**
 
@@ -64,7 +64,7 @@
   - mCacheViews
   - RecycledViewPool
 
-#### 二、刷新机制
+### 二、刷新机制
 
 > 1、adapter.notifyxxx() 时 RV 的 UI 刷新逻辑，即 子View 是如何添加到 RV 中的？
 >
@@ -116,7 +116,7 @@ scrollBy()主要逻辑：
 
 
 
-#### 三、复用机制
+### 三、复用机制
 
 ##### 1、从 Recycler 中获取一个 ViewHolder 的逻辑
 
@@ -209,9 +209,11 @@ public void onBindViewHolder(@NonNull VH holder, int position,
 >
 > notifyItemChanged(position, payload) 调用时只会走 onBindViewHolder(holder, position, payloads)；
 
-=======================================================================================
+=======================================================================
 
-#### 1、缓存机制
+### 四、缓存复用
+
+##### 1、缓存机制
 
 通过 Recycler 完成的，主要用来缓存屏幕内 ViewHolder 以及部分屏幕外 ViewHolder；
 
@@ -320,7 +322,7 @@ mChangedScrap 按命名，应该是数据发生改变，notifyxx() 的时候会�
 
 ![img](https://p1-jj.byteimg.com/tos-cn-i-t2oaga2asx/gold-user-assets/2020/5/3/171d878fdd157587~tplv-t2oaga2asx-zoom-in-crop-mark:1304:0:0:0.awebp)
 
-#### 2、数据绑定
+##### 2、数据绑定
 
 notifyxxx() 更新数据，使用了观察者模式
 
@@ -328,7 +330,7 @@ notifyxxx() 更新数据，使用了观察者模式
 
 
 
-#### 3、LayoutManager
+##### 3、LayoutManager
 
 布局管理者，RecyclerView 在 onLayout() 的时候，利用它来 layoutChildren()
 
@@ -341,7 +343,7 @@ notifyxxx() 更新数据，使用了观察者模式
 
 
 
-#### 4、RecyclerView 与 ListView 的区别？
+##### 4、RecyclerView 与 ListView 的区别？
 
 1. 缓存机制不同
    - RecyclerView 缓存的是 ViewHolder，ListView 缓存的是 view；
@@ -355,7 +357,7 @@ notifyxxx() 更新数据，使用了观察者模式
 
 
 
-#### 5、ListView
+##### 5、ListView
 
 ListView 的缓存有两级，RecycleBin 有两个对象 mActiveViews 和 mScrapViews，mActiveViews 是第一级，mScrapViews 是第二级。
 
@@ -368,7 +370,7 @@ ListView 的缓存有两级，RecycleBin 有两个对象 mActiveViews 和 mScrap
 
 
 
-#### 6、RecyclerView 使用中可以优化的地方
+##### 6、RecyclerView 使用中可以优化的地方
 
 - RecycledViewPool 的使用，在 ViewPager + RecyclerView 的使用中可以使用一个 pool；
 
@@ -387,3 +389,99 @@ ListView 的缓存有两级，RecycleBin 有两个对象 mActiveViews 和 mScrap
   在调用 notifyxxx() 方法的时候（除了 notifyDataSetChanged()）会执行到一个 triggerUpdateProcessor()，如果没有设置 hasFixedSize，会进行 requestLayout()，导致 View 树进行重绘，onMeasure、onLayout() 都会调用。
 
   最大的一个好处是，嵌套的 RV 不会触发 requestLayout()，从而不会导致外层的 RV 重绘。
+
+
+
+### 五、RecyclerView 优化
+
+https://blog.csdn.net/hxl517116279/article/details/107058425/
+
+- 减少 `onCreateViewHolder` 调用次数
+
+  - 两个数据源大部分相似时使用swapAdapter代替setAdapter
+
+    > 这两个方法最大的不同之处就在于setadapter会直接清空rv上的所有缓存，而swapadapter会将rv上的holder保存到pool中，google提供swapadapter方法考虑到的一个应用场景应该是两个数据源有很大的相似部分的情况下，直接使用setadapter重置的话会导致原本可以被复用的holder全部被清空，而使用swapadapter来代替setadapter可以充分利用rv的缓存机制
+
+  - 共用回收池
+
+    > 对于一个页面中的多个RecyclerView,如果使用同一个Adapter，可以使用setRecycledViewPool(pool)，共用回收池，
+    > 避免来每一个RecyclerView都创建一个回收池，特别是RecyclerView嵌套RecyclerView时候，内部的RecyclerView必定使用的都是同一个Adapter，这个时候就很有必要使用回收池了
+
+  - 增加RecycledViewPool缓存数量
+
+    > 此方法是拿空间换时间，要充分考虑应用内存问题，根据应用实际使用情况设置大小。
+
+- 减少`onCreateViewHolder`执行时间
+
+  - 减少item的过度绘制
+
+    > 减少布局层级，尽量少的布局嵌套，尽量少的控件
+
+  - Prefetch预取
+
+    > 如果你使用的是RecyclerView默认的布局管理器，你自动的就得到了这些优化。但是如果你使用嵌套的RecyclerView，或者你自己写LayoutManager，则需要自己实现Prefetch，重写`collectAdjacentPrefetchPositions`
+
+- 减少`onBindViewHolder`调用次数
+
+  - 使用局部刷新
+
+    > 如果必须用 notifyDataSetChanged()，那么最好设置 mAdapter.setHasStableIds(true)，并重写getItemId()来给每个Item一个唯一的ID。
+    >
+    > 这样，当我们刷新数据时，RecyclerView就能确认是否数据没有变化，ViewHolder也直接复用，减少重新布局的烦恼。但这个使用的前提是数据的id一定是唯一的。如果id不变，但数据发生变化，可能就不会刷新了。
+
+  - 使用DiffUtil去局部刷新数据
+
+    > 通过比对新、旧两个[数据集](https://so.csdn.net/so/search?q=数据集&spm=1001.2101.3001.7020)的差异，生成旧数据到新数据的最小变动，然后对有变动的数据项，进行局部刷新。
+
+  - 视情况使用setItemViewCacheSize(size)来加大RecyclerView缓存数目，用空间换取时间提高流畅度
+
+    > RecyclerView可以设置自己所需要的ViewHolder缓存数量，默认大小是2。如果对于可能来回滑动的RecyclerView，把CacheViews的缓存数量设置大一些，可以省去bindView的时间，加快布局显示。
+    >
+    > 此方法是拿空间换时间，要充分考虑应用内存问题，根据应用实际使用情况设置大小。
+
+- 减少`onBindViewHolder`执行时间
+
+  - 数据处理与视图绑定分离
+
+    > onBindViewHolder这个方法是绑定数据，并且是在UI线程，如果在该方法进行耗时操作，将会影响滑动的流畅性。
+
+  - 有大量图片时，滚动时停止加载图片，停止后再去加载图片
+
+  - 使用setHasFixedSize避免requestLayout
+
+    > 如果item的高度固定的话可以设置setHasFixedSize(true)，这样RecyclerView在onMeasure阶段可以直接计算出高度，不需要多次计算子ItemView的高度。
+    >
+    > setHasFixedSize(true)时如果是通过Adapter的增删改插方法去刷新RecyclerView，那么将不需要requestLayout()。如果是通过notifyDataSetChanged()刷新界面，还是会重新调用requestLayout()
+
+  - 不要在onBindViewHolder中设置点击事件
+
+    > onBindViewHolder中设置点击事件会导致快速滑动时重复创建很多对象，可以采取复用OnClickListener对象，然后在onBindViewHolder()方法中通过setTag(position) 和getTag() 的方式，来传递点击事件的position给listener。
+    >
+    > ```java
+    > public class TestAdapter extends RecyclerView.Adapter implements View.OnClickListener{
+    >    ...
+    >    @Override
+    >    public void onBindViewHolder(final Holder holder, final int position) {
+    >        holder.itemView.setOnClickListener(this);
+    >        holder.itemView.setTag(position);
+    >        ...
+    >    }
+    >    @Override
+    >    public void onClick(View v) {
+    >        int position = (Integer) v.getTag();
+    >        Log.d("onClick", "testBtn" + String.valueOf(position));
+    >    }
+    > }
+    > ```
+
+- 其他
+
+  - 对于RecyclerView，如果不需要动画，就把item动画取消
+
+    > 默认在开启item动画的情况下会使rv额外处理很多的逻辑判断，notify的增删改操作都会对应相应的item动画效果，所以如果你的应用不需要这些动画效果的话可以直接关闭掉，这样可以在处理增删改操作时大大简化rv的内部逻辑处理。可以通过 ((SimpleItemAnimator) rv.getItemAnimator()).setSupportsChangeAnimations(false); 把默认动画关闭。
+
+  - 使用getExtraLayoutSpace为LayoutManager设置更多的预留空间
+
+  - 优化解耦 RecyclerView.Adapter
+
+    > 我们在使用 RecyclerView 的时候，总会遇到多项 ItemType 的场景。随着业务复杂度的增加，ItemType 会越变越多，导致代码量越来越多，最终发展为 “上帝类”，需要设计出一种模式，使得增删改一种 ItemType 时的成本降到最低
