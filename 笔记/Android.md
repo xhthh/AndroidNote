@@ -225,6 +225,61 @@ getSharedPreferences()方法本身是Context这个接口中定义的一个抽象
 >
 > put 写操作:写操作也有两步，一是把数据先写入内存中，即 map 集合，二是把数据写入硬盘文件中。
 
+https://juejin.cn/post/6884505736836022280
+
+https://juejin.cn/post/6844903758355234824
+
+###### 1、线程安全
+
+SP 是线程安全的，一共用到了3个锁，mLock、mWritingToDiskLock、mEditorLock；
+
+- 读
+
+  getXXX()，读取内存中`mMap`的值并返回，一个锁搞定；
+
+- 写
+
+  - putXXX()，会先保存到一个 map 中，即 mModified，这里用了一把锁，即 mEditorLock；
+
+    > 不和`mMap`公用同一把锁的原因估计是，在`apply()`被调用之前，`getXXX`和`putXXX`理应是没有冲突的。
+
+  - commit() 和 apply() 都会调用 commitToMemory()，将 mModified 和 mMap 两个中的数据进行合并，此时会使用到 mLock 和 mEditorLock 两个锁；
+
+  - 最后进行文件更新时也会用到一把锁 mWritingToDiskLock；
+
+###### 2、ANR
+
+`apply()`方法设计的初衷是为了规避主线程的`I/O`操作导致`ANR`问题的产生，但是还是会造成 ANR，原因归根到底则是`Android`的另外一个机制；
+
+> 在`apply()`方法中，首先会创建一个等待锁，根据源码版本的不同，最终更新文件的任务会交给`QueuedWork.singleThreadExecutor()`单个线程或者`HandlerThread`去执行，当文件更新完毕后会释放锁。
+>
+> 但当`Activity.onStop()`以及`Service`处理`onStop`等相关方法时，则会执行 `QueuedWork.waitToFinish()`等待所有的等待锁释放，因此如果`SharedPreferences`一直没有完成更新任务，有可能会导致卡在主线程，最终超时导致`ANR`。
+>
+> 比如太频繁无节制的`apply()`，导致任务过多。
+
+Google 在 Activity 和 Service 调用 onStop 之前阻塞主线程来处理 SP，我们能猜到的唯一原因是尽可能的保证数据的持久化。因为如果在运行过程中产生了 crash，也会导致 SP 未持久化，持久化本身是 IO 操作，也会失败。
+
+
+
+###### 3、进程安全
+
+SP 注释中写明了不支持跨进程，由于没有使用跨进程的锁，`SharedPreferences`是进程不安全的，在跨进程频繁读写会有数据丢失的可能。
+
+如何保证`SharedPreferences`进程的安全呢?
+
+实现思路很多，比如：
+
+- 使用文件锁，保证每次只有一个进程在访问这个文件；
+- 或者对于`Android`开发而言，`ContentProvider`作为官方倡导的跨进程组件，其它进程通过定制的`ContentProvider`用于访问`SharedPreferences`，同样可以保证`SharedPreferences`的进程安全；
+
+###### 4、文件损坏 & 备份机制
+
+`SharedPreferences`的写入操作正式执行之前，首先会对文件进行备份，将初始文件重命名为增加了一个`.bak`后缀的备份文件，这之后，尝试对文件进行写入操作，写入成功时，则将备份文件删除。
+
+若因异常情况（比如进程被杀）导致写入失败，进程再次启动后，若发现存在备份文件，则将备份文件重名为源文件，原本未完成写入的文件就直接丢弃。
+
+现在，通过文件备份机制，我们能够保证数据只会丢失最后的更新，而之前成功保存的数据依然能够有效。
+
 
 
 #### 二、Service

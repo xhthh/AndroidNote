@@ -65,13 +65,23 @@ https://juejin.cn/post/7120896365840269348
 ### 二面：
 
 - NA端截图如何传递给h5？共享的方式呢？
+
+  base64？
+
 - Hummer了解么？
+
 - 子线程能刷新UI么？为何只能主线程刷新UI？
+
 - Activity间的通信方式。
+
 - 系统为何不设计Activity#setData这种方式，让外部可以给activity提供数据呢？
+
 - https安全性如何保证的？Charles能抓取https么？app如何防止抓包？
+
 - 如何防止接口被mock，防止反爬虫？（内容签名，加盐）
+
 - 设计模式了解么？举例说明。
+
 - 算法题：[无重复字符的最长子串](https://link.juejin.cn?target=https%3A%2F%2Fleetcode-cn.com%2Fproblems%2Flongest-substring-without-repeating-characters%2F)
 
 ### 三面：
