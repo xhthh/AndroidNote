@@ -1,15 +1,17 @@
 package com.xht.androidnote.summarize.test;
 
+import java.util.Arrays;
+
 public class ArrayTest {
     public static void main(String[] args) {
         int[] a = {1, 2, 3, 0, 0, 0};
         int[] b = {4, 5, 6};
-        //        merge2Array(a, 3, b, 3);
-        //        System.out.println(Arrays.toString(a));
+        mergeArray(a, 3, b, 3);
+        System.out.println(Arrays.toString(a));
 
-        int[] nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
-        int maxSubArray = maxSubArray(nums);
-        System.out.println(maxSubArray);
+        //        int[] nums = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
+        //        int maxSubArray = maxSubArray(nums);
+        //        System.out.println(maxSubArray);
     }
 
     /**
@@ -17,6 +19,7 @@ public class ArrayTest {
      * 子数组 是数组中的一个连续部分。
      * 假设sum<=0，那么后面的子序列肯定不包含目前的子序列，所以令sum = num；
      * 如果sum > 0对于后面的子序列是有好处的。res = Math.max(res, sum)保证可以找到最大的子序和。
+     *
      * @param nums
      * @return
      */
@@ -58,49 +61,6 @@ public class ArrayTest {
                 cur = nums1[p1++];
             } else if (nums1[p1] < nums2[p2]) {
                 cur = nums1[p1++];
-            } else {
-                cur = nums2[p2++];
-            }
-            sorted[p1 + p2 - 1] = cur;
-        }
-        for (int i = 0; i < m + n; i++) {
-            nums1[i] = sorted[i];
-        }
-    }
-
-    private static void merge2Array(int[] nums1, int m, int[] nums2, int n) {
-        int p1 = 0, p2 = 0;
-        int[] sorted = new int[m + n];
-        int cur;
-        while (p1 < m || p2 < n) {
-            if (p1 == m) {
-                cur = nums2[p2++];
-            } else if (p2 == n) {
-                cur = nums1[p1++];
-            } else if (nums1[p1] < nums2[p2]) {
-                cur = nums1[p1++];
-            } else {
-                cur = nums2[p2++];
-            }
-            sorted[p1 + p2 - 1] = cur;
-        }
-
-        for (int i = 0; i < m + n; i++) {
-            nums1[i] = sorted[i];
-        }
-    }
-
-    private static void mergeArray3(int[] nums1, int m, int[] nums2, int n) {
-        int p1 = 0, p2 = 0;
-        int[] sorted = new int[m + n];
-        int cur;
-        while (p1 < m || p2 < n) {
-            if (nums1[p1] < nums2[p2]) {
-                cur = nums1[p1++];
-            } else if (p1 == m) {
-                cur = nums2[p2++];
-            } else if (p2 == n) {
-                cur = nums2[p1++];
             } else {
                 cur = nums2[p2++];
             }

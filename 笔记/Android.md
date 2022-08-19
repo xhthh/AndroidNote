@@ -1717,9 +1717,13 @@ mAttachInfo 是在 View#dispatchAttachedToWindow() 中被赋值的，此方法�
 
   requestLayout会直接递归调用父窗口的requestLayout，直到ViewRootImpl,然后触发peformTraversals，由于mLayoutRequested为true，**会导致onMeasure和onLayout被调用。不一定会触发OnDraw**。requestLayout触发onDraw可能是因为在在layout过程中发现l,t,r,b和以前不一样，那就会触发一次invalidate，所以触发了onDraw，也可能是因为别的原因导致mDirty非空（比如在跑动画）
 
+  > 每一个View 都有一个父 View（除了顶级 DecorView），即 View 中的 `protected ViewParent mParent;` 该值在 assignParent(ViewParent parant) 中赋值，这个方法在 ViewGroup 中的 addViewInner() 中被调用，addViewInner() 在 addView(View child, LayoutParams params) 中被调用，此 addView() 方法在 LayoutInflater 中解析 xml 布局时被调用，所以顶级 View 以下都会赋值 mParent；
+
 - invalidate：
 
   view的invalidate不会导致ViewRootImpl的invalidate被调用，而是递归调用父view的invalidateChildInParent，直到ViewRootImpl的invalidateChildInParent，然后触发peformTraversals，会导致当前view被重绘,由于mLayoutRequested为false，**不会导致onMeasure和onLayout被调用，而OnDraw会被调用**
+
+  > 当子View调用了invalidate方法后，会为该View添加一个标记位，同时不断向父容器请求刷新，父容器通过计算得出自身需要重绘的区域，直到传递到ViewRootImpl中，最终触发performTraversals方法，进行开始View树重绘流程(只绘制需要重绘的视图)。
 
 - postInvalidate：
 
@@ -2131,10 +2135,17 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
 - **ActivityTaskManagerService#startActivity()**
 
   - 通过 getActivityStartController().obtainStarter() 方法获取 ActivityStarter 实例 然后调用一系列方法，最后的execute()方法是开始启动 activity；
+
   - executeRequest(mRequest)
+
+    > 启动一个 activity，用 intent 传递参数，被启动的目标，最终一个 Activity 的信息都封装在一个 ActivityRecord 中，这个在 ActivityStarter#executeRequest() 中创建，创建所需要的信息是从 ActivityTaskManagerService 中的 startActivityAsUser() 构建 ActivityStarter 传过来的；
+
   - startActivityUnchecked()
+
   - startActivityInner()
+
   - ActivityStack#startActivityLocked()
+
   - 根据变量 mDoResume，决定是否调用 RootWindowContainer.resumeFocusedStacksTopActivities() 将其置于栈顶显示处于活动状态
 
   > **ActivityStack**：`Activity`在`AMS`的栈管理类，`activity`的单个堆栈的状态和管理在这个类里。

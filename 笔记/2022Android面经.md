@@ -238,9 +238,10 @@ https://juejin.cn/post/7120896365840269348
 - HashTable，为何废弃
 - 多线程存在哪些问题？
 - synchorized实现
-- juc包下的lock如何实现的？有了synchronized，为何还要有这个？
-
-cas的原理
+- juc包下的lock如何实现的？有了synchronized，为何还要有这个？cas的原理?
+  - AQS，底层是 CAS+volatile
+  - Lock更灵活，能主动释放锁
+  - 自旋，比较再交换
 
 - AtomicInteger如何保证原子操作
 - CAS如何保证原子操作
