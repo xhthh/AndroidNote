@@ -1869,7 +1869,16 @@ private int maxDeep(View view) {
 
 
 
+##### 15、自定义View 设置圆角
 
+- clipPath()  在onDraw()中，canvas.clipPath(mPath);  mPath.addRoundPath()
+  简单，但是带锯齿
+- Xfermode
+  可定义高，支持多图层的圆角，但是麻烦
+- BitmapShader   遮罩方式
+   mPaint.setShader(mShader);
+   canvas.drawRoundRect()
+   简单有效，仅支持Bitmap圆角，如果是LayerDrawable就显得手足无措。
 
 
 

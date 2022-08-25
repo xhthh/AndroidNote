@@ -2,8 +2,8 @@
 
 ```java
 Lifecycle 解决了生命周期 同步问题
-LiveData 实现了真正的状态驱动
-ViewModel 可以让 Fragment 通讯变得更优雅
+LiveData 实现了真正的状态驱动，主要为了 新手老手都能不假思索遵循 “通过唯一可信源分发消息” 标准化开发理念，以便快速开发过程中 “难追溯、难排查、不可预期” 问题发生概率降低到最低。
+ViewModel 主要为了解决 “状态管理” 和 “页面通信” 问题，可以让 Fragment 通讯变得更优雅
 DataBinding 让双向绑定成为了可能
 Jetpack 只是让 MVVM 更简单、更安全
 ```
