@@ -272,7 +272,52 @@ MVP 的缺点：
   解决方法：
 
   - 可以重写onDestroy()方法，在View销毁时强制回收掉Presenter；
+  
   - 或是采用弱引用的方式；
+  
+    ```java
+    //绑定解析View 以图和数据交互
+    public class BasePresenter<V> {
+        //用弱引用创建View
+    
+        //弱引用 ->解决MVP的内存泄露->OOM内存溢出
+        //强 软 弱 虚
+        WeakReference<V> mWeakReference;
+        //请求方式 okHttp+retrofit+rxjava
+        //每个请求 都会产生订阅->把订阅做一个统一的管理
+    
+        //将rxjava的 订阅 添加到mCompositeDisposable 通过mCompositeDisposable 对订阅的请求做统一的管理
+        protected CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    
+    //    通过mWeakReference创建View
+        public void attachView(V view){
+            mWeakReference = new WeakReference<V>(view);
+        }
+        //取出对应的view
+        protected V getView(){
+            return mWeakReference == null?null:mWeakReference.get();
+        }
+        //在咱们取出对应的view之前做这个判断
+        protected boolean isViewAttached(){
+            return mWeakReference != null && mWeakReference.get() !=null;
+        }
+    
+        //在APP或者页面的生命周期结束 及其他需要的地方 释放View 取消订阅
+    
+        public void detachView(){
+    //        释放View
+            if (mWeakReference != null){
+                mWeakReference.clear();
+                mWeakReference = null;
+            }
+    //        取消订阅
+            mCompositeDisposable.clear();
+    
+        }
+    }
+    ```
+  
+    
   
 - 视图和Presenter的交互会过于频繁，使得他们的联系过于紧密。也就是说，一旦视图变更了，presenter也要变更。
 
