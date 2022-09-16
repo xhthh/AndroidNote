@@ -1491,7 +1491,9 @@ private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
 
 ```
 
-
+> 滑出子 View 区域不会触发 CANCEL，但是不会触发 onClick() 事件；
+>
+> 在 View 的 onTouchEvent() 的 ACTION_MOVE 事件中，会判断是否超出了 View 的边界，是的话会改变 pressed 的状态，而在 ACTION_UP 事件中会根据 pressed 的状态进行判断，是否执行 performClick() 方法，即是否会执行到 onClick()
 
 ##### 7、父view中两个button，点击一个然后手指不抬起，一直滑出屏幕
 
@@ -1871,6 +1873,8 @@ private int maxDeep(View view) {
 
 ##### 15、自定义View 设置圆角
 
+https://blog.csdn.net/bobo_zai/article/details/104653340
+
 - clipPath()  在onDraw()中，canvas.clipPath(mPath);  mPath.addRoundPath()
   简单，但是带锯齿
 - Xfermode
@@ -1880,7 +1884,12 @@ private int maxDeep(View view) {
    canvas.drawRoundRect()
    简单有效，仅支持Bitmap圆角，如果是LayerDrawable就显得手足无措。
 
-
+|              | `BitmapShader` | `Xfermode`     | `clipPath` | `RoundedBitmapDrawable` |
+| ------------ | -------------- | -------------- | ---------- | ----------------------- |
+| 实现方式难易 | 简单           | 简单           | 简单       | 最简单                  |
+| 空白的背景   | 不能设置       | 可以设置       | 可以设置   | 不能设置                |
+| 抗锯齿       | 可以设置，有效 | 可以设置，有效 | 不可去除   | 可以设置，有效          |
+| 推荐指数     | 推荐           | 推荐           | 不推荐     | 推荐                    |
 
 
 

@@ -251,17 +251,41 @@ https://juejin.cn/post/7120896365840269348
 ### Android:
 
 - View#request之后，流程是怎样的
-- 事件分发：View设置了一个onClickListener，那么它的onTouchEvent中，DOWN的时间，返回的是true还是false？为何?
 
-如果一个View没有消费DOWN事件，那么MOVE和UP事件还会不会给它？
+- 事件分发：
 
-CANCEL事件是如何触发的？
+  - View设置了一个onClickListener，那么它的onTouchEvent中，DOWN的时间，返回的是true还是false？为何?
+
+    > DOWN 事件 返回 true
+    >
+    > onTouchEvent() 方法，如果是可点击的，默认返回 true
+
+  - 如果一个View没有消费DOWN事件，那么MOVE和UP事件还会不会给它？
+
+    > 如果返回false，子view不会接收到其它事件，父view可以接收到其他事件，
+    > 因为父view的dispatchTransformedTouchEvent()的返回值由子view的dispatchTouchEvent()决定，如果子view返回false，则不能对mFirstTouchTarget进行赋值
+    > 如果mFirstTouchTarget为空，后续事件调用 dispatchTransformedTouchEvent()时，传入的view为null，就会调用父view的dispatchTouchEvent()
+
+  - CANCEL事件是如何触发的？
+
+    > 
 
 - 滑动冲突解决过么？举例说明
+
 - getMeasuredWidth和getWidth有什么区别？什么时候会有不同？如何让getWidth的值跟getMeasuredWidth不同？
+
+  > 生成时机不同，一个在 onMeasure 一个在 onLayout
+  >
+  > 一般情况下两个值都相等
+  >
+  > 不相等情况：重写 layout() 修改 super.layout()中参数的值
+
 - activity#onResume中，View展示出来了？原理
+
 - 通过view#post获取view宽高，可以获取到么?原理
+
 - 如何把消息交给子线程的Handler执行？
+
 - new一个Thread，在run方法里面写三行代码：
 
 ```vbnet
@@ -384,11 +408,85 @@ app的最近打开过的应用，知道谁做的么？关机开机后依旧保�
 ### 一面：
 
 - 自定义View有哪几种方式？核心流程。一次完整的绘制流程是怎样的？
+
+  > 组合控件，继承控件，自绘控件
+
 - 如何给控件的背景设置圆角。
+
+  > - Xfermode
+  > - BitmapShader
+  > - ClipPath
+  > - RoundedBitmapDrawable
+
 - Activity生命周期是谁控制的?
+
+  > 单纯的看 Activity 的 onCreate() 等方法是谁调用的话，是 Instrumentation，其中有 callActivityOnCreate() 等方法，调用 activity 对应的方法；
+  >
+  > 而 Instrumentation 这些方法是在 ActivityThread 中被调用，具体的控制应该是 AMS 中 ActivityStack 中管理，其中有 ActivityState，即 Activity 的各种状态；
+  >
+  > 后边的 sdk 源码，新增了 ClientTransaction 事务，各种 XXXActivityItem，通过 ActivityTaskManagerService 中提供的 ClientLifecycleManager 执行事务，进行生命周期的转换；
+  >
+  > 
+
 - 异步消息如何区分？作用
+
+  > Message 中有标志判断是否为异步
+  >
+  > - setAsynchronous(boolean async) 可设置消息为异步；
+  > - isAsynchronous() 用于判断是否为异步消息；
+  >
+  > Handler 的构造方法中有 async 参数，赋值给 mAsynchronous，在通过 enqueueMessage() 插入消息时，通过 mAsynchronous 判断是否将消息设置为异步；
+  >
+  > 
+  >
+  > 异步消息+同步屏障，用于屏幕刷新机制，优先进行刷新任务；
+
 - UI卡顿的原因有哪些？如何优化？
+
+  > - 绘制任务太重、绘制一帧内容耗时太长；
+  >
+  >   - layout 布局过于复杂
+  >
+  >   - 过度绘制
+  >
+  >     > - 去除不必要的背景色
+  >     > - 移除嵌套布局
+  >     > - 使用 merge、include 标签
+  >     > - 使用 ConstraintLayout 减少嵌套
+  >     > - 减少透明色，即alpha属性的使用
+  >     > - 使用ViewStub标签，延迟加载不必要的视图
+  >     > - 使用AsyncLayoutInflater异步解析视图
+  >
+  > - 主线程太忙，导致 VSync 信号到来时还没有准备好数据从而导致丢帧；
+  >
+  >   - 主线程耗时操作
+  >
+  >     > 使用异步、缓存等方案
+  >
+  > - 主线程挂起
+  >
+  >   - 异步线程与主线程竞争 CPU 资源
+  >
+  >     > 设置异步线程优先级为Process.THREAD_PRIORITY_BACKGROUND，减少与主线程的竞争。
+  >
+  >   - 频繁 GC 使主线程挂起
+  >
+  >     - 比如内存抖动，导致频繁 GC，GC 时其他线程会停止
+  >
+  >       > 避免在 onDraw() 这种会频繁调用的方法里创建对象，或者是是 for 循环中创建对象；
+
 - 内存泄漏常见的有哪几种？如何检测？LeakCanary原理，Activity、Fragment
+
+  > 1.非静态内部类持有外部类的引用，如非静态handler持有activity的引用
+  > 2.接收器、监听器注册没取消造成的内存泄漏，如广播，eventsbus
+  > 3.Activity 的 Context 造成的泄漏，可以使用 ApplicationContext
+  > 4.单例中的static成员间接或直接持有了activity的引用
+  > 5.资源对象没关闭造成的内存泄漏(如: Cursor、File等)
+  > 6.全局集合类强引用没清理造成的内存泄漏(特别是 static 修饰的集合)
+  > ————————————————
+  >
+  > 
+
 - 算法题：单链表中，无序，查找最小的n个数。
 
 ### 二面:

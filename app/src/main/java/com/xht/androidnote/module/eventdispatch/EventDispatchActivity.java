@@ -2,6 +2,7 @@ package com.xht.androidnote.module.eventdispatch;
 
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,9 @@ public class EventDispatchActivity extends BaseActivity {
     TestButton1 mButton1;
     @BindView(R.id.button2)
     TestButton2 mButton2;
+
+    @BindView(R.id.testView)
+    TestView mTestView;
 
     @Override
     protected int getLayoutId() {
@@ -73,6 +77,24 @@ public class EventDispatchActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 L.i("TestButton2------onClickListener---");
+            }
+        });
+
+        mTestView.setClickable(false);
+        //setOnClickListener() 方法中会判断，如果 clickable 为 false，会主动设置为 true
+        mTestView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("TestView---onClick()");
+            }
+        });
+
+        mTestView.post(new Runnable() {
+            @Override
+            public void run() {
+                int measuredWidth = mTestView.getMeasuredWidth();
+                int width = mTestView.getWidth();
+                Log.e("TestView","---measuredWidth = " + measuredWidth+"      width = " + width);
             }
         });
     }
