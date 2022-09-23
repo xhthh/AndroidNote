@@ -50,105 +50,65 @@ public class LinkedListTest {
 
     /**
      * 给你一个链表，每 k 个节点一组进行翻转，请你返回翻转后的链表。
-     * pointer
+     * 12345678
+     * 新建一个 dummy 其 next 即为给定的链表
+     * dummy    -->     1      2      3       4       5       6       7       8
+     * dummy    -->     1      2      3       4       5       6       7       8
+     * pre/end，pre 代表待翻转链表的前驱，end 代表待翻转链表的末尾，进行k个遍历，条件为 end 不为空
+     * dummy    -->     1      2      3       4       5       6       7       8
+     * pre                           end
+     * dummy    -->     1      2      3       4       5       6       7       8
+     * pre             start         end     next，此处断开end与后续链表，即 end.next = null
+     * dummy    -->     3      2      1       4       5       6       7       8
+     * pre             end          start    next
+     * dummy    -->     3      2      1       4       5       6       7       8
+     * 占位符                       pre/end，此处把反转后的链表连接起来，即 start.next = next，并移动 pre和end 到此处，继续遍历反转
      *
      * @param head 1    2       3       4       5
      * @param k
      */
     private static ListNode reverseKGroup(ListNode head, int k) {
-        if (head == null || head.next == null || k == 1) {
-            return head;
-        }
         ListNode dummy = new ListNode(0);
         dummy.next = head;
-        ListNode pointer = dummy;
-        while (pointer != null) {
-            //记录上一个子链表的尾
-            ListNode lastGroup = pointer;
-            int i = 0;
-            for (; i < k; i++) {
-                pointer = pointer.next;
-                if (pointer == null) {
-                    break;
-                }
-            }
-            if (pointer != null) {
-                System.out.println("pointer = " + pointer.val);
-            }
-            // 如果当前子链表的节点数满足 k, 就进行反转
-            // 反之，说明程序到尾了，节点数不够，不用反转
-            if (i == k) {
-                System.out.println("lastGroup = " + lastGroup.val);
-                //记录下一个子链表的头
-                ListNode nextGroup = pointer.next;
-                System.out.println("nextGroup = " + nextGroup.val);
-                //反转当前子链表，revers函数返回反转后的子链表的头
-                System.out.println("lastGroup.next = " + lastGroup.next.val);
-                ListNode reversedList = reverse(lastGroup.next, nextGroup);
-                // lastGroup 是上一个子链表的尾，其 next 指向当前反转子链表的头
-                // 但是因为当前链表已经被反转，所以它指向的是反转后的链表的尾
-                traversalList(reversedList);
-                pointer = lastGroup.next;
-                System.out.println("pointer = " + pointer.val);
-                // 将上一个链表的尾连向反转后链表的头
-                lastGroup.next = reversedList;
-                // 当前反转后的链表的尾连向下一个子链表的头
-                pointer.next = nextGroup;
-            }
-            System.out.println("-------------");
-            traversalList(dummy.next);
-            System.out.println("=============");
-        }
-        return dummy.next;
-    }
 
-    private static ListNode reverseKGroup2(ListNode head, int k) {
-        if (head == null || head.next == null || k <= 1) {
-            return head;
-        }
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        ListNode pointer = dummy;
-        while (pointer != null) {
-            ListNode lastGroup = pointer;
-            int i = 0;
-            for (; i < k; i++) {
-                pointer = pointer.next;
-                if (pointer == null) {
-                    break;
-                }
+        ListNode pre = dummy;
+        ListNode end = dummy;
+
+        while (end.next != null) {
+            for (int i = 0; i < k && end != null; i++) {
+                end = end.next;
             }
-            if (i == k) {
-                ListNode nextGroup = pointer.next;
-                ListNode reversedList = reverse(lastGroup.next, nextGroup);
-                pointer = lastGroup.next;
-                lastGroup.next = reversedList;
-                pointer.next = nextGroup;
+            if (end == null) {
+                break;
             }
+            ListNode start = pre.next;
+            ListNode next = end.next;
+            end.next = null;
+            pre.next = reverse(start);
+            start.next = next;
+            pre = start;
+            end = pre;
         }
 
         return dummy.next;
     }
 
     /**
-     * 1    2   3   4
+     * 反转链表
      *
      * @param head
-     * @param tail
      * @return
      */
-    private static ListNode reverse(ListNode head, ListNode tail) {
-        if (head == null || head.next == null) {
-            return head;
+    private static ListNode reverse(ListNode head) {
+        ListNode pre = null;
+        ListNode cur = head;
+        while (cur != null) {
+            ListNode next = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
         }
-        ListNode prev = null, temp = null;
-        while ((head != null) && (head != tail)) {
-            temp = head.next;
-            head.next = prev;
-            prev = head;
-            head = temp;
-        }
-        return prev;
+        return pre;
     }
 
 
@@ -351,24 +311,6 @@ public class LinkedListTest {
             slow = slow.next;
         }
         return slow;
-    }
-
-    /**
-     * 反转链表
-     *
-     * @param head
-     * @return
-     */
-    private static ListNode reverseLinkedList(ListNode head) {
-        ListNode prev = null;
-        ListNode cur = head;
-        while (cur != null) {
-            ListNode next = cur.next;
-            cur.next = prev;
-            prev = cur;
-            cur = next;
-        }
-        return prev;
     }
 
     /**
