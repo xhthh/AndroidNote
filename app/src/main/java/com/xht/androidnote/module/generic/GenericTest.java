@@ -5,8 +5,8 @@ import java.util.Arrays;
 
 public class GenericTest {
     public static void main(String[] args) {
-        //        test1();
-        test2();
+                test1();
+//        test2();
     }
 
     private static void test2() {
