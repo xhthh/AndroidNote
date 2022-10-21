@@ -27,6 +27,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".module.optimize.OptTestActivity"
+            android:exported="false" />
         <activity android:name=".module.dsa.manhuasuanfa.DsaActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
@@ -185,6 +188,7 @@
         <activity android:name=".module.inflate.Factory2TestActivity" />
         <activity android:name=".module.kotlin.screenshot.ScreenShotActivity" />
         <activity android:name=".module.customview.FlowLayoutActivity" />
+        <activity android:name=".module.optimize.BlockDetectActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

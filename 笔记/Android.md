@@ -957,7 +957,13 @@ Dialog 可以弹，但是同样必须调用 Looper.prepare() 和 Looper.loop()�
 1. 有延时消息，要在Activity销毁的时候移除Messages；
 2. 匿名内部类导致的泄露改为匿名静态内部类，并且对上下文或者Activity使用弱引用。
 
-
+> 由于handler定义为内部类，可能会阻止GC。如果handler的Looper或MessageQueue 非主线程，那么没有问题。如果handler的Looper或MessageQueue 在主线程，那么需要按如下定义：定义handler为静态内部类，当你实例化handler的时候，传入一个外部类的弱引用，以便通过弱引用使用外部类的所有成员。
+>
+> `Handler`导致内存泄漏一般发生在发送延迟消息的时候，当`Activity`关闭之后，延迟消息还没发出，那么主线程中的`MessageQueue`就会持有这个消息的引用，而这个消息是持有`Handler`的引用，而`handler`作为匿名内部类持有了`Activity`的引用，所以就有了以下的一条引用链。
+>
+> 主线程 —> threadlocal —> Looper —> MessageQueue —> Message —> Handler —> Activity
+>
+> 其`根本原因`是因为这条引用链的头头，也就是`主线程`，是不会被回收的，所以导致Activity无法被回收，出现内存泄漏，其中Handler只能算是导火索。
 
 ##### 10、Looper 的退出？
 
@@ -2618,7 +2624,31 @@ Launcher本身也是一个应用程序，它在启动过程中会请求PackageMa
 
 
 
-#### 四、HTTP请求加密
+#### 四、Service 启动流程
+
+https://www.jianshu.com/p/17cdbb502f34
+
+![img](https://upload-images.jianshu.io/upload_images/22650779-28bbd35780960fd7.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
+
+```java
+void scheduleServiceTimeoutLocked(ProcessRecord proc) {
+    if (proc.executingServices.size() == 0 || proc.thread == null) {
+        return;
+    }
+    Message msg = mAm.mHandler.obtainMessage(
+        ActivityManagerService.SERVICE_TIMEOUT_MSG);
+    msg.obj = proc;
+    //发送延时消息，如果规定时间内没有完成，则ANR，时间内完成则会移除该消息
+    mAm.mHandler.sendMessageDelayed(msg,
+            proc.execServicesFg ? SERVICE_TIMEOUT : SERVICE_BACKGROUND_TIMEOUT);
+}
+```
+
+
+
+
+
+#### 五、HTTP请求加密
 
 https://www.jianshu.com/p/cd69f9b031f2
 

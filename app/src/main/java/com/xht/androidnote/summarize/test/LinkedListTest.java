@@ -43,9 +43,13 @@ public class LinkedListTest {
         //        ListNode reverse = reverse(node1, node5);
         //        System.out.println(reverse.val);
         //        traversalList(reverse);
+
         //K个一组反转链表
-        ListNode reverseKGroup = reverseKGroup(node1, 2);
-        traversalList(reverseKGroup);
+        //ListNode reverseKGroup = reverseKGroup(node1, 2);
+        //traversalList(reverseKGroup);
+
+        ListNode listNode = reverseList(node1);
+        traversalList(listNode);
     }
 
     /**
@@ -109,6 +113,27 @@ public class LinkedListTest {
             cur = next;
         }
         return pre;
+    }
+
+    /**
+     * 12345
+     *
+     * @param head
+     * @return
+     */
+    private static ListNode reverseList(ListNode head) {
+        //1.传入的参数的合法性 || 递归的终止条件
+        if (head == null || head.next == null) {
+            return head;
+        }
+        //2.递归
+        ListNode newHead = reverseList(head.next);
+        //3.将后一个数据数据的指针指向前一个数据，并断开后一个数据指向后方的指针
+        head.next.next = head;
+        //4.断开前一个数据指向后一个数据数据的指针，并指向null
+        head.next = null;
+        //5.返回反转后链表
+        return newHead;
     }
 
 

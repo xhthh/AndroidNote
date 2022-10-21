@@ -27,6 +27,14 @@ class FpsViewActivity : BaseActivity() {
             FpsMonitor.stopMonitor()
             tv_fps.text = ""
         }
+
+        btn_sleep.setOnClickListener {
+            try {
+                Thread.sleep(3000)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+            }
+        }
     }
 
 

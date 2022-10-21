@@ -485,3 +485,68 @@ https://blog.csdn.net/hxl517116279/article/details/107058425/
   - 优化解耦 RecyclerView.Adapter
 
     > 我们在使用 RecyclerView 的时候，总会遇到多项 ItemType 的场景。随着业务复杂度的增加，ItemType 会越变越多，导致代码量越来越多，最终发展为 “上帝类”，需要设计出一种模式，使得增删改一种 ItemType 时的成本降到最低
+
+### 六、RecyclerView 常见问题
+
+#### 1、判断滑动到底部
+
+https://www.cnblogs.com/joahyau/p/10874511.html
+
+- 比较 lastItem 的 positon
+
+  通过比较当前屏幕可见最后一个item的position和整个RV的最后一个item的position，是同一个则到达底部。
+
+  ```java
+  public static boolean isVisBottom(RecyclerView recyclerView){  
+      LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();  
+      //屏幕中最后一个可见子项的position
+      int lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition();  
+      //当前屏幕所看到的子项个数
+      int visibleItemCount = layoutManager.getChildCount();  
+      //当前RecyclerView的所有子项个数
+      int totalItemCount = layoutManager.getItemCount();  
+      //RecyclerView的滑动状态
+      int state = recyclerView.getScrollState();  
+      if(visibleItemCount > 0 && lastVisibleItemPosition == totalItemCount - 1 && state == recyclerView.SCROLL_STATE_IDLE){   
+          return true; 
+      } else {   
+          return false;  
+      }
+  }
+  ```
+
+  
+
+- 比较高度
+
+  通过比较屏幕高度+View滑过的高度与View的总高度进行判断。
+
+  ```java
+  public static boolean isSlideToBottom(RecyclerView recyclerView) {    
+     if (recyclerView == null) return false; 
+     if (recyclerView.computeVerticalScrollExtent() + recyclerView.computeVerticalScrollOffset() 
+          >= recyclerView.computeVerticalScrollRange())   
+       return true;  
+     return false;
+  }
+  ```
+
+  computeVerticalScrollExtent()是当前屏幕显示的区域高度，computeVerticalScrollOffset() 是当前屏幕之前滑过的距离，而computeVerticalScrollRange()是整个View控件的高度。
+
+- 滚动实验法
+
+  即尝试是否能滚动。
+
+  ```java
+  RecyclerView.canScrollVertically(1); // false表示已经滚动到底部
+  RecyclerView.canScrollVertically(-1); // false表示已经滚动到顶部
+  ```
+
+  > 实际与第二种是相同的
+
+- 计算 item 高度与 RV 高度比较
+
+  算出滑过的item的距离，加上屏幕高度，再与RV高度比较。
+
+  > 实际与方法二原理一致
+

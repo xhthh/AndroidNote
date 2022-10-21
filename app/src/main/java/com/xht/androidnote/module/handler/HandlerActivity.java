@@ -47,7 +47,7 @@ public class HandlerActivity extends BaseActivity {
             }
             // todo
 
-            L.i("HandlerActivity---static+弱引用 处理handler内存泄漏");
+            L.e("HandlerActivity---static+弱引用 处理handler内存泄漏");
         }
     }
 
@@ -58,7 +58,7 @@ public class HandlerActivity extends BaseActivity {
             super.handleMessage(msg);
             switch (msg.what) {
                 case 1:
-                    L.i("handler---handleMessage()---thread.name==" + Thread.currentThread()
+                    L.e("handler---handleMessage()---thread.name==" + Thread.currentThread()
                             .getName());
                     break;
             }
@@ -102,7 +102,7 @@ public class HandlerActivity extends BaseActivity {
             @Override
             public boolean handleMessage(Message msg) {
                 if(msg.what == 233) {
-                    L.i("Handler CallBack 的使用");
+                    L.e("Handler CallBack 的使用");
                 }
                 return false;
             }
@@ -116,21 +116,21 @@ public class HandlerActivity extends BaseActivity {
 
     private void handlerTest() {
         //发送一个Runnable投递到Handler内部的Looper中去处理。最终也是通过send()方法来完成。即此Runnable并没有创建线程
-        handler.post(new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 //主线程
-                L.i("handlerTest()---post---run()---thread.name==" + Thread.currentThread()
+                L.e("handlerTest()---post---run()---thread.name==" + Thread.currentThread()
                         .getName());
             }
-        });
+        },5000);
 
         //子线程中发送消息，主线程更新UI
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 // 子线程thread，发送消息到主线程
-                L.i("handlerTest()---thread---run()---thread.name==" + Thread.currentThread()
+                L.e("handlerTest()---thread---run()---thread.name==" + Thread.currentThread()
                         .getName());
                 handler.sendEmptyMessage(1);
             }
@@ -154,7 +154,7 @@ public class HandlerActivity extends BaseActivity {
                         super.handleMessage(msg);
                         switch (msg.what) {
                             case 2:
-                                L.i("handlerAndThreadTest()---handler1-----handleMessage()" +
+                                L.e("handlerAndThreadTest()---handler1-----handleMessage()" +
                                         "---thread.name==" + Thread.currentThread().getName());
                                 break;
                         }
@@ -169,7 +169,7 @@ public class HandlerActivity extends BaseActivity {
             @Override
             public void run() {
                 super.run();
-                L.i("handlerAndThreadTest()---thread2---run()---thread.name==" + Thread
+                L.e("handlerAndThreadTest()---thread2---run()---thread.name==" + Thread
                         .currentThread()
                         .getName());
                 handler1.sendEmptyMessage(2);
@@ -194,7 +194,7 @@ public class HandlerActivity extends BaseActivity {
                 super.handleMessage(msg);
 
                 // 当前为子线程---WorkThread
-                L.i("handler2---当前线程===" + Thread.currentThread().getName());
+                L.e("handler2---当前线程===" + Thread.currentThread().getName());
                 // 执行耗时操作
                 timeConsuming();
 
@@ -206,7 +206,7 @@ public class HandlerActivity extends BaseActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                L.i("handlerThreadTest()---run()---当前线程===" + Thread.currentThread().getName());
+                L.e("handlerThreadTest()---run()---当前线程===" + Thread.currentThread().getName());
                 handler2.sendEmptyMessage(4);
             }
         }).start();

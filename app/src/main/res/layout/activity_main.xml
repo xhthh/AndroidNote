@@ -41,10 +41,10 @@
             android:text="各种功能控件测试" />
 
         <Button
-            android:id="@+id/btn_fps"
+            android:id="@+id/btn_opt_test"
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"
-            android:text="监测 fps" />
+            android:text="性能优化test" />
 
         <Button
             android:id="@+id/btn_edit_text"

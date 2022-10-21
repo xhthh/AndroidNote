@@ -34,6 +34,7 @@ import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.kotlin.KotlinTestActivity;
 import com.xht.androidnote.module.kotlin.WidgetTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
+import com.xht.androidnote.module.optimize.OptTestActivity;
 import com.xht.androidnote.module.pickerview.PickerViewActivity;
 import com.xht.androidnote.module.proxy.ProxyActivity;
 import com.xht.androidnote.module.recyclerview.RecyclerViewActivity;
@@ -127,7 +128,7 @@ public class MainActivity extends BaseActivity {
 //        }).start();
     }
 
-    @OnClick({R.id.btn_fps, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
+    @OnClick({R.id.btn_opt_test, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
             R.id.btn_service, R.id.btn_broadcast_receiver, R.id.btn_content_provider, R.id.btn_fragment, R.id.btn_okhttp,
             R.id.btn_retrofit, R.id.btn_glide, R.id.btn_handler, R.id.btn_async_task, R.id.btn_event_dispatch,
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
@@ -148,8 +149,8 @@ public class MainActivity extends BaseActivity {
             case R.id.btn_widget_test:
                 skip2Activity(WidgetTestActivity.class);
                 break;
-            case R.id.btn_fps:
-                skip2Activity(FpsViewActivity.class);
+            case R.id.btn_opt_test:
+                skip2Activity(OptTestActivity.class);
                 break;
             case R.id.btn_constraint:
                 skip2Activity(ConstraintLayoutTestActivity.class);
