@@ -388,11 +388,10 @@ override fun proceed(request: Request): Response {
   流程大致为
 
   1. 先写入请求头，如果是GET请求的话就已经请求完毕，POST请求的话是先发送请求头再发送请求体，会发送两个TCP包
-
-2. 然后读取响应头，接着判断过后，读取响应体。
+  2. 然后读取响应头，接着判断过后，读取响应体。
   3. 最终将响应的结果返回，这个结果会层层的向上传递，经过上面所有的拦截器。
   4. 最终走到了我们自定义的回调处。
-
+  
   > 这个拦截器里会进行 IO 操作与服务器交互，底层使用了 OKIO 来进行 IO 操作。
   >
   > 1. 根据 Request 的配置写入请求头
@@ -1064,6 +1063,7 @@ https://www.jianshu.com/p/b1c9259cb2bc
           return chain.proceed(newRequest);
       }
   };
+  ```
 
 
   OkHttpClient = new OkHttpClient.Builder()
