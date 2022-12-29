@@ -124,6 +124,10 @@ dependencies {
 
     implementation 'cn.hutool:hutool-all:5.8.10'
     implementation 'org.bouncycastle:bcpkix-jdk15to18:1.72'
+
+
+    implementation 'com.yanzhenjie:permission:2.0.3'
+
 }
 aspectjx {
     exclude 'versions.9'

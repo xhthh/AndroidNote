@@ -11,7 +11,7 @@ import com.xht.androidnote.R
 
 class OneFragment : Fragment() {
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.i("xht", "OneFragment---onAttach()");
     }

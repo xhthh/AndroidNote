@@ -11,7 +11,7 @@ import com.xht.androidnote.R
 
 class TwoFragment : Fragment() {
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.i("xht", "TwoFragment---onAttach()");
     }

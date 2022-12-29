@@ -38,7 +38,7 @@ class TestLifeCycleFragment : BaseFragment() {
         tv_result.text = str
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.i("xht", "Fragment---onAttach()");
     }

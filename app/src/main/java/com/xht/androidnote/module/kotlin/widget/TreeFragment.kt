@@ -66,8 +66,8 @@ class TreeFragment() : DialogFragment() {
         super.onStart()
         val dialogWidth = 600
         val dialogHeight = 300
-        dialog.window!!.setLayout(dialogWidth, dialogHeight)
-        val window: Window? = dialog.window
+        dialog?.window!!.setLayout(dialogWidth, dialogHeight)
+        val window: Window? = dialog!!.window
         val lp: WindowManager.LayoutParams? = window?.attributes
         lp?.dimAmount = 0F
         lp?.flags = lp?.flags?.or(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
@@ -97,7 +97,7 @@ class TreeFragment() : DialogFragment() {
         return list
     }
 
-    override fun onDismiss(dialog: DialogInterface?) {
+    override fun onDismiss(dialog: DialogInterface) {
 
     }
 

@@ -79,4 +79,24 @@
         android:layout_height="wrap_content"
         android:text="截屏"
         android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnStorageTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="拍照、选择相册、存储测试"
+        android:textAllCaps="false" />
+
+    <Button
+        android:id="@+id/btnCalendarTest1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="设置日历提醒1"
+        android:textAllCaps="false" />
+    <Button
+        android:id="@+id/btnCalendarTest2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="设置日历提醒2"
+        android:textAllCaps="false" />
 </LinearLayout>

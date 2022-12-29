@@ -2,7 +2,10 @@ package com.xht.androidnote.module.kotlin
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
+import com.blankj.utilcode.util.ToastUtils
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import com.xht.androidnote.module.kotlin.deviceId.DeviceIdActivity
@@ -11,10 +14,18 @@ import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
 import com.xht.androidnote.module.kotlin.screenshot.ScreenShotActivity
 import com.xht.androidnote.module.kotlin.widget.ClockActivity
+import com.xht.androidnote.module.kotlin.widget.StorageTestActivity
 import com.xht.androidnote.module.kotlin.widget.TableTestActivity
 import com.xht.androidnote.module.kotlin.widget.TextTestActivity
+import com.xht.androidnote.utils.CalendarReminderUtils
+import com.xht.androidnote.utils.CalendarUtils
+import com.xht.androidnote.utils.CalendarUtils.onCalendarRemindListener
 import com.xht.androidnote.utils.DateUtils
+import com.yanzhenjie.permission.Action
+import com.yanzhenjie.permission.AndPermission
+import com.yanzhenjie.permission.runtime.Permission
 import kotlinx.android.synthetic.main.activity_widget_test.*
+
 
 class WidgetTestActivity : BaseActivity() {
 
@@ -23,6 +34,7 @@ class WidgetTestActivity : BaseActivity() {
         return R.layout.activity_widget_test
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun initEventAndData() {
         btnNullTest.setOnClickListener {
 
@@ -81,6 +93,54 @@ class WidgetTestActivity : BaseActivity() {
 
         btnScreenShotTest.setOnClickListener {
             skip2Activity(ScreenShotActivity::class.java)
+        }
+
+        btnStorageTest.setOnClickListener {
+            skip2Activity(StorageTestActivity::class.java)
+        }
+
+        btnCalendarTest1.setOnClickListener {
+            var n = 1;
+            AndPermission.with(this)
+                .runtime()
+                .permission(Permission.READ_CALENDAR, Permission.WRITE_CALENDAR)
+                .onGranted(Action<List<String?>> { permissions: List<String?>? ->
+                    CalendarReminderUtils.addCalendarEvent(
+                        this,
+                        "学校读书",
+                        "吃了饭再去",
+                        System.currentTimeMillis() + 10000*n,
+                        0
+                    );
+                    n++
+                })
+                .onDenied(Action<List<String?>> { permissions: List<String?>? -> })
+                .start()
+            //设置日历提醒
+        }
+
+        btnCalendarTest2.setOnClickListener {
+            AndPermission.with(this)
+                .runtime()
+                .permission(Permission.READ_CALENDAR, Permission.WRITE_CALENDAR)
+                .onGranted {
+                    CalendarUtils.addCalendarEventRemind(this,
+                        "日历提醒",
+                        "测试日历提醒",
+                        System.currentTimeMillis() + 10000,
+                        System.currentTimeMillis() + 300000,
+                        0,
+                        object : onCalendarRemindListener {
+                            override fun onFailed(error_code: onCalendarRemindListener.Status?) {
+                                ToastUtils.showShort("添加日历失败：$error_code")
+                            }
+                            override fun onSuccess() {
+                                ToastUtils.showShort("添加日历成功")
+                            }
+                        })
+                }
+                .onDenied { }
+                .start()
         }
     }
 

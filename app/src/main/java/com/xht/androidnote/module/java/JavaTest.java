@@ -2,6 +2,8 @@ package com.xht.androidnote.module.java;
 
 import android.os.Build;
 
+import com.xht.androidnote.utils.TimeUtils;
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -22,7 +24,13 @@ public class JavaTest {
     public static void main(String[] args) {
 
         //extracted();
-        testJoin();
+        //testJoin();
+        String ymd = TimeUtils.getYMD(System.currentTimeMillis());
+        System.out.println("------年月日------"+ ymd);
+        String hm = TimeUtils.getHM(System.currentTimeMillis());
+        System.out.println("------时分------"+ hm);
+        String week = TimeUtils.getWeek(System.currentTimeMillis());
+        System.out.println("------星期------"+ week);
     }
 
     private static void testJoin() {
