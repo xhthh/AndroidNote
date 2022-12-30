@@ -86,4 +86,10 @@
     </style>
 
 
+    <!-- EditText 样式 -->
+    <style name="EditTextStyle" parent="Base.Widget.AppCompat.EditText">
+
+        <item name="colorControlNormal">#00FF00</item>
+        <item name="colorControlActivated">#FF00FF</item>
+    </style>
 </resources>

@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.ToastUtils
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import com.xht.androidnote.module.kotlin.deviceId.DeviceIdActivity
+import com.xht.androidnote.module.kotlin.location.LocationActivity
 import com.xht.androidnote.module.kotlin.location.LocationActivity2
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
@@ -59,7 +60,7 @@ class WidgetTestActivity : BaseActivity() {
             startActivity(
                 Intent(
                     this,
-                    LocationActivity2::class.java
+                    LocationActivity::class.java
                 )
             )
         }

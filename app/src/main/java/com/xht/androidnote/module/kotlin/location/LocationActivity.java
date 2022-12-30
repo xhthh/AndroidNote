@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +34,12 @@ public class LocationActivity extends BaseActivity {
     private String locationProvider = null;
     private Button mBtnGetLocation;
 
+    private TextView tvLoLa;//经纬度
+    private TextView tvLocation;//位置信息
+    private TextView tvCity;//城市
+    private EditText etLo;//经度
+    private EditText etLa;//纬度
+
 
     @Override
     protected int getLayoutId() {
@@ -41,10 +49,22 @@ public class LocationActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
         mBtnGetLocation = findViewById(R.id.btnGetLocation);
+        tvLoLa = findViewById(R.id.tvLoLa);
+        tvLocation = findViewById(R.id.tvLocation);
+        tvCity = findViewById(R.id.tvCity);
+        etLo = findViewById(R.id.etLo);
+        etLa = findViewById(R.id.etLa);
         mBtnGetLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getLocation();
+            }
+        });
+        findViewById(R.id.btnClear).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etLa.setText("");
+                etLo.setText("");
             }
         });
     }
@@ -87,7 +107,6 @@ public class LocationActivity extends BaseActivity {
                             location.getLatitude() + "", Toast.LENGTH_SHORT).show();
                     Log.v("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
                     getAddress(location);
-
                 } else {
                     //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
                     locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
@@ -201,11 +220,21 @@ public class LocationActivity extends BaseActivity {
         List<Address> result = null;
         try {
             if (location != null) {
+                double loStr = Double.parseDouble(etLo.getText().toString());
+                double laStr = Double.parseDouble(etLa.getText().toString());
                 Geocoder gc = new Geocoder(this, Locale.getDefault());
-                result = gc.getFromLocation(location.getLatitude(),
-                        location.getLongitude(), 1);
+                if (loStr > 0 && laStr > 0) {
+                    result = gc.getFromLocation(laStr, loStr, 1);
+                } else {
+                    result = gc.getFromLocation(location.getLatitude(),
+                            location.getLongitude(), 1);
+                }
+
                 Toast.makeText(this, "获取地址信息：" + result.toString(), Toast.LENGTH_LONG).show();
                 Log.v("TAG", "获取地址信息：" + result.toString());
+                tvLoLa.setText("经度：" + location.getLongitude() + " 纬度：" + location.getLatitude());
+                tvLocation.setText(result.toString());
+                tvCity.setText(result.get(0).getLocality());
             }
         } catch (Exception e) {
             e.printStackTrace();
