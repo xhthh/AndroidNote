@@ -79,11 +79,11 @@ public class LocationActivity extends BaseActivity {
         //        if (providers.contains(LocationManager.GPS_PROVIDER)) {
         //            //如果是GPS
         //            locationProvider = LocationManager.GPS_PROVIDER;
-        //            Log.v("TAG", "定位方式GPS");
+        //            Log.e("TAG", "定位方式GPS");
         //        } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
         //            //如果是Network
         //            locationProvider = LocationManager.NETWORK_PROVIDER;
-        //            Log.v("TAG", "定位方式Network");
+        //            Log.e("TAG", "定位方式Network");
         //        } else {
         //            Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
         //            return;
@@ -105,7 +105,7 @@ public class LocationActivity extends BaseActivity {
                 if (location != null) {
                     Toast.makeText(this, location.getLongitude() + " " +
                             location.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                    Log.v("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
+                    Log.e("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
                     getAddress(location);
                 } else {
                     //监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
@@ -117,7 +117,7 @@ public class LocationActivity extends BaseActivity {
             if (location != null) {
                 Toast.makeText(this, location.getLongitude() + " " +
                         location.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                Log.v("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
+                Log.e("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
                 getAddress(location);
 
             } else {
@@ -150,7 +150,7 @@ public class LocationActivity extends BaseActivity {
                 //如果位置发生变化，重新显示地理位置经纬度
                 Toast.makeText(LocationActivity.this, location.getLongitude() + " " +
                         location.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                Log.v("TAG", "监视地理位置变化-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
+                Log.e("TAG", "监视地理位置变化-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
             }
         }
     };
@@ -176,7 +176,7 @@ public class LocationActivity extends BaseActivity {
                         if (location != null) {
                             Toast.makeText(this, location.getLongitude() + " " +
                                     location.getLatitude() + "", Toast.LENGTH_SHORT).show();
-                            Log.v("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
+                            Log.e("TAG", "获取上次的位置-经纬度：" + location.getLongitude() + "   " + location.getLatitude());
                         } else {
                             // 监视地理位置变化，第二个和第三个参数分别为更新的最短时间minTime和最短距离minDistace
                             locationManager.requestLocationUpdates(locationProvider, 0, 0, locationListener);
@@ -202,11 +202,11 @@ public class LocationActivity extends BaseActivity {
         if (providers.contains(LocationManager.GPS_PROVIDER)) {
             //如果是GPS
             locationProvider = LocationManager.GPS_PROVIDER;
-            Log.v("TAG", "定位方式GPS");
+            Log.e("TAG", "定位方式GPS");
         } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
             //如果是Network
             locationProvider = LocationManager.NETWORK_PROVIDER;
-            Log.v("TAG", "定位方式Network");
+            Log.e("TAG", "定位方式Network");
         } else {
             Toast.makeText(this, "没有可用的位置提供器", Toast.LENGTH_SHORT).show();
             return null;
@@ -231,7 +231,7 @@ public class LocationActivity extends BaseActivity {
                 }
 
                 Toast.makeText(this, "获取地址信息：" + result.toString(), Toast.LENGTH_LONG).show();
-                Log.v("TAG", "获取地址信息：" + result.toString());
+                Log.e("TAG", "获取地址信息：" + result.toString());
                 tvLoLa.setText("经度：" + location.getLongitude() + " 纬度：" + location.getLatitude());
                 tvLocation.setText(result.toString());
                 tvCity.setText(result.get(0).getLocality());
