@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.blankj.utilcode.util.ToastUtils
 import com.xht.androidnote.R
@@ -133,10 +134,10 @@ class WidgetTestActivity : BaseActivity() {
                         0,
                         object : onCalendarRemindListener {
                             override fun onFailed(error_code: onCalendarRemindListener.Status?) {
-                                ToastUtils.showShort("添加日历失败：$error_code")
+                                Toast.makeText(mContext,"添加日历失败",Toast.LENGTH_SHORT).show();
                             }
                             override fun onSuccess() {
-                                ToastUtils.showShort("添加日历成功")
+                                Toast.makeText(mContext,"添加日历成功",Toast.LENGTH_SHORT).show();
                             }
                         })
                 }

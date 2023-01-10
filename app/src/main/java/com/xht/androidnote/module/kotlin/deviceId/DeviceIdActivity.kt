@@ -5,6 +5,7 @@ import android.provider.Settings
 import android.util.Log
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.utils.DeviceIdUtils
 import kotlinx.android.synthetic.main.activity_device_id.*
 import java.net.NetworkInterface
 import java.util.*
@@ -16,8 +17,9 @@ class DeviceIdActivity : BaseActivity() {
 
     override fun initEventAndData() {
         btnGetDeviceId.setOnClickListener {
-            val wifiMac = getWifiMac()
-            tvDeviceId.text = wifiMac + "  " + getAndroidId(this) + "  " + generateId()
+//            val wifiMac = getWifiMac()
+//            tvDeviceId.text = wifiMac + "  " + getAndroidId(this) + "  " + generateId()
+            tvDeviceId.text = DeviceIdUtils.getDeviceId(this)
         }
 
         //921018fb881
