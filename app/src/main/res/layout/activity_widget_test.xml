@@ -1,102 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnNullTest"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="测试数据为空时的异常" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnCoroutines"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="协程" />
+        <Button
+            android:id="@+id/btnTestGoToPermission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="跳转到权限页面" />
 
-    <Button
-        android:id="@+id/btnCoroutinesTest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="协程test" />
+        <Button
+            android:id="@+id/btnNullTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="测试数据为空时的异常" />
 
-    <Button
-        android:id="@+id/btnMultiSelect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="多选列表" />
+        <Button
+            android:id="@+id/btnCoroutines"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="协程" />
+
+        <Button
+            android:id="@+id/btnCoroutinesTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="协程test" />
+
+        <Button
+            android:id="@+id/btnMultiSelect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="多选列表" />
 
 
-    <Button
-        android:id="@+id/btnSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="搜索框" />
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="搜索框" />
 
-    <Button
-        android:id="@+id/btnLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="获取位置信息" />
+        <Button
+            android:id="@+id/btnLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取位置信息" />
 
-    <Button
-        android:id="@+id/btnDeviceId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="设备唯一标识" />
+        <Button
+            android:id="@+id/btnDeviceId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设备唯一标识" />
 
-    <Button
-        android:id="@+id/btnClock"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="时钟控件" />
+        <Button
+            android:id="@+id/btnClock"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="时钟控件" />
 
-    <Button
-        android:id="@+id/btnRecord"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="录音" />
+        <Button
+            android:id="@+id/btnRecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="录音" />
 
-    <Button
-        android:id="@+id/btnText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="高亮textview 可点击"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="高亮textview 可点击"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btnTable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="表格"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnTable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="表格"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btnScreenShotTest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="截屏"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnScreenShotTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="截屏"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btnStorageTest"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="拍照、选择相册、存储测试"
-        android:textAllCaps="false" />
+        <Button
+            android:id="@+id/btnStorageTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="拍照、选择相册、存储测试"
+            android:textAllCaps="false" />
 
-    <Button
-        android:id="@+id/btnCalendarTest1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="设置日历提醒1"
-        android:textAllCaps="false" />
-    <Button
-        android:id="@+id/btnCalendarTest2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="设置日历提醒2"
-        android:textAllCaps="false" />
-</LinearLayout>
+        <Button
+            android:id="@+id/btnCalendarTest1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置日历提醒1"
+            android:textAllCaps="false" />
+
+        <Button
+            android:id="@+id/btnCalendarTest2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置日历提醒2"
+            android:textAllCaps="false" />
+    </LinearLayout>
+
+</ScrollView>

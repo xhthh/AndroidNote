@@ -15,14 +15,12 @@ import com.xht.androidnote.module.kotlin.location.LocationActivity2
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
 import com.xht.androidnote.module.kotlin.screenshot.ScreenShotActivity
-import com.xht.androidnote.module.kotlin.widget.ClockActivity
-import com.xht.androidnote.module.kotlin.widget.StorageTestActivity
-import com.xht.androidnote.module.kotlin.widget.TableTestActivity
-import com.xht.androidnote.module.kotlin.widget.TextTestActivity
+import com.xht.androidnote.module.kotlin.widget.*
 import com.xht.androidnote.utils.CalendarReminderUtils
 import com.xht.androidnote.utils.CalendarUtils
 import com.xht.androidnote.utils.CalendarUtils.onCalendarRemindListener
 import com.xht.androidnote.utils.DateUtils
+import com.xht.androidnote.utils.JumpPermissionManagement
 import com.yanzhenjie.permission.Action
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
@@ -143,6 +141,11 @@ class WidgetTestActivity : BaseActivity() {
                 }
                 .onDenied { }
                 .start()
+        }
+
+        btnTestGoToPermission.setOnClickListener {
+            //startActivity(Intent(this, TestGoToPermissionActivity::class.java))
+            JumpPermissionManagement.GoToSetting(this)
         }
     }
 
