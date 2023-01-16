@@ -2,6 +2,7 @@ package com.xht.androidnote.module.view.edittext;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +25,8 @@ public class EditTextActivity extends BaseActivity {
     @BindView(R.id.tv_title)
     TextView tvTitle;
 
+    String strHint;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_edit_text;
@@ -32,10 +35,30 @@ public class EditTextActivity extends BaseActivity {
     @Override
     protected void initEventAndData() {
 
+        //输入字符星号化
+        editTextTest1.setTransformationMethod(new WordReplacement());
+
+        //EditText 获得焦点时hint消失，失去焦点时hint显示
+        editTextTest1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (!hasFocus) {
+                    ((TextView) v).setHint(strHint);
+                } else {
+                    ((TextView) v).setHint("");
+                }
+
+            }
+        });
+
         editTextTest1.addTextChangedListener(new PriceWatcher(editTextTest1));
 
 
         editTextTest1.addTextChangedListener(new TextWatcher() {
+            private CharSequence temp;
+            private int sStart;
+            private int sEnd;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -43,12 +66,12 @@ public class EditTextActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                temp = s;
+                Log.e("xht","------输入文本 = " + temp.toString());
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
     }
