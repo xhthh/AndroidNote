@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">AndroidNote</string>
     <string name="cancel">取消</string>
+
+    <!--获取验证码按钮-->
+    <string name="timer_resend">重新获取</string>
+    <string name="timer_free_register">获取验证码</string>
+    <string name="picture_code_error">请输入正确的图形验证码</string>
+    <string name="picture_code_empty">请输入图形验证码</string>
 </resources>

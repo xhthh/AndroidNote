@@ -6,21 +6,19 @@ import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.blankj.utilcode.util.ToastUtils
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import com.xht.androidnote.module.kotlin.deviceId.DeviceIdActivity
 import com.xht.androidnote.module.kotlin.location.LocationActivity
-import com.xht.androidnote.module.kotlin.location.LocationActivity2
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
 import com.xht.androidnote.module.kotlin.screenshot.ScreenShotActivity
-import com.xht.androidnote.module.kotlin.widget.*
-import com.xht.androidnote.utils.CalendarReminderUtils
-import com.xht.androidnote.utils.CalendarUtils
+import com.xht.androidnote.module.kotlin.widget.ClockActivity
+import com.xht.androidnote.module.kotlin.widget.StorageTestActivity
+import com.xht.androidnote.module.kotlin.widget.TableTestActivity
+import com.xht.androidnote.module.kotlin.widget.TextTestActivity
+import com.xht.androidnote.utils.*
 import com.xht.androidnote.utils.CalendarUtils.onCalendarRemindListener
-import com.xht.androidnote.utils.DateUtils
-import com.xht.androidnote.utils.JumpPermissionManagement
 import com.yanzhenjie.permission.Action
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
@@ -109,7 +107,7 @@ class WidgetTestActivity : BaseActivity() {
                         this,
                         "学校读书",
                         "吃了饭再去",
-                        System.currentTimeMillis() + 10000*n,
+                        System.currentTimeMillis() + 10000 * n,
                         0
                     );
                     n++
@@ -132,10 +130,11 @@ class WidgetTestActivity : BaseActivity() {
                         0,
                         object : onCalendarRemindListener {
                             override fun onFailed(error_code: onCalendarRemindListener.Status?) {
-                                Toast.makeText(mContext,"添加日历失败",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "添加日历失败", Toast.LENGTH_SHORT).show();
                             }
+
                             override fun onSuccess() {
-                                Toast.makeText(mContext,"添加日历成功",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "添加日历成功", Toast.LENGTH_SHORT).show();
                             }
                         })
                 }
@@ -147,6 +146,23 @@ class WidgetTestActivity : BaseActivity() {
             //startActivity(Intent(this, TestGoToPermissionActivity::class.java))
             JumpPermissionManagement.GoToSetting(this)
         }
+
+        val timeCount = TimeCount(20000, 1000, tvGetCode)
+        //测试TextView不可点击问题
+        tvGetCode.setOnClickListener {
+            Log.e("textView", "------点击获取验证码，倒计时，设为不可点击------");
+            tvGetCode.isClickable = false;
+            timeCount.start()
+        }
+        timeCount.setOnTimeFinishListener(object : TimeCount.OnTimeFinishListener {
+            override fun onTimeFinished() {
+                Log.e("textView", "------倒计时结束，设为可点击------");
+                tvGetCode.isClickable = true
+            }
+
+            override fun onTimeGoingOn() {
+            }
+        })
     }
 
     inline fun <reified T> startActivity(context: Context, block: Intent.() -> Unit) {
