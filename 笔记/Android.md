@@ -1691,7 +1691,7 @@ View 中的 layout() 流程如下：
 3. 绘制子元素 dispatchDraw(canvas)
 4. 绘制装饰     onDrawForeground(canvas)
 
-> setVillNotDraw() 如果一个 View 不需要绘制任何内容，那么设置这个标记位为 true 后，系统会进行相应的优化。默认情况下，View 没有启用，ViewGroup 默认启用了这个标志；
+> setWillNotDraw() 如果一个 View 不需要绘制任何内容，那么设置这个标记位为 true 后，系统会进行相应的优化。默认情况下，View 没有启用，ViewGroup 默认启用了这个标志；
 
 
 
