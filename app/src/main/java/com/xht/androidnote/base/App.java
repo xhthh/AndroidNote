@@ -4,8 +4,10 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.os.Process;
+import android.os.StrictMode;
 import android.view.View;
 
+import com.xht.androidnote.BuildConfig;
 import com.xht.androidnote.utils.L;
 
 import java.util.ArrayList;
@@ -46,6 +48,30 @@ public class App extends Application {
 //        builder.watchActivities(false);
 //        AppWatcher.Config config = builder.build();
 //        AppWatcher.setConfig(config);
+
+        //initStrictMode();
+    }
+
+    private void initStrictMode() {
+        // 1、设置Debug标志位，仅仅在线下环境才使用StrictMode
+        if (BuildConfig.DEBUG) {
+            // 2、设置线程策略
+            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                    .detectCustomSlowCalls() //API等级11，使用StrictMode.noteSlowCode
+                    .detectDiskReads()
+                    .detectDiskWrites()
+                    .detectNetwork() // or .detectAll() for all detectable problems
+                    .penaltyDialog() //弹出违规提示对话框
+                    .penaltyLog() //在Logcat 中打印违规异常信息
+                    .penaltyFlashScreen() //API等级11
+                    .build());
+            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                    .detectLeakedSqlLiteObjects()
+                    .detectLeakedClosableObjects() //API等级11
+                    .penaltyLog()
+                    .penaltyDeath()
+                    .build());
+        }
     }
 
 
