@@ -193,6 +193,8 @@ ServiceMethod<?> loadServiceMethod(Method method) {
 > 
 > 最后就是源码中 invoke()中的代码，serviceMethod之类获取注解信息，方法参数等，然后构建一个OkHttpCall
 > ```
+>
+> ![img](https://upload-images.jianshu.io/upload_images/782269-fb29059f8e16d0fe.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/646/format/webp)
 
 
 

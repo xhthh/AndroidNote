@@ -24,6 +24,7 @@ Jetpack 只是让 MVVM 更简单、更安全
   - addObserver() 进行注册；
   - 通过反射，获取观察者 observer 中声明的方法，遍历查看是否有被 OnLifecycleEvent 注解的方法；
   - 最终通过 Map 存储；
+  
 - 分发处理
   - ComponentActivity 实现了 LifecycleOwner 接口并持有 LifecycleRegistry 实例，但是操作 LifecycleRegistry 生命周期变化的逻辑是在 ReportFragment 中（在API 29及以上 直接使用activity的registerActivityLifecycleCallbacks 注册了生命周期回调，29以下是通过 Fragment 感知生命周期）；
 
@@ -41,11 +42,16 @@ Jetpack 只是让 MVVM 更简单、更安全
   
   - 最后使用 sync() 把生命周期状态同步给所有的观察者；
   
-       observer.dispatchEvent(lifeCycleOwner, event)
+    observer.dispatchEvent(lifeCycleOwner, event)
   
     - ObserverWithState#dispatchEvent() 中会回调 mLifecycleObserver.onStateChanged(owner, event)
+    - mLifecycleObserver 的实现类是在 ObserverWithState 构造函数中，Lifecycling.lifecycleEventObserver(observer) 返回的 ReflectiveGenericLifecycleObserver；
   
   - 最终在实现类的回调中，通过反射，调用在注册时，保存的数据找到对应的方法，进行调用；
+  
+- 流程总结
+
+  ![img](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/bfeed64e896c49ddb57b7ff1f1a099d1~tplv-k3u1fbpfcp-zoom-in-crop-mark:4536:0:0:0.awebp)
 
 
 

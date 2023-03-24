@@ -290,10 +290,42 @@ https://github.com/lzyzsd/JsBridge
 如何避免 WebView 内存泄漏
 
 1. **不在xml 中定义 WebView，而是在需要的时候在 Activity 中创建，并且 Context 使用 getApplicationContext()。** 
+
 2. **在 Activity 销毁（WebView）的时候，先让 WebView 加载 null 内容，然后移除 WebView，再销毁 WebView，最后置空。**
-3. 动态添加webview，通过布局的viewgroup，使用viewgroup.add方式添加webview，销毁的时候先通过viewgroup.removeView(webview)删除webview，然后webview.destroy；另外传入webview的Context采用弱引用的方式。
+
+   > 动态添加webview，通过布局的viewgroup，使用viewgroup.add方式添加webview，销毁的时候先通过viewgroup.removeView(webview)删除webview，然后webview.destroy；另外传入webview的Context采用弱引用的方式。
+
+3. 在承载 `WebView` 的 `Activity` 中，单开一个进程去处理。但是这里要牵扯到进程之间的通信。
+
+   > 如果想要webView跟Activity有更多的数据交互，可以用AIDL->Service（数据交互）->Activity（主进程，Handler、回调等方式）
+
+WebView内存泄漏原因：
 
 > 内存泄漏的主要原因是引用了 Activity/Fragment 的 Context，导致 Activity/Fragment 无法被释放。
+>
+> webview引起的内存泄漏主要是因为org.chromium.android_webview.AwContents 类中注册了component callbacks，但是未正常反注册而导致的。
+>
+> org.chromium.android_webview.AwContents 类中有这两个方法 onAttachedToWindow 和 onDetachedFromWindow；系统会在attach和detach处进行注册和反注册component callback；
+>  在onDetachedFromWindow() 方法的第一行中：
+>
+> ```kotlin
+> if (isDestroyed()) return;， 
+> ```
+>
+> 如果 isDestroyed() 返回 true 的话，那么后续的逻辑就不能正常走到，所以就不会执行unregister的操作；我们的activity退出的时候，都会主动调用 WebView.destroy() 方法，这会导致 isDestroyed() 返回 true；destroy()的执行时间又在onDetachedFromWindow之前，所以就会导致不能正常进行unregister()。
+>
+> 解决方法就是：**让onDetachedFromWindow先走，在主动调用destroy()之前，把webview从它的parent上面移除掉。**
+>
+> ```php
+> ViewParent parent = mWebView.getParent();
+> if (parent != null) {
+>     ((ViewGroup) parent).removeView(mWebView);
+> }
+> 
+> mWebView.destroy();
+> ```
+>
+> 链接：https://www.jianshu.com/p/3e8f7dbb0dc7
 
 
 
