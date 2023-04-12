@@ -34,6 +34,10 @@ class CustomViewActivity : BaseActivity() {
         btn_flowlayout.setOnClickListener {
             skip2Activity(FlowLayoutActivity::class.java)
         }
+
+        btn_wave_view.setOnClickListener {
+            skip2Activity(WaveViewActivity::class.java)
+        }
     }
 
     fun traverseViewGroup(view: View?): Int {

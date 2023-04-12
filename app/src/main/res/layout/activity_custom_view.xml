@@ -31,6 +31,12 @@
         android:text="流式布局FlowLayout"
         android:textAllCaps="false" />
 
+    <Button
+        android:id="@+id/btn_wave_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="水波纹效果" />
+
     <com.xht.androidnote.module.customview.MyViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

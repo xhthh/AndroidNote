@@ -194,6 +194,7 @@
         <activity android:name=".module.customview.FlowLayoutActivity" />
         <activity android:name=".module.optimize.BlockDetectActivity" />
         <activity android:name=".module.kotlin.widget.StorageTestActivity" />
+        <activity android:name=".module.customview.WaveViewActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
