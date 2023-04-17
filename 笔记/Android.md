@@ -147,7 +147,12 @@ onNewIntent不会再调用onCreate方法了，会直接调用onStart与onResume�
 
 - Intent
 
-  大小限制 1M
+  Intent传输数据的大小受[Binder](https://so.csdn.net/so/search?q=Binder&spm=1001.2101.3001.7020)的限制，Binder 事务缓冲区限制了传递数据的大小，上限是1M。不过这个1M并不是安全的上限，Binder可能在处理别的工作，安全上限是多少这个在不同的机型上也不一样。
+
+  - 减少传输数据量
+  - Intent通过绑定一个Bundle来传输，这个可以超过1M，不过也不能过大
+  - 通过内存共享，使用静态变量或者使用EventBus等类似的通信工具
+  - 通过文件共享
 
 - 借助类的静态变量
 
@@ -253,7 +258,7 @@ SP 是线程安全的，一共用到了3个锁，mLock、mWritingToDiskLock、mE
 
 > 在`apply()`方法中，首先会创建一个等待锁，根据源码版本的不同，最终更新文件的任务会交给`QueuedWork.singleThreadExecutor()`单个线程或者`HandlerThread`去执行，当文件更新完毕后会释放锁。
 >
-> 但当`Activity.onStop()`以及`Service`处理`onStop`等相关方法时，则会执行 `QueuedWork.waitToFinish()`等待所有的等待锁释放，因此如果`SharedPreferences`一直没有完成更新任务，有可能会导致卡在主线程，最终超时导致`ANR`。
+> 但当`Activity.onStop()`以及`Service`处理`onStop`等相关方法时，如 ActivityThread#handleStopActivity() 方法中，会执行 `QueuedWork.waitToFinish()`等待所有的等待锁释放，因此如果`SharedPreferences`一直没有完成更新任务，有可能会导致卡在主线程，最终超时导致`ANR`。
 >
 > 比如太频繁无节制的`apply()`，导致任务过多。
 
@@ -1416,7 +1421,7 @@ if (!canceled && !intercepted) {
   
   > - 如果子 View dispatchTouchEvent() 返回 false，mFirstTouchTarget 就不会被赋值，dispatchTransformedTouchEvent() 中 child 传 null，走 super.dispatchTouchEvent() 即父 View 的父类即其本身作为 View 的 dispatchTouchEvent() 方法；
   > - 且后续事件序列 MOVE、UP 不会再传递给子 View，因为父 View 的 dispatchTouchEvent() 方法中，开始处判断，if (actionMasked == MotionEvent.ACTION_DOWN || mFirstTouchTarget != null)    MOVE 和 UP 且 mFirstTouchTarget 为 null，所以走 else 分支，intercept 赋为 true；
-  > - intercept 为 true，也就不会再进入 dispatchTransformedTouchEvent() 所在的这段代码，即不会再将 MOVE 和 UP 事件传递给子 View；
+  > - intercept 为 true，进入 dispatchTransformedTouchEvent() 传 null，即调用父 View 自身的 dispatchTouchEvent()，即不会再将 MOVE 和 UP 事件传递给子 View；
 
 ##### 5、View 的分发
 
@@ -1612,7 +1617,7 @@ ViewGroup 是一个抽象类，没有实现 onMeasure，具体测量过程由各
 - 遍历子元素对每个子元素执行 measureChildBeforeLayout()，这个方法内部会调用子元素的 measure()；
 - 系统会通过 mTotalLength 变量来存储竖直方向上的高度。每测量一个子元素，mTotalLength就会增加，增加的部分主要包括了子元素的高度以及子元素在竖直方向上的margin等。
 - 当子元素测量完毕后，LinearLayout 会测量自己的大小；
-- 最终通过 setMeasureDimension() 设置测量后的宽高；
+- 最终通过 setMeasuredDimension() 设置测量后的宽高；
 
 
 

@@ -214,7 +214,35 @@ ViewModel，视图模型，即为界面准备数据的模型。
     - 提供了 clear() 方法，在 Activity 真正销毁后，进行清除；
   - ViewModelStore 的存储和获取：
     - NonConfigurationInstances 与配置无关的类，通过它获取 ViewModelStore 的实例，追踪源码最终到 Activity#attach()--->ActivityThread#performLaunchActivity()--->ActivityClientRecord中的变量 lastNonConfigurationInstances；
+    
     - 而 ActivityClientRecord 保存在 ActivityThread 的 mActivities 中；
+    
+    - Activity 的生命周期都是通过 ActivityThread 管理的, 重建Activity通过 `ActivityThread # handleRelaunchActivity` 实现；
+    
+      `handleRelaunchActivityInner()` 分为两步 ：
+    
+      - handleDestroyActivity()销毁当前的页面；
+    
+        在 performDestroyActivity() 在调用 mInstrumentation.callActivityOnDestroy(r.activity) 也就是销毁 Activity 之前, 会调用 activity.retainNonConfigurationInstances() 将返回的 NonConfigurationInstances 对象保存到 ActivityClientRecord 中；
+    
+        > //在销毁前保存 NonConfigurationInstances
+        > r.lastNonConfigurationInstances = r.activity.retainNonConfigurationInstances();
+    
+      - handleLaunchActivity()重建新的页面；
+    
+        performLaunchActivity(r)，创建 activity，调用 attach(r.lastNonConfigurationInstances)；
+  
+  > ActivityClientRecord r 中保存了 Activity.NonConfigurationInstances.
+  >
+  > Activity.NonConfigurationInstances 中保存了 FragmentActivity.NonConfigurationInstances.
+  >
+  > FragmentActivity.NonConfigurationInstances 中保存了 ViewModelStore viewModelStore
+  >
+  > ViewModelStore viewModelStore 内部通过HashMap保存了 当前Activity的所有 ViewModel
+  >
+  > 销毁页面时, ViewModel 最终将被保存到 ActivityRecord 中.
+  > 重建页面时, 使用了同一个 ActivityRecord 来进行数据的恢复, 从中可以获得销毁前页面上所有 ViewModel 的容器 ViewModelStore, 再次调用 ViewModelProviders.of(Activity.class).get(ViewModel.class) 根据类名从 HashMap 中获得已经创建过的 ViewModel.
+  > 原文链接：https://blog.csdn.net/qijingwang/article/details/121521256
 
 
 

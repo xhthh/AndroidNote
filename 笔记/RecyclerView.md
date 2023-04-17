@@ -197,6 +197,12 @@ tryGetViewHolderForPositionByDeadline() 主要逻辑：
 
 如果 RV 的 itemView 布局比较复杂，调用 notifyItemChanged(position) 时会造成这个 itemView 所有的视图都重新布局显示，会造成性能损耗。
 
+> 局部刷新原理
+>
+> Adapter.notifyItemChanged(int position, @Nullable Object payload)方法会导致RecyclerView的onMeasure()和onLayout()方法调用。在onLayout()方法中会调用dispatchLayoutStep1()、dispatchLayoutStep2()和dispatchLayoutStep3()三个方法，其中dispatchLayoutStep1()将更新信息存储到ViewHolder中，dispatchLayoutStep2()进行子View的布局，dispatchLayoutStep3()触发动画。在dispatchLayoutStep2()中，会通过DefaultItemAnimator的canReuseUpdatedViewHolder()方法判断position处是否复用之前的ViewHolder，如果调用notifyItemChanged()时的payload不为空，则复用；否则，不复用。在dispatchLayoutStep3()中，如果position处的ViewHolder与之前的ViewHolder相同，则执行DefaultItemAnimator的move动画；如果不同，则执行DefaultItemAnimator的change动画，旧View动画消失（alpha值从1到0），新View动画展现（alpha值从0到1），这样就出现了闪烁效果。
+> ————————————————
+> 原文链接：https://blog.csdn.net/ZHXLXH/article/details/88344955
+
 ```java
 public void onBindViewHolder(@NonNull VH holder, int position,
         @NonNull List<Object> payloads) {
