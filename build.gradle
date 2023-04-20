@@ -5,20 +5,26 @@ buildscript {
     ext.kotlin_version = '1.3.72'
 
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        jcenter(){url 'http://jcenter.bintray.com/'}
+        maven{
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            allowInsecureProtocol = true
+        }
+        jcenter(){
+            url 'http://jcenter.bintray.com/'
+            allowInsecureProtocol = true
+        }
 //        mavenCentral()
         google()
         jcenter()
     }
     //gradle需要的插件
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.3'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-        classpath 'com.kingkingdu.plugin:img-compressor:1.1.5'
+        classpath 'io.github.duking666:ImgCompressPlugin:1.2.1'
 
-        classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
+        //classpath 'com.hujiang.aspectjx:gradle-android-plugin-aspectjx:2.0.10'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -28,8 +34,14 @@ buildscript {
 //项目中所有modules需要使用的，仓库和依赖，不过依赖写在每个module自身中的build.gradle，如果有共同的依赖可以写在此处的dependencies中
 allprojects {
     repositories {
-        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
-        jcenter(){url 'http://jcenter.bintray.com/'}
+        maven{
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+            allowInsecureProtocol = true
+        }
+        jcenter(){
+            url 'http://jcenter.bintray.com/'
+            allowInsecureProtocol = true
+        }
         google()
         maven { url "https://jitpack.io" }
         jcenter()

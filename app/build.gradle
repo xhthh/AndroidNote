@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'android-aspectjx'
+//apply plugin: 'android-aspectjx'
 
 
 
@@ -19,13 +19,13 @@ ext {
     SUPPORT_LIBRARY_VERSION = '27.1.1'
 }
 
-def javaVersion = JavaVersion.VERSION_1_8
+def javaVersion = JavaVersion.VERSION_11
 
 def coroutines_version = "1.3.7"
 
 //android{}是Android插件提供的一个扩展类型，可以让我们自定义Android Gradle工程，是Android Gradle工程配置的唯一入口。
 android {
-    compileSdkVersion 30        //是编译所依赖的Android SDK的版本，这里是API Level。
+    compileSdkVersion 31        //是编译所依赖的Android SDK的版本，这里是API Level。
     buildToolsVersion '28.0.3'  //是构建该Android工程所用构建工具的版本。
 
     compileOptions {
@@ -37,7 +37,7 @@ android {
     defaultConfig {
         applicationId "com.xht.androidnote"
         minSdkVersion 19
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
@@ -77,9 +77,9 @@ dependencies {
     api 'androidx.multidex:multidex:2.0.0'
 
     //butterknife
-    implementation 'com.jakewharton:butterknife:10.1.0'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
 
     // okhttp
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
@@ -111,7 +111,7 @@ dependencies {
     //implementation project(':annotations')
     //annotationProcessor project(':annotations_processor')
 
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.5'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
 
     //test buildSrc 统筹管理依赖版本
     //implementation Libs.retrofit
@@ -129,10 +129,10 @@ dependencies {
     implementation 'com.yanzhenjie:permission:2.0.3'
 
 }
-aspectjx {
-    exclude 'versions.9'
-    exclude 'leakcanary'
-}
+//aspectjx {
+//    exclude 'versions.9'
+//    exclude 'leakcanary'
+//}
 repositories {
     mavenCentral()
 }
