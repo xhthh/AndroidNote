@@ -48,10 +48,10 @@ public class MyView extends View {
                 L.i("View---dispatchTouchEvent()---CANCEL");
                 break;
         }
-//        boolean result = super.dispatchTouchEvent(event);
+        boolean result = super.dispatchTouchEvent(event);
 //        L.i("View---dispatchTouchEvent()---result=" + result);
-//        return result;
-        return false;
+        return result;
+//        return false;
 //        return true;
 //                        return true;//父view和子view的事件都会走到，不会走子view的onTouchEvent()，如果需要两个都处理，可以在这里返回true
         //        return false;//如果返回false，子view不会接收到其它事件，父view可以接收到其他事件，

@@ -80,8 +80,8 @@ public class MyViewGroup extends RelativeLayout {
         boolean result = super.onInterceptTouchEvent(ev);
 //        L.i("ViewGrouup---onInterceptTouchEvent()---result=" + result);
 //        result = false;
-        return result;
-//        return false;
+//        return result;
+        return false;
     }
 
     /*

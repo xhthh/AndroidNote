@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.activity.ATestActivity;
@@ -139,6 +140,8 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_inflater:
                 skip2Activity(Factory2TestActivity.class);
+                Toast.makeText(this,"如果您的应用以 Android 12.0（API 级别 31）或更高版本为目标平台，" +
+                        "则消息框上限为两行文本，并且必须在文本旁边显示应用图标。请注意，此文本的行长因屏幕尺寸而异，因此最好尽可能缩短文本长度",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_adaptation_test:
                 skip2Activity(AndroidAdaptationActivity.class);

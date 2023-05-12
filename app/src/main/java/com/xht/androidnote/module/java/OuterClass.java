@@ -10,6 +10,7 @@ public class OuterClass {
     private static final OuterClass outerClass = new OuterClass();
     private static InnerClass2 innerClass2 = outerClass.new InnerClass2();
     private static final int age = 18;
+    private String name = "嘻嘻";
 
 
     private HashMap<String, Integer> map = new HashMap<>();
@@ -33,6 +34,9 @@ public class OuterClass {
         static Student student;
         private int test() {
             return outerClass.getAge();
+        }
+        private static void test2() {
+            System.out.println("-----静态内部类---静态方法-----" + age);
         }
     }
 
