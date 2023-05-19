@@ -79,16 +79,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        int height = scrollView.getHeight();
-        int measuredHeight = scrollView.getMeasuredHeight();
-
-        Log.i("xht", "height=" + height + "  measuredHeight=" + measuredHeight);
-        Log.i("xht", "height2=" + llContent.getHeight() + "  measuredHeight2=" + llContent.getMeasuredHeight());
-    }
-
-    @Override
     protected void initEventAndData() {
 
         /*
@@ -119,14 +109,14 @@ public class MainActivity extends BaseActivity {
         //            }
         //        }, 3000);
 
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Looper.prepare();
-//                Looper.loop();
-//                Log.e("xht","===========Looper Test==============");
-//            }
-//        }).start();
+        //        new Thread(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                Looper.prepare();
+        //                Looper.loop();
+        //                Log.e("xht","===========Looper Test==============");
+        //            }
+        //        }).start();
     }
 
     @OnClick({R.id.btn_opt_test, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
@@ -140,8 +130,8 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_inflater:
                 skip2Activity(Factory2TestActivity.class);
-                Toast.makeText(this,"如果您的应用以 Android 12.0（API 级别 31）或更高版本为目标平台，" +
-                        "则消息框上限为两行文本，并且必须在文本旁边显示应用图标。请注意，此文本的行长因屏幕尺寸而异，因此最好尽可能缩短文本长度",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "如果您的应用以 Android 12.0（API 级别 31）或更高版本为目标平台，" +
+                        "则消息框上限为两行文本，并且必须在文本旁边显示应用图标。请注意，此文本的行长因屏幕尺寸而异，因此最好尽可能缩短文本长度", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.btn_adaptation_test:
                 skip2Activity(AndroidAdaptationActivity.class);
