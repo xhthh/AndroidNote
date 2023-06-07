@@ -1,8 +1,10 @@
 package com.xht.androidnote.module.adaptation
 
 import android.Manifest
+import android.app.Activity
 import android.content.ContentUris
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -14,12 +16,8 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_adaptation10.btnAndroidId
-import kotlinx.android.synthetic.main.activity_adaptation10.btnInsertFile
-import kotlinx.android.synthetic.main.activity_adaptation10.btnSelectPic
-import kotlinx.android.synthetic.main.activity_adaptation10.ivPic
-import kotlinx.android.synthetic.main.activity_adaptation10.tvAndroidId
-import kotlinx.android.synthetic.main.activity_adaptation10.tvPathList
+import com.xht.androidnote.utils.FileUtil
+import kotlinx.android.synthetic.main.activity_adaptation10.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.BufferedOutputStream
@@ -83,6 +81,9 @@ class Adaptation10Activity : BaseActivity() {
 //                        selectPic()
 //                    }
 //                })
+
+            val code = android.os.Build.VERSION.SDK_INT
+            Log.e(TAG, "------CODE = $code")
             doSomethingWithPermissions()
         }
 
@@ -97,15 +98,85 @@ class Adaptation10Activity : BaseActivity() {
         btnInsertFile.setOnClickListener {
             insertFile()
         }
+
+        btnSAF.setOnClickListener {
+            openDocument()
+        }
+
+        val externalFilesDir = FileUtil.getExternalFilesDir(this)
+        Log.e(TAG, "FileUtil.getExternalFilesDir = $externalFilesDir")
+    }
+
+    /**
+     * 打开文件选择器
+     * ACTION_OPEN_DOCUMENT 和 ACTION_GET_CONTENT 有啥区别
+     */
+    private fun openDocument() {
+        //通过系统的文件浏览器选择一个文件
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        //筛选，只显示可以“打开”的结果，如文件(而不是联系人或时区列表)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        //过滤只显示图像类型文件
+        intent.type = "image/*"
+        startActivityForResult(intent, 233)
+    }
+
+    private val IMAGE_PROJECTION = arrayOf(
+        MediaStore.Images.Media.DISPLAY_NAME,
+        MediaStore.Images.Media.SIZE,
+        MediaStore.Images.Media._ID
+    )
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 233 && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                //获取文件uri
+                val uri = data.data
+                val cursor = uri?.let {
+                    contentResolver.query(
+                        it, IMAGE_PROJECTION, null, null,
+                        null, null
+                    )
+                }
+                if (cursor != null && cursor.moveToFirst()) {
+                    val displayName = cursor.getString(
+                        cursor.getColumnIndexOrThrow(
+                            IMAGE_PROJECTION[0]
+                        )
+                    )
+                    val size = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_PROJECTION[1]))
+                    Log.i(TAG, "Uri: $uri")
+                    Log.i(TAG, "Name: $displayName")
+                    Log.i(TAG, "Size: $size")
+                    Toast.makeText(this, "选择图片的 uri = $uri", Toast.LENGTH_SHORT).show()
+                    tvSelectUri.text =
+                        "uri = $uri \n file.path = " + FileUtil.getImageAbsolutePath(this, uri)
+                }
+                cursor?.close()
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     @AfterPermissionGranted(100)
     fun doSomethingWithPermissions() {
-        if (EasyPermissions.hasPermissions(
-                this,
+
+        val permissions = if (Build.VERSION.SDK_INT < 33) {
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        } else {
+            arrayOf(
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
+
+        if (EasyPermissions.hasPermissions(
+                this,
+                *permissions
             )
         ) {
             selectPic()
@@ -117,12 +188,14 @@ class Adaptation10Activity : BaseActivity() {
                 this,
                 "权限申请原理对话框 : 描述申请权限的原理",
                 100,
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                *permissions
             )
         }
     }
 
+    /**
+     * 通过 ContentResolver 插入文件至外部存储，Download 文件夹下，设置文件名称、内容等信息
+     */
     private fun insertFile() {
         // 操作 external.db 数据库
         // 获取 Uri 路径
@@ -178,7 +251,13 @@ class Adaptation10Activity : BaseActivity() {
             }
             cursor.close()
         }
+        //取最新的一个uri设置给ImageView
         ivPic.setImageURI(picUri)
+        tvNewestPicUri.text =
+            "最新图片 uri = $picUri \n file.path = " + FileUtil.getFilePathFromContentUri(
+                picUri,
+                contentResolver
+            )
     }
 
     override fun onRequestPermissionsResult(
