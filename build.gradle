@@ -13,9 +13,8 @@ buildscript {
             url 'http://jcenter.bintray.com/'
             allowInsecureProtocol = true
         }
-//        mavenCentral()
         google()
-        jcenter()
+        mavenCentral()
     }
     //gradle需要的插件
     dependencies {
@@ -44,7 +43,7 @@ allprojects {
         }
         google()
         maven { url "https://jitpack.io" }
-        jcenter()
+        mavenCentral()
         maven { url 'https://www.jitpack.io' }
 
     }

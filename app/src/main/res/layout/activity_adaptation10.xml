@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Android 10，SDK=29"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvPathList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/ll29"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/btnSelectPic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取图片" />
+
+            <ImageView
+                android:id="@+id/ivPic"
+                android:layout_width="200dp"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_launcher" />
+
+            <Button
+                android:id="@+id/btnAndroidId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获取AndroidId" />
+
+            <TextView
+                android:id="@+id/tvAndroidId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp" />
+
+            <Button
+                android:id="@+id/btnInsertFile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="通过MediaStore插入文件"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
