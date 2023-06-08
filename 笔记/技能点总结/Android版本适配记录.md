@@ -98,7 +98,11 @@ https://blog.csdn.net/qq_38122220/article/details/124057020
 
 
 
+#### Android 12
 
+##### 1、exported
+
+https://blog.csdn.net/u013208026/article/details/126241775
 
 
 

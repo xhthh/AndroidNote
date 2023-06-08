@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.bumptech.glide.Glide
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseActivity
 import com.xht.androidnote.utils.FileUtil
@@ -110,14 +111,21 @@ class Adaptation10Activity : BaseActivity() {
     /**
      * 打开文件选择器
      * ACTION_OPEN_DOCUMENT 和 ACTION_GET_CONTENT 有啥区别
+     *
+     * ACTION_PICK_IMAGES 可以
      */
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun openDocument() {
-        //通过系统的文件浏览器选择一个文件
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-        //筛选，只显示可以“打开”的结果，如文件(而不是联系人或时区列表)
-        intent.addCategory(Intent.CATEGORY_OPENABLE)
-        //过滤只显示图像类型文件
-        intent.type = "image/*"
+//        //通过系统的文件浏览器选择一个文件
+//        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+//        //筛选，只显示可以“打开”的结果，如文件(而不是联系人或时区列表)
+//        intent.addCategory(Intent.CATEGORY_OPENABLE)
+//        //过滤只显示图像类型文件
+//        intent.type = "image/*"
+//        startActivityForResult(intent, 233)
+        val intent = Intent(MediaStore.ACTION_PICK_IMAGES)
+        //intent.type = "video/*"
+        intent.putExtra(MediaStore.EXTRA_PICK_IMAGES_MAX, 5)//多选图片
         startActivityForResult(intent, 233)
     }
 
@@ -130,31 +138,57 @@ class Adaptation10Activity : BaseActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 233 && resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                //获取文件uri
-                val uri = data.data
-                val cursor = uri?.let {
-                    contentResolver.query(
-                        it, IMAGE_PROJECTION, null, null,
-                        null, null
-                    )
-                }
-                if (cursor != null && cursor.moveToFirst()) {
-                    val displayName = cursor.getString(
-                        cursor.getColumnIndexOrThrow(
-                            IMAGE_PROJECTION[0]
-                        )
-                    )
-                    val size = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_PROJECTION[1]))
-                    Log.i(TAG, "Uri: $uri")
-                    Log.i(TAG, "Name: $displayName")
-                    Log.i(TAG, "Size: $size")
-                    Toast.makeText(this, "选择图片的 uri = $uri", Toast.LENGTH_SHORT).show()
-                    tvSelectUri.text =
-                        "uri = $uri \n file.path = " + FileUtil.getImageAbsolutePath(this, uri)
-                }
-                cursor?.close()
+            //processOpenDoc(data)
+            processMultiSelect(data)
+        }
+    }
+
+    /**
+     * Android 13 文件选择器多选，返回uri处理
+     * uri 转换File路径，看网上方案是将文件复制到了沙盒环境。。。，不是原文件真实路径
+     */
+    private fun processMultiSelect(data: Intent?) {
+        val itemCount = data?.clipData!!.itemCount
+        val stringBuilder = StringBuilder()
+        for (i in 0 until itemCount) {
+            var uri: Uri = data.clipData!!.getItemAt(i).uri;
+            Log.i(TAG, "Uri: $uri")
+            Toast.makeText(this, "选择图片的 uri = $uri", Toast.LENGTH_SHORT).show()
+            stringBuilder.append(
+                "uri = $uri \n file.path = " + FileUtil.getFileAbsolutePath(this, uri) + "\n\n"
+            )
+        }
+        tvSelectUri.text = stringBuilder.toString()
+    }
+
+    /**
+     * 处理 Intent.ACTION_OPEN_DOCUMENT 返回
+     */
+    private fun processOpenDoc(data: Intent?) {
+        if (data != null) {
+            //获取文件uri
+            val uri = data.data
+            val cursor = uri?.let {
+                contentResolver.query(
+                    it, IMAGE_PROJECTION, null, null,
+                    null, null
+                )
             }
+            if (cursor != null && cursor.moveToFirst()) {
+                val displayName = cursor.getString(
+                    cursor.getColumnIndexOrThrow(
+                        IMAGE_PROJECTION[0]
+                    )
+                )
+                val size = cursor.getString(cursor.getColumnIndexOrThrow(IMAGE_PROJECTION[1]))
+                Log.i(TAG, "Uri: $uri")
+                Log.i(TAG, "Name: $displayName")
+                Log.i(TAG, "Size: $size")
+                Toast.makeText(this, "选择图片的 uri = $uri", Toast.LENGTH_SHORT).show()
+                tvSelectUri.text =
+                    "uri = $uri \n file.path = " + FileUtil.getFileAbsolutePath(this, uri)
+            }
+            cursor?.close()
         }
     }
 
@@ -252,7 +286,7 @@ class Adaptation10Activity : BaseActivity() {
             cursor.close()
         }
         //取最新的一个uri设置给ImageView
-        ivPic.setImageURI(picUri)
+        Glide.with(this).load(picUri).into(ivPic)
         tvNewestPicUri.text =
             "最新图片 uri = $picUri \n file.path = " + FileUtil.getFilePathFromContentUri(
                 picUri,
