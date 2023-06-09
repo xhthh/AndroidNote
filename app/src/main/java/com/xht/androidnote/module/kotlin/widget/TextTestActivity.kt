@@ -3,21 +3,23 @@ package com.xht.androidnote.module.kotlin.widget
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextPaint
-import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.NonNull
-import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityTextTestBinding
 import com.xht.androidnote.utils.SpannableStringUtil
-import kotlinx.android.synthetic.main.activity_text_test.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-class TextTestActivity : BaseActivity() {
+class TextTestActivity : BaseViewActivity<ActivityTextTestBinding>() {
+    override fun getViewBinding(): ActivityTextTestBinding {
+        return ActivityTextTestBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return com.xht.androidnote.R.layout.activity_text_test
     }
@@ -34,7 +36,7 @@ class TextTestActivity : BaseActivity() {
 //        tvText.isEnabled = true
 //        tvText.movementMethod = LinkMovementMethod.getInstance()
 
-        SpannableStringUtil.setTelUrl(this, tvText, list)
+        SpannableStringUtil.setTelUrl(this, binding.tvText, list)
     }
 
 
@@ -56,7 +58,7 @@ class TextTestActivity : BaseActivity() {
 
     private fun setClick(
         spannableString: SpannableString, phoneNum: String, textView: TextView,
-        note: String
+        note: String,
     ) {
         spannableString.setSpan(object : ClickableSpan() {
             override fun updateDrawState(@NonNull ds: TextPaint) {
@@ -71,7 +73,8 @@ class TextTestActivity : BaseActivity() {
         }, note.indexOf(phoneNum), note.indexOf(phoneNum) + 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(
             ForegroundColorSpan(resources.getColor(com.xht.androidnote.R.color.color_333333)),
-            note.indexOf(phoneNum), note.indexOf(phoneNum) + 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            note.indexOf(phoneNum), note.indexOf(phoneNum) + 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
     }
 
 

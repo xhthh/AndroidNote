@@ -6,16 +6,19 @@ import android.os.SystemClock
 import android.view.WindowManager
 import android.widget.Toast
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_record.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityRecordBinding
 import java.io.File
 
-class RecordActivity : BaseActivity() {
+class RecordActivity : BaseViewActivity<ActivityRecordBinding>() {
 
     private var mStartRecording = true
     var timeWhenPaused: Long = 0 //stores time when user clicks pause button
 
     var beginTime: Long = 0L
+    override fun getViewBinding(): ActivityRecordBinding {
+        return ActivityRecordBinding.inflate(layoutInflater)
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_record
@@ -25,7 +28,7 @@ class RecordActivity : BaseActivity() {
         val requestPermission = RequestPermission()
         requestPermission.RequestPermission(this)
 
-        ibSwitch.setOnClickListener {
+        binding.ibSwitch.setOnClickListener {
 
             onRecord(mStartRecording)
             mStartRecording = !mStartRecording
@@ -37,7 +40,7 @@ class RecordActivity : BaseActivity() {
 
         if (start) {
             // start recording
-            ibSwitch.setBackgroundResource(R.drawable.icon_record_end_white)
+            binding.ibSwitch.setBackgroundResource(R.drawable.icon_record_end_white)
             //mPauseButton.setVisibility(View.VISIBLE);
             Toast.makeText(this, "开始录音", Toast.LENGTH_SHORT).show()
             val folder =
@@ -48,8 +51,8 @@ class RecordActivity : BaseActivity() {
             }
 
             //start Chronometer
-            chronometer.base = SystemClock.elapsedRealtime()
-            chronometer.start()
+            binding.chronometer.base = SystemClock.elapsedRealtime()
+            binding.chronometer.start()
 
             //start RecordingService
             startService(intent)
@@ -59,10 +62,10 @@ class RecordActivity : BaseActivity() {
             beginTime = System.currentTimeMillis()
         } else {
             //stop recording
-            ibSwitch.setBackgroundResource(R.drawable.icon_record_begin_white)
+            binding.ibSwitch.setBackgroundResource(R.drawable.icon_record_begin_white)
             //mPauseButton.setVisibility(View.GONE);
-            chronometer.stop()
-            chronometer.base = SystemClock.elapsedRealtime()
+            binding.chronometer.stop()
+            binding.chronometer.base = SystemClock.elapsedRealtime()
             timeWhenPaused = 0
             stopService(intent)
             //allow the screen to turn off again once recording is finished

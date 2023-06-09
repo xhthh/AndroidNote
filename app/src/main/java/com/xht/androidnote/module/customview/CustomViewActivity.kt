@@ -3,13 +3,17 @@ package com.xht.androidnote.module.customview
 import android.view.View
 import android.view.ViewGroup
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_custom_view.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityCustomViewBinding
 
 /**
  * Created by xht on 2020/9/2
  */
-class CustomViewActivity : BaseActivity() {
+class CustomViewActivity : BaseViewActivity<ActivityCustomViewBinding>() {
+    override fun getViewBinding(): ActivityCustomViewBinding {
+        return ActivityCustomViewBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_custom_view
     }
@@ -31,11 +35,11 @@ class CustomViewActivity : BaseActivity() {
             )
         }
 
-        btn_flowlayout.setOnClickListener {
+        binding.btnFlowlayout.setOnClickListener {
             skip2Activity(FlowLayoutActivity::class.java)
         }
 
-        btn_wave_view.setOnClickListener {
+        binding.btnWaveView.setOnClickListener {
             skip2Activity(WaveViewActivity::class.java)
         }
     }

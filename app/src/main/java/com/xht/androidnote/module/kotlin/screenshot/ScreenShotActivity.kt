@@ -5,17 +5,18 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import com.blankj.utilcode.util.ScreenUtils
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityScreenShotBinding
 import com.xht.androidnote.utils.L
-import kotlinx.android.synthetic.main.activity_screen_shot.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
 
-
-
-class ScreenShotActivity : BaseActivity() {
+class ScreenShotActivity : BaseViewActivity<ActivityScreenShotBinding>() {
+    override fun getViewBinding(): ActivityScreenShotBinding {
+        return ActivityScreenShotBinding.inflate(layoutInflater)
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_screen_shot
@@ -23,8 +24,8 @@ class ScreenShotActivity : BaseActivity() {
 
     override fun initEventAndData() {
 
-        btnScreenShot.setOnClickListener {
-            val bitmap = ScreenUtils.screenShot(this,false)
+        binding.btnScreenShot.setOnClickListener {
+            val bitmap = ScreenUtils.screenShot(this, false)
             val width = bitmap.width
             val height = bitmap.height
             L.e("------width=$width height=$height")
@@ -36,16 +37,15 @@ class ScreenShotActivity : BaseActivity() {
             val encodeToString = Base64.encodeToString(isBm.readBytes(), Base64.DEFAULT)
 
 
-            val imageBytes = Base64.decode(encodeToString,Base64.DEFAULT)
+            val imageBytes = Base64.decode(encodeToString, Base64.DEFAULT)
             val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
 
-            ivResult.setImageBitmap(decodedImage)
+            binding.ivResult.setImageBitmap(decodedImage)
         }
     }
 
     fun test() {
         val bitmap = ScreenUtils.screenShot(this)
-
 
 
     }

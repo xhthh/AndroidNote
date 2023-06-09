@@ -7,7 +7,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityWidgetTestBinding
 import com.xht.androidnote.module.kotlin.deviceId.DeviceIdActivity
 import com.xht.androidnote.module.kotlin.location.LocationActivity
 import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
@@ -22,10 +23,12 @@ import com.xht.androidnote.utils.CalendarUtils.onCalendarRemindListener
 import com.yanzhenjie.permission.Action
 import com.yanzhenjie.permission.AndPermission
 import com.yanzhenjie.permission.runtime.Permission
-import kotlinx.android.synthetic.main.activity_widget_test.*
 
 
-class WidgetTestActivity : BaseActivity() {
+class WidgetTestActivity : BaseViewActivity<ActivityWidgetTestBinding>() {
+    override fun getViewBinding(): ActivityWidgetTestBinding {
+        return ActivityWidgetTestBinding.inflate(layoutInflater)
+    }
 
 
     override fun getLayoutId(): Int {
@@ -34,7 +37,7 @@ class WidgetTestActivity : BaseActivity() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun initEventAndData() {
-        btnNullTest.setOnClickListener {
+        binding.btnNullTest.setOnClickListener {
 
             val bean = Bean()
             bean.desc = null
@@ -45,15 +48,15 @@ class WidgetTestActivity : BaseActivity() {
 
         }
 
-        btnMultiSelect.setOnClickListener {
+        binding.btnMultiSelect.setOnClickListener {
             startActivity(Intent(this, MultiSelectActivity::class.java))
         }
 
-        btnSearch.setOnClickListener {
+        binding.btnSearch.setOnClickListener {
             startActivity(Intent(this, SearchActivity::class.java))
         }
 
-        btnLocation.setOnClickListener {
+        binding.btnLocation.setOnClickListener {
             startActivity(
                 Intent(
                     this,
@@ -62,42 +65,42 @@ class WidgetTestActivity : BaseActivity() {
             )
         }
 
-        btnDeviceId.setOnClickListener {
+        binding.btnDeviceId.setOnClickListener {
             startActivity(Intent(this, DeviceIdActivity::class.java))
         }
-        btnClock.setOnClickListener {
+        binding.btnClock.setOnClickListener {
             startActivity(Intent(this, ClockActivity::class.java))
 //            testTime2()
         }
-        btnRecord.setOnClickListener {
+        binding.btnRecord.setOnClickListener {
             startActivity(Intent(this, RecordActivity::class.java))
 //            testTime()
         }
 
-        btnText.setOnClickListener {
+        binding.btnText.setOnClickListener {
             startActivity(Intent(this, TextTestActivity::class.java))
         }
 
-        btnTable.setOnClickListener {
+        binding.btnTable.setOnClickListener {
             //startActivity(Intent(this, TableTestActivity::class.java))
             startActivity<TableTestActivity>(this) {
             }
         }
-        btnCoroutines.setOnClickListener {
+        binding.btnCoroutines.setOnClickListener {
             //startActivity(Intent(this, TableTestActivity::class.java))
             startActivity<CoroutinesTestActivity>(this) {
             }
         }
 
-        btnScreenShotTest.setOnClickListener {
+        binding.btnScreenShotTest.setOnClickListener {
             skip2Activity(ScreenShotActivity::class.java)
         }
 
-        btnStorageTest.setOnClickListener {
+        binding.btnStorageTest.setOnClickListener {
             skip2Activity(StorageTestActivity::class.java)
         }
 
-        btnCalendarTest1.setOnClickListener {
+        binding.btnCalendarTest1.setOnClickListener {
             var n = 1;
             AndPermission.with(this)
                 .runtime()
@@ -117,7 +120,7 @@ class WidgetTestActivity : BaseActivity() {
             //设置日历提醒
         }
 
-        btnCalendarTest2.setOnClickListener {
+        binding.btnCalendarTest2.setOnClickListener {
             AndPermission.with(this)
                 .runtime()
                 .permission(Permission.READ_CALENDAR, Permission.WRITE_CALENDAR)
@@ -142,22 +145,22 @@ class WidgetTestActivity : BaseActivity() {
                 .start()
         }
 
-        btnTestGoToPermission.setOnClickListener {
+        binding.btnTestGoToPermission.setOnClickListener {
             //startActivity(Intent(this, TestGoToPermissionActivity::class.java))
             JumpPermissionManagement.GoToSetting(this)
         }
 
-        val timeCount = TimeCount(20000, 1000, tvGetCode)
+        val timeCount = TimeCount(20000, 1000, binding.tvGetCode)
         //测试TextView不可点击问题
-        tvGetCode.setOnClickListener {
+        binding.tvGetCode.setOnClickListener {
             Log.e("textView", "------点击获取验证码，倒计时，设为不可点击------");
-            tvGetCode.isClickable = false;
+            binding.tvGetCode.isClickable = false;
             timeCount.start()
         }
         timeCount.setOnTimeFinishListener(object : TimeCount.OnTimeFinishListener {
             override fun onTimeFinished() {
                 Log.e("textView", "------倒计时结束，设为可点击------");
-                tvGetCode.isClickable = true
+                binding.tvGetCode.isClickable = true
             }
 
             override fun onTimeGoingOn() {

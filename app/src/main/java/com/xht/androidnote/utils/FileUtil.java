@@ -11,6 +11,7 @@ import android.os.FileUtils;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.RequiresApi;
@@ -105,6 +106,9 @@ public class FileUtil {
         }
         // MediaStore (and general)
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //这两种返回都有问题
+            //return getFileFromContentUri(context, imageUri);
+            //return getRealFilePath(context, imageUri);
             return uriToFileApiQ(context, imageUri);
         } else if ("content".equalsIgnoreCase(imageUri.getScheme())) {
             // Return the remote address
@@ -203,6 +207,8 @@ public class FileUtil {
 
     /**
      * Android 10 以上适配 另一种写法
+     * 不行
+     * 转换结果为：/sdcard/.transforms/synthetic/picker/0/com.android.providers.media.photopicker/media/1000013125.jpg
      *
      * @param context
      * @param uri
@@ -263,6 +269,44 @@ public class FileUtil {
             }
         }
         return file.getAbsolutePath();
+    }
+
+    public static String getRealPathFromUri(Context context, Uri uri) {
+        String filePath = "";
+        String scheme = uri.getScheme();
+        if (scheme == null)
+            filePath = uri.getPath();
+        else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            filePath = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    filePath = cursor.getString(columnIndex);
+                }
+                cursor.close();
+            }
+            if (TextUtils.isEmpty(filePath)) {
+                filePath = getFilePathForNonMediaUri(context, uri);
+            }
+        }
+        return filePath;
+    }
+
+    //非媒体文件中查找
+    private static String getFilePathForNonMediaUri(Context context, Uri uri) {
+        String filePath = "";
+        Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow("_data");
+                filePath = cursor.getString(columnIndex);
+            }
+            cursor.close();
+        }
+        return filePath;
     }
 
 

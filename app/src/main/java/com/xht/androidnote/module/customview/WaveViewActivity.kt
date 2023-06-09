@@ -4,10 +4,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_wave_view.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityWaveViewBinding
 
-class WaveViewActivity : BaseActivity() {
+class WaveViewActivity : BaseViewActivity<ActivityWaveViewBinding>() {
+    override fun getViewBinding(): ActivityWaveViewBinding {
+        return ActivityWaveViewBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_wave_view
     }
@@ -21,17 +25,17 @@ class WaveViewActivity : BaseActivity() {
         wave_view.start();
         */
 
-        wave_view.setDuration(5000);
-        wave_view.setStyle(Paint.Style.FILL);
-        wave_view.setColor(Color.RED);
-        wave_view.setInterpolator(LinearOutSlowInInterpolator());
-        wave_view.start();
+        binding.waveView.setDuration(5000);
+        binding.waveView.setStyle(Paint.Style.FILL);
+        binding.waveView.setColor(Color.RED);
+        binding.waveView.setInterpolator(LinearOutSlowInInterpolator());
+        binding.waveView.start();
 
-        //wave_view.postDelayed({ wave_view.stop(); }, 1000)
+        //binding.waveView.postDelayed({ binding.waveView.stop(); }, 1000)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        wave_view.stop()
+        binding.waveView.stop()
     }
 }

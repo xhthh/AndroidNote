@@ -1,18 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'android-aspectjx'
-
 
 
 //图片压缩插件配置,后文有对配置信息介绍
 apply plugin: 'img-compressor'
-imgCompressOpt{
-    way="pngquant"
+imgCompressOpt {
+    way = "pngquant"
     test = false
-    whiteFiles=["text_pic1.png","test_pic2.jpg"]
-    minSize=5
-    tinyKeys=["your key"]
+    whiteFiles = ["text_pic1.png", "test_pic2.jpg"]
+    minSize = 5
+    tinyKeys = ["your key"]
 }
 
 ext {
@@ -58,10 +57,17 @@ android {
 
     }
 
-    repositories{
-        flatDir{
+    repositories {
+        flatDir {
             dirs 'libs'
         }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -97,7 +103,7 @@ dependencies {
 
     // EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_version"
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
@@ -132,8 +138,14 @@ dependencies {
 
     //implementation 'com.guolindev.permissionx:permissionx:1.7.1'
 
-
-
+    //livedata
+//    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
+//    //viewmodel
+//    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+//    //lifecycleRuntime
+//    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha01"
+    implementation "androidx.core:core-ktx:1.10.1"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 //aspectjx {
 //    exclude 'versions.9'

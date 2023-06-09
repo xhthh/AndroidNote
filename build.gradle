@@ -2,17 +2,17 @@
 
 //buildscript中的声明是gradle脚本自身需要使用的资源，仓库和依赖的插件
 buildscript {
-    ext.kotlin_version = '1.3.72'
+    ext.kotlin_version = '1.8.10'
 
     repositories {
         maven{
             url 'http://maven.aliyun.com/nexus/content/groups/public/'
             allowInsecureProtocol = true
         }
-        jcenter(){
-            url 'http://jcenter.bintray.com/'
-            allowInsecureProtocol = true
-        }
+//        jcenter(){
+//            url 'http://jcenter.bintray.com/'
+//            allowInsecureProtocol = true
+//        }
         google()
         mavenCentral()
     }
@@ -37,10 +37,10 @@ allprojects {
             url 'http://maven.aliyun.com/nexus/content/groups/public/'
             allowInsecureProtocol = true
         }
-        jcenter(){
-            url 'http://jcenter.bintray.com/'
-            allowInsecureProtocol = true
-        }
+//        jcenter(){
+//            url 'http://jcenter.bintray.com/'
+//            allowInsecureProtocol = true
+//        }
         google()
         maven { url "https://jitpack.io" }
         mavenCentral()

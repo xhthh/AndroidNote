@@ -3,10 +3,14 @@ package com.xht.androidnote.module.fragment.lifecycle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_test_fragment.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityTestFragmentBinding
 
-class TestFragmentActivity : BaseActivity() {
+class TestFragmentActivity : BaseViewActivity<ActivityTestFragmentBinding>() {
+    override fun getViewBinding(): ActivityTestFragmentBinding {
+        return ActivityTestFragmentBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_test_fragment
     }
@@ -30,7 +34,7 @@ class TestFragmentActivity : BaseActivity() {
     }
 
     private fun initListener() {
-        btn_replace.setOnClickListener {
+        binding.btnReplace.setOnClickListener {
             if (tag == "one") {
                 tag = "two"
                 currentFragment = twoFragment
@@ -41,7 +45,7 @@ class TestFragmentActivity : BaseActivity() {
             testReplace(currentFragment, tag)
         }
 
-        btn_add.setOnClickListener {
+        binding.btnAdd.setOnClickListener {
             tag = "one"
             val beginTransaction = supportFragmentManager.beginTransaction()
             if (fragment1 == null) {
@@ -53,7 +57,7 @@ class TestFragmentActivity : BaseActivity() {
             beginTransaction.commitAllowingStateLoss()
         }
 
-        btn_hide.setOnClickListener {
+        binding.btnHide.setOnClickListener {
             tag = "two"
             val beginTransaction = supportFragmentManager.beginTransaction()
             if (fragment2 == null) {

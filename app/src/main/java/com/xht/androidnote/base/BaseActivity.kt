@@ -5,19 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Window
 import androidx.fragment.app.FragmentActivity
-import androidx.viewbinding.ViewBinding
 import butterknife.ButterKnife
 import butterknife.Unbinder
 
 /**
  * Created by xht on 2018/4/23.
  */
-abstract class BaseViewActivity<T : ViewBinding> : FragmentActivity() {
-    @JvmField
-    protected var mContext: Activity? = null
+abstract class BaseActivity : FragmentActivity() {
+    protected lateinit var mContext: Activity
     private var mBind: Unbinder? = null
-
-    lateinit var binding: T
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBaseConfig()
@@ -27,9 +23,8 @@ abstract class BaseViewActivity<T : ViewBinding> : FragmentActivity() {
         initEventAndData()
     }
 
-    protected abstract fun getViewBinding(): T
-
     protected abstract fun getLayoutId(): Int
+
     protected abstract fun initEventAndData()
     private fun setBaseConfig() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)

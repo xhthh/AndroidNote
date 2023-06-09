@@ -189,19 +189,19 @@ fun getMaxLengthOfFruit() {
 //    println("max length fruit is $maxLengthFruit")
 
 
-    val length1 = list.maxBy({ fruit: String -> fruit.length })
+    val length1 = list.maxByOrNull({ fruit: String -> fruit.length })
 
     //当Lambda参数是函数的最后一个参数时，可以将Lambda表达式移到函数括号的外面，如下所示：
-    val length2 = list.maxBy() { fruit: String -> fruit.length }
+    val length2 = list.maxByOrNull() { fruit: String -> fruit.length }
 
     //如果Lambda参数是函数的唯一一个参数的话，还可以将函数的括号省略
-    val length3 = list.maxBy { fruit: String -> fruit.length }
+    val length3 = list.maxByOrNull { fruit: String -> fruit.length }
 
     //Lambda表达式中的参数列表其实在大多数情况下不必声明参数类型
-    val length4 = list.maxBy { fruit -> fruit.length }
+    val length4 = list.maxByOrNull { fruit -> fruit.length }
 
     //当Lambda表达式的参数列表中只有一个参数时，也不必声明参数名，而是可以使用it关键字来代替
-    val length5 = list.maxBy { it.length }
+    val length5 = list.maxByOrNull { it.length }
 }
 
 fun filterTest() {

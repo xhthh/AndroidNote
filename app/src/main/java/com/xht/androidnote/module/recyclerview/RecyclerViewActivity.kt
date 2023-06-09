@@ -2,24 +2,25 @@ package com.xht.androidnote.module.recyclerview
 
 import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.DiffUtil.DiffResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import androidx.recyclerview.widget.RecyclerView.ViewCacheExtension
-import butterknife.BindView
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_recyclerview.*
-import java.util.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityRecyclerviewBinding
 
 /**
  * Created by xht on 2019/8/15.
  */
-class RecyclerViewActivity : BaseActivity() {
+class RecyclerViewActivity : BaseViewActivity<ActivityRecyclerviewBinding>() {
     var list: MutableList<String> = ArrayList()
 
     lateinit var adapter: RvTestAdapter
+    override fun getViewBinding(): ActivityRecyclerviewBinding {
+        return ActivityRecyclerviewBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_recyclerview
     }
@@ -37,12 +38,12 @@ class RecyclerViewActivity : BaseActivity() {
         //关闭预取功能
         layoutManager.isItemPrefetchEnabled = false
 
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = adapter
+        binding.recyclerView.layoutManager = layoutManager
+        binding.recyclerView.adapter = adapter
         adapter.notifyDataSetChanged()
 
         //设置mCachedView 缓存大小，默认是2
-        //recyclerView.setItemViewCacheSize(5);
+        //binding.recyclerView.setItemViewCacheSize(5);
 //        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 //            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
 //                super.onScrolled(recyclerView, dx, dy)
@@ -57,7 +58,7 @@ class RecyclerViewActivity : BaseActivity() {
 //                }
 //            }
 //        })
-        recyclerView!!.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val linearLayoutManager = recyclerView.layoutManager as LinearLayoutManager?
@@ -76,14 +77,14 @@ class RecyclerViewActivity : BaseActivity() {
     }
 
     private fun initView() {
-        btnInsert.setOnClickListener {
+        binding.btnInsert.setOnClickListener {
         }
 
-        btnUpdate.setOnClickListener {
+        binding.btnUpdate.setOnClickListener {
             list[1] = "111"
             adapter.notifyItemChanged(1)
         }
-        btnPartialRefresh.setOnClickListener {
+        binding.btnPartialRefresh.setOnClickListener {
             list[1] = "1+a"
             adapter.notifyItemChanged(1, "aaa")
         }

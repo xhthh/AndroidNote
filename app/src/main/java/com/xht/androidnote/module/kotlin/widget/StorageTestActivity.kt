@@ -3,16 +3,20 @@ package com.xht.androidnote.module.kotlin.widget
 import android.content.Intent
 import android.util.Log
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_storage_test.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityStorageTestBinding
 
-class StorageTestActivity : BaseActivity() {
+class StorageTestActivity : BaseViewActivity<ActivityStorageTestBinding>() {
+    override fun getViewBinding(): ActivityStorageTestBinding {
+        return ActivityStorageTestBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_storage_test
     }
 
     override fun initEventAndData() {
-        btnPicSelectTest.setOnClickListener {
+        binding.btnPicSelectTest.setOnClickListener {
             val contentSelectionIntent = Intent(Intent.ACTION_GET_CONTENT)
             contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE)
             contentSelectionIntent.type = "image/*"
@@ -32,7 +36,7 @@ class StorageTestActivity : BaseActivity() {
             233 -> {
                 val result = if (data == null || resultCode != RESULT_OK) null else data.data
                 Log.e("xht", "----------result======$result");
-                ivResult1.setImageURI(result)
+                binding.ivResult1.setImageURI(result)
             }
         }
     }

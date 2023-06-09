@@ -9,17 +9,23 @@ import android.widget.TextView
 import androidx.annotation.IdRes
 import androidx.recyclerview.widget.RecyclerView
 import com.xht.androidnote.R
+import com.xht.androidnote.databinding.ItemMultiSelectBinding
 import com.xht.androidnote.module.kotlin.multiSelect.lib.MultiCheckHelper
-import kotlinx.android.synthetic.main.item_multi_select.view.*
 
 /**
  * Created by xht on 2021/7/24
  */
-class MultiSelectAdapter(val context: Context, var list: List<ClientInfo>, var checkHelper: MultiCheckHelper) : RecyclerView.Adapter<MultiSelectAdapter.MultiSelectViewHolder>() {
-
+class MultiSelectAdapter(
+    val context: Context,
+    var list: List<ClientInfo>,
+    var checkHelper: MultiCheckHelper,
+) : RecyclerView.Adapter<MultiSelectAdapter.MultiSelectViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MultiSelectViewHolder {
-        return MultiSelectViewHolder(LayoutInflater.from(context).inflate(R.layout.item_multi_select, parent, false))
+        val binding = ItemMultiSelectBinding.inflate(LayoutInflater.from(context), parent, false)
+        return MultiSelectViewHolder(
+            binding.root
+        )
     }
 
     override fun getItemCount(): Int {
@@ -28,7 +34,8 @@ class MultiSelectAdapter(val context: Context, var list: List<ClientInfo>, var c
 
     override fun onBindViewHolder(holder: MultiSelectAdapter.MultiSelectViewHolder, position: Int) {
         val clientInfo = list[position]
-        holder.itemView.tvTitle.text = clientInfo.title
+
+        holder.tvTitle.text = clientInfo.title
 
         checkHelper.bind(clientInfo, holder, holder.itemView)
     }

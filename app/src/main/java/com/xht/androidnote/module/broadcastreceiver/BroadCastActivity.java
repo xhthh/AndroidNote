@@ -3,6 +3,8 @@ package com.xht.androidnote.module.broadcastreceiver;
 import android.content.IntentFilter;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
+import android.os.Build;
 import android.view.View;
 import android.widget.Button;
 
@@ -86,7 +88,9 @@ public class BroadCastActivity extends BaseActivity {
                 mReceiver = new MyBroadCastReceiver();
                 IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-                registerReceiver(mReceiver, intentFilter);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    registerReceiver(mReceiver, intentFilter, RECEIVER_EXPORTED);
+                }
                 break;
         }
     }

@@ -3,12 +3,16 @@ package com.xht.androidnote
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivitySplashBinding
 
-class SplashActivity : BaseActivity() {
+class SplashActivity : BaseViewActivity<ActivitySplashBinding>() {
 
     private val handler = Handler()
     private var mCountNum = 60
+    override fun getViewBinding(): ActivitySplashBinding {
+        return ActivitySplashBinding.inflate(layoutInflater)
+    }
 
 
     override fun getLayoutId(): Int {
@@ -19,7 +23,7 @@ class SplashActivity : BaseActivity() {
 
         handler.postDelayed({
             //startActivity(Intent(mContext, MainActivity::class.java))
-            startActivity<MainActivity>(mContext)
+            startActivity<MainActivity>(this)
             finish()
         }, 500)
 

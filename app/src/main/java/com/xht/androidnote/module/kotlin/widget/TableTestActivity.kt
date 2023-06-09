@@ -20,28 +20,29 @@ import com.bin.david.form.data.style.FontStyle
 import com.bin.david.form.data.table.TableData
 import com.bin.david.form.listener.OnColumnItemClickListener
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityTableTestBinding
 import com.xht.androidnote.module.kotlin.bean.EmergencyContactInfo
 import com.xht.androidnote.module.kotlin.widget.adapter.CustomSpinnerArrayAdapter
 import com.xht.androidnote.module.kotlin.widget.treeView.Node
 import com.xht.androidnote.module.kotlin.widget.treeView.TreeListView
-import kotlinx.android.synthetic.main.activity_table_test.*
-import kotlinx.android.synthetic.main.fragment_tree.*
-import kotlinx.android.synthetic.main.item_list_content.view.*
 
 
-class TableTestActivity : BaseActivity() {
+class TableTestActivity : BaseViewActivity<ActivityTableTestBinding>() {
 
     lateinit var dialogFragment: TreeFragment
+    override fun getViewBinding(): ActivityTableTestBinding {
+        return ActivityTableTestBinding.inflate(layoutInflater)
+    }
 
     override fun getLayoutId(): Int {
-        return com.xht.androidnote.R.layout.activity_table_test
+        return R.layout.activity_table_test
     }
 
     override fun initEventAndData() {
         initData()
         testSpinner()
-        btnDialog.setOnClickListener {
+        binding.btnDialog.setOnClickListener {
 //            showDialogFragment()
             showDialog()
         }
@@ -84,7 +85,7 @@ class TableTestActivity : BaseActivity() {
 //                ) { dialog, which -> Toast.makeText(mContext, "点击确定", Toast.LENGTH_SHORT).show() }
                 .create()
         }
-        setDialogWidthAndHeight(dialog,500,400)
+        setDialogWidthAndHeight(dialog, 500, 400)
         dialog?.show()
 
 
@@ -141,16 +142,16 @@ class TableTestActivity : BaseActivity() {
 
 //        spinner.adapter = customSpinnerArrayAdapter
 
-        spinner.dropDownWidth = dp2px(this, 90F)
-        spinner.dropDownVerticalOffset = dp2px(this, 30F)
-        spinner.setBackgroundResource(R.drawable.spinner)
+        binding.spinner.dropDownWidth = dp2px(this, 90F)
+        binding.spinner.dropDownVerticalOffset = dp2px(this, 30F)
+        binding.spinner.setBackgroundResource(R.drawable.spinner)
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
-                id: Long
+                id: Long,
             ) {
                 Log.e("xht", "sdafdasdfafd")
             }

@@ -3,17 +3,22 @@ package com.xht.androidnote.module.kotlin.widget
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.fragment.app.DialogFragment
 import com.xht.androidnote.R
+import com.xht.androidnote.databinding.FragmentTreeBinding
 import com.xht.androidnote.module.kotlin.widget.treeView.Node
 import com.xht.androidnote.module.kotlin.widget.treeView.TreeListView
-import kotlinx.android.synthetic.main.fragment_tree.*
-import java.util.*
 
 
 class TreeFragment() : DialogFragment() {
+
+    private lateinit var binding: FragmentTreeBinding
 
     var list: MutableList<Node> = mutableListOf()
 
@@ -29,7 +34,7 @@ class TreeFragment() : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
 //        val params = dialog.window?.attributes
 //        params?.gravity = Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL
@@ -38,6 +43,7 @@ class TreeFragment() : DialogFragment() {
 //        dialog.window!!.requestFeature(Window.FEATURE_NO_TITLE)
 //        dialog.setCanceledOnTouchOutside(true)
 //        dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        binding = FragmentTreeBinding.inflate(layoutInflater, container, false)
 
         return inflater.inflate(com.xht.androidnote.R.layout.fragment_tree, container, false)
     }
@@ -58,7 +64,7 @@ class TreeFragment() : DialogFragment() {
             RelativeLayout.LayoutParams.MATCH_PARENT,
             RelativeLayout.LayoutParams.MATCH_PARENT
         )
-        content.addView(listView)
+        binding.content.addView(listView)
 
     }
 

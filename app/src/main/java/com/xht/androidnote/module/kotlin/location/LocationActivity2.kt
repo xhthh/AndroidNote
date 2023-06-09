@@ -7,12 +7,15 @@ import androidx.appcompat.app.AlertDialog
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_location.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityLocationBinding
 
-class LocationActivity2 : BaseActivity() {
+class LocationActivity2 : BaseViewActivity<ActivityLocationBinding>() {
 
     private val REQUEST_LOCATION_PERMISSION_CODE = 100
+    override fun getViewBinding(): ActivityLocationBinding {
+        return ActivityLocationBinding.inflate(layoutInflater)
+    }
 
 
     override fun getLayoutId(): Int {
@@ -20,7 +23,7 @@ class LocationActivity2 : BaseActivity() {
     }
 
     override fun initEventAndData() {
-        btnGetLocation.setOnClickListener {
+        binding.btnGetLocation.setOnClickListener {
             showLocation()
         }
     }
@@ -38,9 +41,10 @@ class LocationActivity2 : BaseActivity() {
 
                 override fun onDenied(
                     permissionsDeniedForever: List<String>,
-                    permissionsDenied: List<String>
+                    permissionsDenied: List<String>,
                 ) {
-                    Toast.makeText(this@LocationActivity2, "未获得地理位置权限", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@LocationActivity2, "未获得地理位置权限", Toast.LENGTH_LONG)
+                        .show()
                 }
             })
             .request()

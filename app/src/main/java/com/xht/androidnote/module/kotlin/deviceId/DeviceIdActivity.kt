@@ -4,28 +4,32 @@ import android.content.Context
 import android.provider.Settings
 import android.util.Log
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityDeviceIdBinding
 import com.xht.androidnote.utils.DeviceIdUtils
-import kotlinx.android.synthetic.main.activity_device_id.*
 import java.net.NetworkInterface
-import java.util.*
+import java.util.Enumeration
 
-class DeviceIdActivity : BaseActivity() {
+class DeviceIdActivity : BaseViewActivity<ActivityDeviceIdBinding>() {
+    override fun getViewBinding(): ActivityDeviceIdBinding {
+        return ActivityDeviceIdBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_device_id
     }
 
     override fun initEventAndData() {
-        btnGetDeviceId.setOnClickListener {
+        binding.btnGetDeviceId.setOnClickListener {
 //            val wifiMac = getWifiMac()
 //            tvDeviceId.text = wifiMac + "  " + getAndroidId(this) + "  " + generateId()
-            tvDeviceId.text = DeviceIdUtils.getDeviceId(this)
+            binding.tvDeviceId.text = DeviceIdUtils.getDeviceId(this)
         }
 
         //921018fb881
     }
 
-    fun generateId():String {
+    fun generateId(): String {
         val strRand = java.lang.StringBuilder("android")
         for (i in 0..7) {
             strRand.append((Math.random() * 10).toInt())

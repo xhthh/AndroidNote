@@ -1,6 +1,5 @@
 package com.xht.androidnote.module.activity;
 
-import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -13,11 +12,9 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.xht.androidnote.MainActivity;
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.module.service.MyService;
-import com.xht.androidnote.module.service.OnProgressListener;
 import com.xht.androidnote.utils.L;
 
 import butterknife.BindView;
@@ -127,7 +124,7 @@ public class ATestActivity extends BaseActivity {
         });
 
 
-        intent = new Intent(mContext, MyService.class);
+        intent = new Intent(this, MyService.class);
         intent.putExtra("clientName", "ATestActivity");
         findViewById(R.id.btn_bind_service).setOnClickListener(new View.OnClickListener() {
             @Override

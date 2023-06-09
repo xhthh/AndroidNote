@@ -16,14 +16,14 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.bumptech.glide.Glide
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityAdaptation10Binding
 import com.xht.androidnote.utils.FileUtil
-import kotlinx.android.synthetic.main.activity_adaptation10.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.BufferedOutputStream
 
-class Adaptation10Activity : BaseActivity() {
+class Adaptation10Activity : BaseViewActivity<ActivityAdaptation10Binding>() {
     private val TAG = "adaptation10"
 
     var filesDirPath: String? = null
@@ -33,6 +33,10 @@ class Adaptation10Activity : BaseActivity() {
     var externalCacheDirPath: String? = null
     var externalStorageDirectoryPath: String? = null
     var externalStoragePublicDirectoryPath: String? = null
+
+    override fun getViewBinding(): ActivityAdaptation10Binding {
+        return ActivityAdaptation10Binding.inflate(layoutInflater)
+    }
 
     override fun getLayoutId(): Int {
         return R.layout.activity_adaptation10
@@ -68,9 +72,9 @@ class Adaptation10Activity : BaseActivity() {
                 "\n\n 外部路径：getExternalStorageDirectory() = " + externalStorageDirectoryPath +
                 "\n\n getExternalStoragePublicDirectory() = " + externalStoragePublicDirectoryPath
         Log.e(TAG, pathList)
-        tvPathList.text = pathList
+        binding.tvPathList.text = pathList
 
-        btnSelectPic.setOnClickListener {
+        binding.btnSelectPic.setOnClickListener {
 //            PermissionX.init(this)
 //                .permissions(
 //                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -88,19 +92,19 @@ class Adaptation10Activity : BaseActivity() {
             doSomethingWithPermissions()
         }
 
-        btnAndroidId.setOnClickListener {
+        binding.btnAndroidId.setOnClickListener {
             val androidId: String =
                 Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
 
             Log.e(TAG, "androidId = $androidId")
-            tvAndroidId.text = androidId
+            binding.tvAndroidId.text = androidId
         }
 
-        btnInsertFile.setOnClickListener {
+        binding.btnInsertFile.setOnClickListener {
             insertFile()
         }
 
-        btnSAF.setOnClickListener {
+        binding.btnSAF.setOnClickListener {
             openDocument()
         }
 
@@ -158,7 +162,7 @@ class Adaptation10Activity : BaseActivity() {
                 "uri = $uri \n file.path = " + FileUtil.getFileAbsolutePath(this, uri) + "\n\n"
             )
         }
-        tvSelectUri.text = stringBuilder.toString()
+        binding.tvSelectUri.text = stringBuilder.toString()
     }
 
     /**
@@ -185,7 +189,7 @@ class Adaptation10Activity : BaseActivity() {
                 Log.i(TAG, "Name: $displayName")
                 Log.i(TAG, "Size: $size")
                 Toast.makeText(this, "选择图片的 uri = $uri", Toast.LENGTH_SHORT).show()
-                tvSelectUri.text =
+                binding.tvSelectUri.text =
                     "uri = $uri \n file.path = " + FileUtil.getFileAbsolutePath(this, uri)
             }
             cursor?.close()
@@ -286,8 +290,8 @@ class Adaptation10Activity : BaseActivity() {
             cursor.close()
         }
         //取最新的一个uri设置给ImageView
-        Glide.with(this).load(picUri).into(ivPic)
-        tvNewestPicUri.text =
+        Glide.with(this).load(picUri).into(binding.ivPic)
+        binding.tvNewestPicUri.text =
             "最新图片 uri = $picUri \n file.path = " + FileUtil.getFilePathFromContentUri(
                 picUri,
                 contentResolver
@@ -297,10 +301,10 @@ class Adaptation10Activity : BaseActivity() {
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 0) {
+        if (requestCode == 100) {
             for (result in grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "You must allow all the permissions.", Toast.LENGTH_SHORT)

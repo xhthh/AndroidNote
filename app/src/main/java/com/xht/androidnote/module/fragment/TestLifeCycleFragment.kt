@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseFragment
-import kotlinx.android.synthetic.main.fragment_test_life_cycle.*
+import com.xht.androidnote.databinding.FragmentTestLifeCycleBinding
 
 class TestLifeCycleFragment : BaseFragment() {
 
-
+    private lateinit var binding: FragmentTestLifeCycleBinding
     override fun getLayoutId(): Int {
         return R.layout.fragment_test_life_cycle;
     }
@@ -35,7 +35,7 @@ class TestLifeCycleFragment : BaseFragment() {
                 "Fragment---onDestroy()\n" +
                 "Fragment---onDetach()\n" +
                 "Activity---onDestroy()"
-        tv_result.text = str
+        binding.tvResult.text = str
     }
 
     override fun onAttach(context: Context) {
@@ -48,8 +48,13 @@ class TestLifeCycleFragment : BaseFragment() {
         Log.i("xht", "Fragment---onCreate()");
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         Log.i("xht", "Fragment---onCreateView()");
+        binding = FragmentTestLifeCycleBinding.inflate(layoutInflater, container, false)
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 

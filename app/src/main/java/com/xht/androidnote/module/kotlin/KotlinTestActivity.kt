@@ -2,17 +2,25 @@ package com.xht.androidnote.module.kotlin
 
 import android.util.Log
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_kotlin_test.*
-import kotlinx.coroutines.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityKotlinTestBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class KotlinTestActivity : BaseActivity() {
+class KotlinTestActivity : BaseViewActivity<ActivityKotlinTestBinding>() {
+    override fun getViewBinding(): ActivityKotlinTestBinding {
+        return ActivityKotlinTestBinding.inflate(layoutInflater)
+    }
+
     override fun getLayoutId(): Int {
         return R.layout.activity_kotlin_test
     }
 
     override fun initEventAndData() {
-        btnCoroutinesTest.setOnClickListener {
+        binding.btnCoroutinesTest.setOnClickListener {
 //            testCoroutines1()
 //            testCoroutines2()
 //            testCoroutines3()

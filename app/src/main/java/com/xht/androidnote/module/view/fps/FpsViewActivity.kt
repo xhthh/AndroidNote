@@ -3,10 +3,13 @@ package com.xht.androidnote.module.view.fps
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.xht.androidnote.R
-import com.xht.androidnote.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_fps.*
+import com.xht.androidnote.base.BaseViewActivity
+import com.xht.androidnote.databinding.ActivityFpsBinding
 
-class FpsViewActivity : BaseActivity() {
+class FpsViewActivity : BaseViewActivity<ActivityFpsBinding>() {
+    override fun getViewBinding(): ActivityFpsBinding {
+        return ActivityFpsBinding.inflate(layoutInflater)
+    }
 
 
     override fun getLayoutId(): Int {
@@ -17,18 +20,18 @@ class FpsViewActivity : BaseActivity() {
     @RequiresApi(Build.VERSION_CODES.JELLY_BEAN)
     override fun initEventAndData() {
 
-        btn_start_fps.setOnClickListener {
+        binding.btnStartFps.setOnClickListener {
             FpsMonitor.startMonitor { fps ->
-                tv_fps.text = String.format("fps: %s", fps)
+                binding.tvFps.text = String.format("fps: %s", fps)
             }
         }
 
-        btn_stop_fps.setOnClickListener {
+        binding.btnStopFps.setOnClickListener {
             FpsMonitor.stopMonitor()
-            tv_fps.text = ""
+            binding.tvFps.text = ""
         }
 
-        btn_sleep.setOnClickListener {
+        binding.btnStopFps.setOnClickListener {
             try {
                 Thread.sleep(3000)
             } catch (e: InterruptedException) {
