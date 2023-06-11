@@ -20,8 +20,9 @@ abstract class BaseViewActivity<T : ViewBinding> : FragmentActivity() {
     lateinit var binding: T
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = getViewBinding()
         setBaseConfig()
-        setContentView(getLayoutId())
+        setContentView(binding.root)
         mBind = ButterKnife.bind(this)
         mContext = this
         initEventAndData()
@@ -29,6 +30,9 @@ abstract class BaseViewActivity<T : ViewBinding> : FragmentActivity() {
 
     protected abstract fun getViewBinding(): T
 
+    /**
+     * todo 这里没用了，setContentView(binding.getRoot())
+     */
     protected abstract fun getLayoutId(): Int
     protected abstract fun initEventAndData()
     private fun setBaseConfig() {
