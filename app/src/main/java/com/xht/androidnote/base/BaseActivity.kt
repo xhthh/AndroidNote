@@ -1,6 +1,7 @@
 package com.xht.androidnote.base
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Window
@@ -17,10 +18,17 @@ abstract class BaseActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBaseConfig()
-        setContentView(getLayoutId())
+        //BaseViewActivity中处理binding使用，避免initEventAndData()中使用binding使未初始化
+        if (!initLayout()) {
+            setContentView(getLayoutId())
+        }
         mBind = ButterKnife.bind(this)
         mContext = this
         initEventAndData()
+    }
+
+    protected open fun initLayout(): Boolean {
+        return false
     }
 
     protected abstract fun getLayoutId(): Int
@@ -31,7 +39,20 @@ abstract class BaseActivity : FragmentActivity() {
     }
 
     protected fun skip2Activity(clazz: Class<*>?) {
-        if (mContext != null) mContext!!.startActivity(Intent(mContext, clazz))
+        mContext.startActivity(Intent(mContext, clazz))
+    }
+
+    /**
+     * reified 将内联函数的类型参数标记为在运⾏时可访问
+     */
+    protected inline fun <reified T> startActivity(mContext: Context) {
+        val intent = Intent(mContext, T::class.java)
+        mContext.startActivity(intent)
+    }
+
+    protected inline fun <reified T> startActivity() {
+        val intent = Intent(mContext, T::class.java)
+        mContext.startActivity(intent)
     }
 
     override fun onDestroy() {

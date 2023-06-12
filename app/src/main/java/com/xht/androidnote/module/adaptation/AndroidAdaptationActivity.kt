@@ -16,7 +16,7 @@ class AndroidAdaptationActivity : BaseViewActivity<ActivityAdaptationBinding>() 
 
     override fun initEventAndData() {
         binding.btnAndroid10.setOnClickListener {
-            skip2Activity(Adaptation10Activity::class.java)
+            startActivity<Adaptation10Activity>(this)
         }
         binding.btnAndroid11.setOnClickListener {
             skip2Activity(Adaptation10Activity::class.java)
@@ -25,7 +25,7 @@ class AndroidAdaptationActivity : BaseViewActivity<ActivityAdaptationBinding>() 
             skip2Activity(Adaptation10Activity::class.java)
         }
         binding.btnAndroid13.setOnClickListener {
-            skip2Activity(Adaptation13Activity::class.java)
+            startActivity<Adaptation13Activity>()
         }
     }
 }

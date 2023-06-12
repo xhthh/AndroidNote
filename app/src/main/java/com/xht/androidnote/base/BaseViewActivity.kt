@@ -1,62 +1,18 @@
 package com.xht.androidnote.base
 
-import android.app.Activity
-import android.content.Intent
-import android.os.Bundle
-import android.view.Window
-import androidx.fragment.app.FragmentActivity
 import androidx.viewbinding.ViewBinding
-import butterknife.ButterKnife
-import butterknife.Unbinder
 
 /**
- * Created by xht on 2018/4/23.
+ * 改成了 ViewBinding，为了全都重写一遍，单独抽一个基类
  */
-abstract class BaseViewActivity<T : ViewBinding> : FragmentActivity() {
-    @JvmField
-    protected var mContext: Activity? = null
-    private var mBind: Unbinder? = null
-
+abstract class BaseViewActivity<T : ViewBinding> : BaseActivity() {
     lateinit var binding: T
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+
+    override fun initLayout(): Boolean {
         binding = getViewBinding()
-        setBaseConfig()
         setContentView(binding.root)
-        mBind = ButterKnife.bind(this)
-        mContext = this
-        initEventAndData()
+        return true
     }
 
     protected abstract fun getViewBinding(): T
-
-    /**
-     * todo 这里没用了，setContentView(binding.getRoot())
-     */
-    protected abstract fun getLayoutId(): Int
-    protected abstract fun initEventAndData()
-    private fun setBaseConfig() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-    }
-
-    protected fun skip2Activity(clazz: Class<*>?) {
-        if (mContext != null) mContext!!.startActivity(Intent(mContext, clazz))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (mBind != null) {
-            mBind!!.unbind()
-        }
-    }
-
-    /*@Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(Class<?> event) {
-
-    }*/
-    override fun onResume() {
-        super.onResume()
-        //        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
-//        ViewClickHookUtil.INSTANCE.hookAllChildView(decorView);
-    }
 }

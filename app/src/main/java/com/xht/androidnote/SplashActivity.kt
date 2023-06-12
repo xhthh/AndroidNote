@@ -34,13 +34,6 @@ class SplashActivity : BaseViewActivity<ActivitySplashBinding>() {
 //        }
     }
 
-
-    //泛型
-    inline fun <reified T> startActivity(mContext: Context) {
-        val intent = Intent(mContext, T::class.java)
-        mContext.startActivity(intent)
-    }
-
     inline fun <reified T> startActivity(mContext: Context, block: Intent.() -> Unit) {
         val intent = Intent(mContext, T::class.java)
         intent.block()
