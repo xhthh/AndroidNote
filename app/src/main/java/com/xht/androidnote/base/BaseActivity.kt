@@ -55,6 +55,12 @@ abstract class BaseActivity : FragmentActivity() {
         mContext.startActivity(intent)
     }
 
+    protected inline fun <reified T> startActivity(mContext: Context, block: Intent.() -> Unit) {
+        val intent = Intent(mContext, T::class.java)
+        intent.block()
+        mContext.startActivity(intent)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (mBind != null) {

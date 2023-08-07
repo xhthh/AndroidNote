@@ -17,6 +17,7 @@ public class GenericJavaTest {
      */
     public static void testEntityResponse(Response<? extends Entity> response) {
         Entity entity = response.getEntity();
+        //Article article = response.getEntity();
         /*
             不确定response里this.entity的具体类型，但必定是Entity的子类，此时用set()方法是向下转型，存在风险；
             比如，this.entity是Article类型，但传入了Entity对象，类型转换异常
@@ -40,5 +41,6 @@ public class GenericJavaTest {
          */
         //response.setEntity(new Entity());
         response.setEntity(new Article());
+        response.setEntity(new Topic());
     }
 }

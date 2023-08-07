@@ -20,6 +20,14 @@ https://blog.csdn.net/qq_38122220/article/details/124057020
 
 
 
+##### 2、更安全地导出上下文注册的接收器
+
+以 Android 13(33) 或更高版本为目标平台的应用，必须为每个广播接收器指定 `RECEIVER_EXPORTED` 或 `RECEIVER_NOT_EXPORTED`，否则当 App 尝试注册广播接收器时，系统会抛出 `SecurityException`
+
+
+
+
+
 > - idcard_quality 旷视身份证这个库 升级33后会不会有问题，验证一下
 >
 > - android12 后 activity/service/receiver 有 intent-filter 的需要显示声明 exported
@@ -91,6 +99,46 @@ https://blog.csdn.net/qq_38122220/article/details/124057020
 >   ```
 >
 >   https://blog.csdn.net/NakajimaFN/article/details/127281084
+>   
+>   听云文档
+>   
+>   http://wukongdoc.tingyun.com/app/sdk_deploy/Android/Android_Gradle.html
+>   
+>   - Gradle接入方式，升级听云SDK至 2.17.1.10
+>   
+>     - gradle插件 4.2.2
+>     - targetSdkVersion 33
+>   
+>   - 写了个bug，后台查不到crash信息
+>   
+>     小米手机 Android13系统
+>   
+>     ```
+>     I/NBSAgent: NBSAgent start.
+>     I/NBSAgent: NBSAgent enabled.
+>     I/NBSAgent: NBSAgent V2.17.1.10
+>     I/NBSAgent: Android app is debugMode !
+>     I/NBSAgent: connect success
+>     ```
+>   
+>     华为mate40pro
+>   
+>     ```
+>     I/NBSAgent: NBSAgent start.
+>     I/NBSAgent: NBSAgent enabled.
+>     I/NBSAgent: NBSAgent V2.17.1.10
+>     I/NBSAgent: Android app is debugMode !
+>     I/NBSAgent: errorCode:460, Invalid key(cea9fe7d00c0472d833a110e10c8b6a2)
+>     
+>     
+>     使用之前的V2.15.0.7 jar包， 连接成功，崩溃信息，后台能看到
+>     I/NBSAgent: NBSAgent start.
+>     I/NBSAgent: NBSAgent enabled.
+>     I/NBSAgent: NBSAgent V2.15.0.7
+>     I/NBSAgent: connect success
+>     ```
+>   
+>     > 会不会是 初始化的问题，start()
 
 
 

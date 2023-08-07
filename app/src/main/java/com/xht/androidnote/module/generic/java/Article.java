@@ -7,3 +7,7 @@ public class Article extends Entity{
         System.out.println(content + "：Json → Article");
     }
 }
+
+class Topic extends Article {
+
+}
