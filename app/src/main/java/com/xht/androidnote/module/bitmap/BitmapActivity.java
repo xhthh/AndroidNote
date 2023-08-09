@@ -2,15 +2,21 @@ package com.xht.androidnote.module.bitmap;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Base64;
+import android.util.LruCache;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.util.LruCache;
-import android.widget.ImageView;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
 import com.xht.androidnote.utils.L;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,6 +30,12 @@ public class BitmapActivity extends BaseActivity {
     @BindView(R.id.iv_bitmap_round_test)
     ImageView ivBitmapRoundTest;
 
+    @BindView(R.id.iv_base64_test)
+    ImageView ivBase64Test;
+
+    @BindView(R.id.btnBase64ToBitmap)
+    Button btnBase64ToBitmap;
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bitmap;
@@ -36,6 +48,28 @@ public class BitmapActivity extends BaseActivity {
         test();
 
         testRoundCorner();
+
+
+        btnBase64ToBitmap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        String base64test = getFromAssets("base64test");
+
+                        Bitmap bitmap = base64ToBitmap(base64test);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ivBase64Test.setImageBitmap(bitmap);
+                            }
+                        });
+                    }
+                });
+                thread.start();
+            }
+        });
     }
 
     private void testRoundCorner() {
@@ -75,6 +109,32 @@ public class BitmapActivity extends BaseActivity {
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
             L.i(entry.getKey() + "：" + entry.getValue());
         }
+    }
+
+    /**
+     * base64转为bitmap
+     *
+     * @param base64Data
+     * @return
+     */
+    public static Bitmap base64ToBitmap(String base64Data) {
+        byte[] bytes = Base64.decode(base64Data, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    public String getFromAssets(String fileName) {
+        try {
+            InputStreamReader inputReader = new InputStreamReader(getResources().getAssets().open(fileName));
+            BufferedReader bufReader = new BufferedReader(inputReader);
+            String line = "";
+            StringBuilder Result = new StringBuilder();
+            while ((line = bufReader.readLine()) != null)
+                Result.append(line);
+            return Result.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

@@ -11,4 +11,17 @@
         android:scaleType="fitXY"
         android:src="@mipmap/ic_launcher" />
 
+    <Button
+        android:id="@+id/btnBase64ToBitmap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="base64转图片" />
+
+    <ImageView
+        android:id="@+id/iv_base64_test"
+        android:layout_width="200dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/ic_launcher" />
+
 </LinearLayout>
