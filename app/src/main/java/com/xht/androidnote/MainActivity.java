@@ -4,7 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Looper;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -44,7 +44,6 @@ import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
-import com.xht.androidnote.module.view.fps.FpsViewActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 
 import butterknife.BindView;
@@ -100,23 +99,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        //        Handler handler = new Handler();
-        //        handler.postDelayed(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                finish();
-        //                startActivity(new Intent(mContext, MainActivity.class));
-        //            }
-        //        }, 3000);
-
-        //        new Thread(new Runnable() {
-        //            @Override
-        //            public void run() {
-        //                Looper.prepare();
-        //                Looper.loop();
-        //                Log.e("xht","===========Looper Test==============");
-        //            }
-        //        }).start();
+        Log.e(TAG,"------手机品牌PhoneBrand---" + Build.BRAND + "---手机型号---" + Build.MODEL);
     }
 
     @OnClick({R.id.btn_opt_test, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,

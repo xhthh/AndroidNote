@@ -1,7 +1,5 @@
 package com.xht.androidnote
 
-import android.content.Context
-import android.content.Intent
 import android.os.Handler
 import com.xht.androidnote.base.BaseViewActivity
 import com.xht.androidnote.databinding.ActivitySplashBinding
@@ -32,11 +30,5 @@ class SplashActivity : BaseViewActivity<ActivitySplashBinding>() {
 //            putExtra("params1", "erdai")
 //            putExtra("params2", "666")
 //        }
-    }
-
-    inline fun <reified T> startActivity(mContext: Context, block: Intent.() -> Unit) {
-        val intent = Intent(mContext, T::class.java)
-        intent.block()
-        mContext.startActivity(intent)
     }
 }

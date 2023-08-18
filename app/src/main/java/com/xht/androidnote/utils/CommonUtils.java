@@ -1,6 +1,17 @@
 package com.xht.androidnote.utils;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Insets;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Environment;
+import android.view.Display;
+import android.view.WindowInsets;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -103,5 +114,87 @@ public class CommonUtils {
         }
     }
 
+    public static boolean checkAppInstalled(Context context, String pkgName) {
+        if (pkgName == null || pkgName.isEmpty()) {
+            return false;
+        }
+        PackageInfo packageInfo;
+        try {
+            packageInfo = context.getPackageManager().getPackageInfo(pkgName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            packageInfo = null;
+            e.printStackTrace();
+        }
+        if (packageInfo == null) {
+            return false;
+        } else {
+            return true;//true为安装了，false为未安装
+        }
+    }
+
+    /**
+     * 获取状态栏高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getStatusBarHeight(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            WindowMetrics windowMetrics = wm.getCurrentWindowMetrics();
+            WindowInsets windowInsets = windowMetrics.getWindowInsets();
+            Insets insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() | WindowInsets.Type.displayCutout());
+            return insets.top;
+        } else {
+            int result = 0;
+            int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+            if (resourceId > 0) {
+                result = context.getResources().getDimensionPixelSize(resourceId);
+            }
+            return result;
+        }
+    }
+
+    /**
+     * 获取导航栏高度
+     *
+     * @param context
+     * @return
+     */
+    public static int getNavigationBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    /**
+     * 计算bitmap 最大可用
+     *
+     * @param activity
+     * @return
+     */
+    public static int calculateMaxBitmapSize(Activity activity) {
+        WindowManager wm = (WindowManager) activity.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+
+        int width, height;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            WindowMetrics metrics = activity.getWindowManager().getCurrentWindowMetrics();
+            width = metrics.getBounds().width();
+            height = metrics.getBounds().height();
+        } else {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+            height = size.y;
+
+            width = display.getWidth();
+        }
+        return (int) Math.sqrt(Math.pow(width, 2) + Math.pow(height, 2));
+    }
 
 }

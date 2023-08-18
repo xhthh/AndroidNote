@@ -1,6 +1,5 @@
 package com.xht.androidnote.module.kotlin
 
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.util.Log
@@ -15,6 +14,7 @@ import com.xht.androidnote.module.kotlin.multiSelect.MultiSelectActivity
 import com.xht.androidnote.module.kotlin.record.RecordActivity
 import com.xht.androidnote.module.kotlin.screenshot.ScreenShotActivity
 import com.xht.androidnote.module.kotlin.widget.ClockActivity
+import com.xht.androidnote.module.kotlin.widget.StatusBarTestActivity
 import com.xht.androidnote.module.kotlin.widget.StorageTestActivity
 import com.xht.androidnote.module.kotlin.widget.TableTestActivity
 import com.xht.androidnote.module.kotlin.widget.TextTestActivity
@@ -37,6 +37,9 @@ class WidgetTestActivity : BaseViewActivity<ActivityWidgetTestBinding>() {
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun initEventAndData() {
+        binding.btnStatusBar.setOnClickListener {
+            startActivity<StatusBarTestActivity>(this) {}
+        }
         binding.btnNullTest.setOnClickListener {
 
             val bean = Bean()
@@ -166,12 +169,6 @@ class WidgetTestActivity : BaseViewActivity<ActivityWidgetTestBinding>() {
             override fun onTimeGoingOn() {
             }
         })
-    }
-
-    inline fun <reified T> startActivity(context: Context, block: Intent.() -> Unit) {
-        val intent = Intent(context, T::class.java)
-        intent.block()
-        context.startActivity(intent)
     }
 
     private fun testTime() {

@@ -137,4 +137,5 @@ public class BitmapActivity extends BaseActivity {
         return null;
     }
 
+
 }

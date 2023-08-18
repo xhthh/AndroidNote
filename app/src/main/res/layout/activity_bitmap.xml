@@ -1,27 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/iv_bitmap_round_test"
-        android:layout_width="300dp"
-        android:layout_height="200dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/ic_launcher" />
-
-    <Button
-        android:id="@+id/btnBase64ToBitmap"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="base64转图片" />
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/iv_base64_test"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="20dp"
-        android:src="@mipmap/ic_launcher" />
+        <ImageView
+            android:id="@+id/iv_bitmap_round_test"
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_launcher" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btnBase64ToBitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="base64转图片" />
+
+        <ImageView
+            android:id="@+id/iv_base64_test"
+            android:layout_width="200dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/ic_launcher" />
+
+        <Button
+            android:id="@+id/btnCompress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图片压缩" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@mipmap/splash_logo_test" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="压缩后结果" />
+
+        <ImageView
+            android:id="@+id/ivCompressResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</ScrollView>
