@@ -71,13 +71,13 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     //noinspection GradleCompatible
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.6.0'
 
     //implementation 'com.android.support:multidex:1.0.1'
 
-    api 'androidx.multidex:multidex:2.0.0'
+    api 'androidx.multidex:multidex:2.0.1'
 
     //butterknife
     implementation 'com.jakewharton:butterknife:10.2.3'
