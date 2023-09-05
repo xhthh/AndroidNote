@@ -33,6 +33,7 @@ import com.xht.androidnote.module.inflate.Factory2TestActivity;
 import com.xht.androidnote.module.ipc.IPCActivity;
 import com.xht.androidnote.module.java.JavaTestActivity;
 import com.xht.androidnote.module.kotlin.KotlinTestActivity;
+import com.xht.androidnote.module.kotlin.TestEpic;
 import com.xht.androidnote.module.kotlin.WidgetTestActivity;
 import com.xht.androidnote.module.okhttp.OkHttpActivity;
 import com.xht.androidnote.module.optimize.OptTestActivity;
@@ -99,7 +100,11 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        Log.e(TAG,"------手机品牌PhoneBrand---" + Build.BRAND + "---手机型号---" + Build.MODEL);
+        Log.e(TAG, "------手机品牌PhoneBrand---" + Build.BRAND + "---手机型号---" + Build.MODEL);
+
+
+        String processName = TestEpic.getProcessName(this);
+        Log.e(TAG, "------processName = " + processName);
     }
 
     @OnClick({R.id.btn_opt_test, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
@@ -108,7 +113,7 @@ public class MainActivity extends BaseActivity {
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin,
-            R.id.btn_adaptation_test, R.id.btn_inflater})
+            R.id.btn_adaptation_test, R.id.btn_inflater, R.id.btn_hegui_test})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_inflater:
@@ -124,6 +129,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_widget_test:
                 skip2Activity(WidgetTestActivity.class);
+                break;
+            case R.id.btn_hegui_test:
+                TestEpic.readConfig(this);
                 break;
             case R.id.btn_opt_test:
                 skip2Activity(OptTestActivity.class);

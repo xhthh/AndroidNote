@@ -41,6 +41,12 @@
             android:text="各种功能控件测试" />
 
         <Button
+            android:id="@+id/btn_hegui_test"
+            style="@style/btnStyle"
+            android:layout_marginTop="20dp"
+            android:text="合规检测" />
+
+        <Button
             android:id="@+id/btn_opt_test"
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"

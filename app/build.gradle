@@ -35,7 +35,7 @@ android {
     //默认的配置，它是一个ProductFlavor。ProductFlavor允许我们根据不同的情况同时生成多个不同的apk包。
     defaultConfig {
         applicationId "com.xht.androidnote"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 33
         versionCode 1
         versionName "1.0"
@@ -143,7 +143,12 @@ dependencies {
 //    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha01"
     implementation "androidx.core:core-ktx:1.10.1"
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation "com.github.tiann:epic:0.11.2"
+
+    implementation group: 'org.ow2.asm', name: 'asm-commons', version: '9.3'
 }
+
 //aspectjx {
 //    exclude 'versions.9'
 //    exclude 'leakcanary'
