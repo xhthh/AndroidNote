@@ -189,6 +189,8 @@ https://juejin.cn/post/7093787313095999502
 - android:exported
 
   > 如果 targetSdkVersion 31 时，Activity、Service 或者 BroadcastReveiver 中使用 intent-filter，并且没有显示的声明 android:exported 的值，则 App 将无法安装。
+  >
+  > https://blog.csdn.net/z936689039/article/details/128649726
   
 - 待处理 intent 可变性
 
@@ -269,6 +271,10 @@ https://juejin.cn/post/7093787313095999502
 
 - 更安全的动态代码加载
 
+  > 如果必须动态加载代码，请使用以下方法将动态加载的文件（例如 DEX、JAR 或 APK 文件）在文件打开后和写入任何内容之前立即设置为只读。
+  >
+  > jar.setReadOnly()
+
 - 压缩路径遍历
 
   > 对于以 Android 14 为目标平台的应用，Android 会通过以下方式防止 Zip 路径遍历漏洞：如果 Zip 文件条目名称包含“..”或以“/”开头，[`ZipFile(String)`](https://developer.android.google.cn/reference/java/util/zip/ZipFile?hl=zh-cn#public-constructors) 和 [`ZipInputStream.getNextEntry()`](https://developer.android.google.cn/reference/java/util/zip/ZipInputStream?hl=zh-cn#getNextEntry()) 会抛出 [`ZipException`](https://developer.android.google.cn/reference/java/util/zip/ZipException?hl=zh-cn)。
@@ -313,7 +319,12 @@ https://juejin.cn/post/7093787313095999502
 
 - 关于不可关闭通知用户体验方式的变更
 
-
+  > 调用 `Notification.Builder#setOngoing(true)` 或 `NotificationCompat.Builder#setOngoing(true)`  方法可以防止使用者关闭前台通知，从 Android 14 开始允许使用者关闭这类型的通知，但是但在下列情況下，使用者无法关闭通知：
+  >
+  > - 手机锁定时
+  > - 点击全部清除通知的按钮（避免不慎关闭通知）
+  >
+  > 链接：https://juejin.cn/post/7233208763921956920
 
 
 

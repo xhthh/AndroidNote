@@ -16,6 +16,7 @@ import com.xht.androidnote.module.activity.ATestActivity;
 import com.xht.androidnote.module.adaptation.AndroidAdaptationActivity;
 import com.xht.androidnote.module.animation.AnimationActivity;
 import com.xht.androidnote.module.annotation.AnnotationActivity;
+import com.xht.androidnote.module.asm.ASMTestActivity;
 import com.xht.androidnote.module.asynctask.AsyncTaskActivity;
 import com.xht.androidnote.module.bitmap.BitmapActivity;
 import com.xht.androidnote.module.broadcastreceiver.BroadCastActivity;
@@ -113,7 +114,7 @@ public class MainActivity extends BaseActivity {
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin,
-            R.id.btn_adaptation_test, R.id.btn_inflater, R.id.btn_hegui_test})
+            R.id.btn_adaptation_test, R.id.btn_inflater, R.id.btn_hegui_test, R.id.btn_aop_test})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_inflater:
@@ -132,6 +133,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.btn_hegui_test:
                 TestEpic.readConfig(this);
+                break;
+            case R.id.btn_aop_test:
+                skip2Activity(ASMTestActivity.class);
                 break;
             case R.id.btn_opt_test:
                 skip2Activity(OptTestActivity.class);

@@ -214,6 +214,7 @@
         <activity android:name=".module.adaptation.Adaptation10Activity" />
         <activity android:name=".module.adaptation.Adaptation13Activity" />
         <activity android:name=".module.kotlin.widget.StatusBarTestActivity" />
+        <activity android:name=".module.asm.ASMTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"
