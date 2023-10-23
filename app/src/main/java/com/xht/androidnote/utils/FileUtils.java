@@ -203,4 +203,20 @@ public class FileUtils {
         String suffix = fileName.substring(fileName.lastIndexOf("."));
         return temp + "_" + getCreateFileName() + suffix;
     }
+
+    public static byte[] readBytes(String filePath) {
+        File file = new File(filePath);
+        FileInputStream fis;
+        byte[] fileBytes;
+        try {
+            fis = new FileInputStream(file);
+            fileBytes = new byte[(int) file.length()];
+            fis.read(fileBytes);
+            fis.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        return fileBytes;
+    }
 }
