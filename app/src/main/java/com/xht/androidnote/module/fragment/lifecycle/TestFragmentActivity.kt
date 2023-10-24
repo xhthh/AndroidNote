@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.xht.androidnote.R
 import com.xht.androidnote.base.BaseViewActivity
 import com.xht.androidnote.databinding.ActivityTestFragmentBinding
+import com.xht.androidnote.module.fragment.switchFragment
 
 class TestFragmentActivity : BaseViewActivity<ActivityTestFragmentBinding>() {
     override fun getViewBinding(): ActivityTestFragmentBinding {
@@ -35,26 +36,42 @@ class TestFragmentActivity : BaseViewActivity<ActivityTestFragmentBinding>() {
 
     private fun initListener() {
         binding.btnReplace.setOnClickListener {
-            if (tag == "one") {
-                tag = "two"
-                currentFragment = twoFragment
-            } else {
-                tag = "one"
-                currentFragment = oneFragment
+//            if (tag == "one") {
+//                tag = "two"
+//                currentFragment = twoFragment
+//            } else {
+//                tag = "one"
+//                currentFragment = oneFragment
+//            }
+//            testReplace(currentFragment, tag)
+            switchFragment(R.id.fl_root, "two") {
+                TwoFragment().apply {
+
+                }
             }
-            testReplace(currentFragment, tag)
         }
 
         binding.btnAdd.setOnClickListener {
-            tag = "one"
-            val beginTransaction = supportFragmentManager.beginTransaction()
-            if (fragment1 == null) {
-                fragment1 = OneFragment()
-                beginTransaction.add(R.id.fl_root, fragment1!!, tag)
+//            tag = "one"
+//            val beginTransaction = supportFragmentManager.beginTransaction()
+//            if (fragment1 == null) {
+//                fragment1 = OneFragment()
+//                beginTransaction.add(R.id.fl_root, fragment1!!, tag)
+//            }
+//            hideFragment(beginTransaction)
+//            beginTransaction.show(fragment1!!)
+//            beginTransaction.commitAllowingStateLoss()
+            switchFragment(R.id.fl_root, "one") {
+                OneFragment().apply {
+
+                }
             }
-            hideFragment(beginTransaction)
-            beginTransaction.show(fragment1!!)
-            beginTransaction.commitAllowingStateLoss()
+        }
+
+        binding.btnDestroy.setOnClickListener {
+            switchFragment(R.id.fl_root, "one") {
+                OneFragment().apply {  }
+            }
         }
 
         binding.btnHide.setOnClickListener {
