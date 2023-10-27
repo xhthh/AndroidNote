@@ -1,7 +1,10 @@
 package com.xht.androidnote.module;
 
 import android.content.Intent;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.xht.androidnote.R;
 import com.xht.androidnote.base.BaseActivity;
@@ -29,7 +32,27 @@ public class ContentReviewActivity extends BaseActivity {
 
         String content = intent.getStringExtra("content");
 
-        mWvContentReview.loadUrl(content);
+        WebSettings settings = mWvContentReview.getSettings();
+        settings.setJavaScriptEnabled(true);
+        //settings.setSupportZoom(true);
 
+        //设置可以支持缩放        
+        settings.setSupportZoom(true);
+        //设置true,才能让Webivew支持<meta>标签的viewport属性
+        settings.setUseWideViewPort(true);
+        //设置出现缩放工具        
+        settings.setBuiltInZoomControls(true);
+        //设置隐藏缩放控件        
+        settings.setDisplayZoomControls(false);
+        //最小缩放等级        
+        mWvContentReview.setInitialScale(60);
+
+
+        settings.setBuiltInZoomControls(true);
+        mWvContentReview.setWebChromeClient(new WebChromeClient());
+        mWvContentReview.setWebViewClient(new WebViewClient());
+
+//        mWvContentReview.loadUrl("file:///android_asset/about.html");
+        mWvContentReview.loadUrl("https://www.baidu.com");
     }
 }
