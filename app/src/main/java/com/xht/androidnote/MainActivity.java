@@ -47,6 +47,7 @@ import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
+import com.xht.androidnote.utils.HarmonyUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -106,6 +107,13 @@ public class MainActivity extends BaseActivity {
 
         String processName = TestEpic.getProcessName(this);
         Log.e(TAG, "------processName = " + processName);
+
+        boolean harmonyOs = HarmonyUtils.isHarmonyOs();
+        Log.e("harmony","---是否鸿蒙系统---harmonyOs = " + harmonyOs);
+        String harmonyVersion = HarmonyUtils.getHarmonyVersion();
+        Log.e("harmony","---鸿蒙系统---harmonyVersion = " + harmonyVersion);
+        String harmonyDisplayVersion = HarmonyUtils.getHarmonyDisplayVersion();
+        Log.e("harmony","---鸿蒙系统---harmonyDisplayVersion = " + harmonyDisplayVersion);
     }
 
     @OnClick({R.id.btn_opt_test, R.id.btn_rxjava, R.id.btn_widget_test, R.id.btn_event_custom_view, R.id.btn_thread, R.id.btn_test_pickerview, R.id.btn_activity,
