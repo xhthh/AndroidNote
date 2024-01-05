@@ -627,7 +627,7 @@ fun testAlso() {
 | apply  | fun T.apply(block: T.() -> Unit): T { block(); return this } | this指代当前对象或者省略 | 返回this     | 是             | 1、适用于run函数的任何场景，一般用于初始化一个对象实例的时候，操作对象属性，并最终返回这个对象。 2、动态inflate出一个XML的View的时候需要给View绑定数据也会用到. 3、一般可用于多个扩展函数链式调用 4、数据model多层级包裹判空处理的问题 |
 | also   | fun T.also(block: (T) -> Unit): T { block(this); return this } | it指代当前对象           | 返回this     | 是             | 适用于let函数的任何场景，一般可用于多个扩展函数链式调用      |
 
-
+https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5eedb15615084bab9496e3bfad73e5d9~tplv-k3u1fbpfcp-jj-mark:0:0:0:0:q75.png
 
 #### 8、lateinit 和 by lazy
 

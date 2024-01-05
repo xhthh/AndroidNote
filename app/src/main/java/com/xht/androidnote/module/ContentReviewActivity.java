@@ -1,7 +1,6 @@
 package com.xht.androidnote.module;
 
 import android.content.Intent;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -49,10 +48,10 @@ public class ContentReviewActivity extends BaseActivity {
 
 
         settings.setBuiltInZoomControls(true);
-        mWvContentReview.setWebChromeClient(new WebChromeClient());
+        //mWvContentReview.setWebChromeClient(new WebChromeClient());
         mWvContentReview.setWebViewClient(new WebViewClient());
 
-//        mWvContentReview.loadUrl("file:///android_asset/about.html");
-        mWvContentReview.loadUrl("https://www.baidu.com");
+        mWvContentReview.loadUrl("file:///android_asset/test.html");
+//        mWvContentReview.loadUrl("https://www.baidu.com");
     }
 }

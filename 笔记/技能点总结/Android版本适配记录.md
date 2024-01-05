@@ -156,3 +156,29 @@ https://blog.csdn.net/u013208026/article/details/126241775
 
 
 
+
+
+#### 检测是否使用非SDK接口
+
+> 在 Application#onCreate() 中
+>
+> ```java
+> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+>             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+>                     .detectNonSdkApiUsage()
+>                     .penaltyListener(new ThreadPoolExecutor(
+>                             CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE_SECONDS, TimeUnit.SECONDS,
+>                             new LinkedBlockingQueue<Runnable>()), new StrictMode.OnVmViolationListener() {
+>                         @Override
+>                         public void onVmViolation(Violation v) {
+>                             //todo 没走到
+>                             Log.e("xht", "---非SDK接口使用---" + v.getMessage());
+>                         }
+>                     })
+>                     .build());
+>         }
+> ```
+>
+> 您还可以利用 `StrictMode` API 来测试您的应用是否使用非 SDK 接口。请使用 [`detectNonSdkApiUsage`](https://developer.android.com/reference/android/os/StrictMode.VmPolicy.Builder?hl=zh-cn#detectNonSdkApiUsage()) 方法来启用此 API。启用 `StrictMode` API 后，您可以使用 [`penaltyListener`](https://developer.android.com/reference/android/os/StrictMode.VmPolicy.Builder?hl=zh-cn#penaltyListener(java.util.concurrent.Executor, android.os.StrictMode.OnVmViolationListener)) 来接收每次使用非 SDK 接口时触发的回调，并且您可以在其中实现自定义处理。回调中提供的 `Violation` 对象派生自 `Throwable`，并且封闭式堆栈轨迹会提供相应使用行为的具体情境。
+>
+> 
