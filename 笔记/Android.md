@@ -1,11 +1,3 @@
-## ```
-
-resumeFocusedStacksTopActivities
-
-```Android
-
-```
-
 ### Android基础
 
 #### 一、Activity
@@ -613,17 +605,29 @@ Activity 的 Context 是其本身，在 Activity 中可以直接用 this，或�
 
     > 会抛出异常，Unable to add window -- token null is not valid; is your activity running?
     >
+> https://juejin.cn/post/7314125877486616615
 
-    - Activity 在被创建后会调用 attach()，其中会创建 PhoneWindow 对象，给当前 window 绑定 mToken，它可以用来标识 Window，做一些校验工作。
-
-      Dialog 通过 getSystemService() 获取 WindowManager 对象，最终显示出来。
-
-      Activity 重写了 getSystemService() 返回了一个 已经绑定了 mToken 的对象；
-
+- Activity 在被创建后会调用 attach()，其中会创建 PhoneWindow 对象，给当前 window 绑定 mToken，它可以用来标识 Window，做一些校验工作。
+  
+  Dialog 通过 getSystemService() 获取 WindowManager 对象，最终显示出来。
+  
+  Activity 重写了 getSystemService() 返回了一个 已经绑定了 mToken 的对象；
+  
       而 Application 和 Service 调用默认的 ContextImpl#getSystemService() 没有 mToken。
+      
+      > - 默认的 getSystemService() 会调用 SystemServiceRegistry() 获取 WINDOW_SERVICE，这里会创建一个 WindowManagerImpl 实例，只有一个上下文参数，这样 WindowManagerImpl#mParentWindow 参数为 null；
+      > - WindowManagerGlobal#addView() 中会根据 parentWindow 判断，是否为 null，调用 adjustLayoutParamsForSubWindow()，给 WindowManager.LayoutParams 的 token 赋值；
+  
     - 启动 Activity 的时候，会构建表示 Activity 信息的 ActivityRecord 对象，其构造函数中会实例化 Token 对象
+    
     - AMS 在接着上一步之后，会利用创建的 Token 构建 AppWindowContainerController 对象，最终将 Token 存储到 WMS 中的 mTokenMap 中
+    
     - WMS 在 addWindow 时，会根据当前 Window 对象的 Token 进行校验
+    
+      > 该校验在 WindowManagerService#addWindow() 中：
+      >
+      > - 校验窗口类型，activity 和 dialog 的窗口类型均为 2，即 TYPE_APPLICATION
+      > - 校验token，getWindowToken()，Application 类型的 context 启动的 dialog，获取到的 token  为 null，会返回 WindowManagerGlobal.ADD_BAD_APP_TOKEN，在 ViewRootImpl#serView() 中，提示 “Unable to add window -- token null is not valid; is your activity running?”
 
 #### 六、Android中的消息机制和线程机制
 
@@ -2140,7 +2144,7 @@ performLaunchActivity主要完成以下事情：
   public void setLifecycleStateRequest(ActivityLifecycleItem stateRequest) {
       mLifecycleStateRequest = stateRequest;
   }
-  ```
+```
 
 - 继续 mService.getLifecycleManager().scheduleTransaction(clientTransaction) 流程；
 
@@ -2260,7 +2264,7 @@ Launcher本身也是一个应用程序，它在启动过程中会请求PackageMa
 
 - Zygote 进程 fork 出一个子进程后，通过反射最终调用到了 ActivityThread#main()；
 
-```java
+​```java
 public static void main(String[] args) {
     Looper.prepareMainLooper();
     ActivityThread thread = new ActivityThread();
@@ -2515,3 +2519,44 @@ https://www.jianshu.com/p/ad567861bc0e
 > - 部分机型无法接收通知。
 > - 部分机型最近任务列表找不到该应用。
 > - 新包覆盖安装无法更新图标，依旧显示旧图标。
+
+
+
+##### 2、so库使用
+
+- 将 so 库放到 module 中的 libs 目录
+
+- 在 build.gradle 中配置 sourceSets
+
+  ```groovy
+  sourceSets {
+  	main {
+  		jniLibs.srcDirs("libs")
+  	}
+  }
+  ```
+
+- 在 build.gradle 中配置 abiFilters，libs 中需要放置对应的 abi
+
+- 在类中进行加载
+
+  ```
+  static {
+      System.loadLibrary("c++_shared");
+      System.loadLibrary("jfcrypto");
+  }
+  ```
+
+- 在类中声明 native 方法，且**所使用的native 类的位置要和之前生成 so 方法的 包名 、类名 、方法名 要完全一致！**
+
+  例如：**生成so工程的** native 方法类 ：
+
+  ```
+  包名：  com.cloud.jnitest   
+  类名：  JniTest
+  方法名：getStringFromC ()
+  
+  否则会报错：
+  java.lang.UnsatisfiedLinkError: No implementation found for long com.eth.litecommonlib.http.utils.JFSecurity.nativeJFInit(java.lang.String) (tried Java_com_eth_litecommonlib_http_utils_JFSecurity_nativeJFInit and Java_com_eth_litecommonlib_http_utils_JFSecurity_nativeJFInit__Ljava_lang_String_2)
+  ```
+

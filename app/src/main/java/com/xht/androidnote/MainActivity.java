@@ -46,6 +46,7 @@ import com.xht.androidnote.module.rxjava.RxJavaActivity;
 import com.xht.androidnote.module.service.ServiceActivity;
 import com.xht.androidnote.module.thread.ThreadTestActivity;
 import com.xht.androidnote.module.view.edittext.EditTextActivity;
+import com.xht.androidnote.module.web.WebViewTestActivity;
 import com.xht.androidnote.module.window.DialogWindowActivity;
 import com.xht.androidnote.utils.HarmonyUtils;
 
@@ -122,9 +123,12 @@ public class MainActivity extends BaseActivity {
             R.id.btn_window, R.id.btn_ipc, R.id.btn_bitmap, R.id.btn_animation, R.id.btn_java,
             R.id.btn_icon_replace, R.id.btn_annotation, R.id.btn_eventbus, R.id.btn_icon_hot_fix, R.id.btn_java_dynamic_proxy,
             R.id.btn_recyclerview, R.id.btn_dsa, R.id.btn_edit_text, R.id.btn_constraint, R.id.btnKotlin,
-            R.id.btn_adaptation_test, R.id.btn_inflater, R.id.btn_hegui_test, R.id.btn_aop_test})
+            R.id.btn_adaptation_test, R.id.btn_inflater, R.id.btn_hegui_test, R.id.btn_aop_test, R.id.btn_webview})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.btn_webview:
+                skip2Activity(WebViewTestActivity.class);
+                break;
             case R.id.btn_inflater:
                 skip2Activity(Factory2TestActivity.class);
                 Toast.makeText(this, "如果您的应用以 Android 12.0（API 级别 31）或更高版本为目标平台，" +

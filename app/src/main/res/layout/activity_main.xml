@@ -23,6 +23,12 @@
             android:text="kotlin 测试" />
 
         <Button
+            android:id="@+id/btn_webview"
+            style="@style/btnStyle"
+            android:layout_marginBottom="20dp"
+            android:text="WebView" />
+
+        <Button
             android:id="@+id/btn_recyclerview"
             style="@style/btnStyle"
             android:layout_marginBottom="20dp"
