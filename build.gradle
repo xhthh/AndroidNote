@@ -2,7 +2,7 @@
 
 //buildscript中的声明是gradle脚本自身需要使用的资源，仓库和依赖的插件
 buildscript {
-    ext.kotlin_version = '1.8.10'
+    ext.kotlin_version = '1.9.21'
 
     repositories {
         maven{

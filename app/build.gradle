@@ -20,7 +20,7 @@ ext {
 
 def javaVersion = JavaVersion.VERSION_11
 
-def coroutines_version = "1.3.7"
+def coroutines_version = "1.7.3"
 
 //android{}是Android插件提供的一个扩展类型，可以让我们自定义Android Gradle工程，是Android Gradle工程配置的唯一入口。
 android {
