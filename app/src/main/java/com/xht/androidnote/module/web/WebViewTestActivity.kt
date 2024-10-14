@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.web
 
+import android.content.Intent
 import android.os.Build
 import android.util.Log
 import android.view.ViewGroup
@@ -31,9 +32,27 @@ class WebViewTestActivity : BaseViewActivity<ActivityTestWebviewBinding>() {
     }
 
     override fun initEventAndData() {
-        initWebSettings(binding.webview)
-        binding.webview.webViewClient = this.webViewClient
-        binding.webview.loadUrl("chrome://crash")
+//        initWebSettings(binding.webview)
+//        binding.webview.webViewClient = this.webViewClient
+        //binding.webview.loadUrl("chrome://crash")
+
+        val settings = binding.webview.settings
+        settings.javaScriptEnabled = true
+        binding.webview.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                val uri = request?.url
+                if (uri?.scheme?.startsWith("alipay") == true) {
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    startActivity(intent)
+                    return true
+                }
+                return super.shouldOverrideUrlLoading(view, request)
+            }
+        }
+        binding.webview.loadUrl("file:///android_asset/schemetest.html");
     }
 
     private fun initWebView(webView: WebView) {

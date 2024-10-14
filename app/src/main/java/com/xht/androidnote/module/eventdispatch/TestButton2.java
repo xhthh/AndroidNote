@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.appcompat.widget.AppCompatButton;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.xht.androidnote.utils.L;
 
@@ -21,6 +22,12 @@ public class TestButton2 extends AppCompatButton {
 
     public TestButton2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("TestButton2------onClickListener---");
+            }
+        });
     }
 
     @Override

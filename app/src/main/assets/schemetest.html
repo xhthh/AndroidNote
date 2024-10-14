@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调起支付宝示例</title>
+</head>
+<body>
+<h2>调起支付宝支付</h2>
+<button id="payButton">点击支付</button>
+
+<script>
+    document.getElementById('payButton').addEventListener('click', function () {
+        // 万卡 URL Scheme→wanka://open/somepath
+        // 支付宝 URL Scheme
+        var alipayUrl = "alipays://platformapi/startapp?appId=20000067&url=https://your-redirect-url.com";
+
+        // 跳转到支付宝
+        window.location.href = alipayUrl;
+    });
+</script>
+</body>
+</html>

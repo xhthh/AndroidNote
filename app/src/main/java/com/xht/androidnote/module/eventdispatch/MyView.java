@@ -21,12 +21,12 @@ public class MyView extends View {
                   int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                L.i("MyView---onClick()");
-            }
-        });
+        //        setOnClickListener(new OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        //                L.i("MyView---onClick()");
+        //            }
+        //        });
     }
 
     @Override
@@ -34,26 +34,26 @@ public class MyView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 L.i("View---dispatchTouchEvent()---DOWN");
-                //                return true;
-                break;
+                return true;
+                //break;
             case MotionEvent.ACTION_MOVE:
                 L.i("View---dispatchTouchEvent()---MOVE");
                 break;
-            //            return true;
-
+//                return false;
             case MotionEvent.ACTION_UP:
                 L.i("View---dispatchTouchEvent()---UP");
-                break;
+//                break;
+                return false;
             case MotionEvent.ACTION_CANCEL:
                 L.i("View---dispatchTouchEvent()---CANCEL");
                 break;
         }
         boolean result = super.dispatchTouchEvent(event);
-//        L.i("View---dispatchTouchEvent()---result=" + result);
+        //        L.i("View---dispatchTouchEvent()---result=" + result);
         return result;
-//        return false;
-//        return true;
-//                        return true;//父view和子view的事件都会走到，不会走子view的onTouchEvent()，如果需要两个都处理，可以在这里返回true
+        //        return false;
+        //        return true;
+        //        return true;//父view和子view的事件都会走到，不会走子view的onTouchEvent()，如果需要两个都处理，可以在这里返回true
         //        return false;//如果返回false，子view不会接收到其它事件，父view可以接收到其他事件，
         // 因为父view的dispatchTransformedTouchEvent()的返回值由子view的dispatchTouchEvent()决定，如果子view返回false，则不能对mFirstTouchTarget进行赋值
         //如果mFirstTouchTarget为空，后续事件调用 dispatchTransformedTouchEvent()时，传入的view为null，就会调用父view的dispatchTouchEvent()
@@ -69,8 +69,8 @@ public class MyView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 L.i("View---onTouchEvent()---DOWN");
-                //                return true;
-//                return false;
+                //return false;
+                //return true;
                 break;
             case MotionEvent.ACTION_MOVE:
                 L.i("View---onTouchEvent()---MOVE");
@@ -83,9 +83,9 @@ public class MyView extends View {
                 break;
         }
         boolean result = super.onTouchEvent(event);
-//        result = false;
-//        result = true;
-        L.i("View---onTouchEvent()---result=" + result);
+        //result = false;
+        //result = true;
+        //L.i("View---onTouchEvent()---result=" + result);
         return result;
     }
 

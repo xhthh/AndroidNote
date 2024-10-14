@@ -216,6 +216,7 @@
         <activity android:name=".module.kotlin.widget.StatusBarTestActivity" />
         <activity android:name=".module.asm.ASMTestActivity" />
         <activity android:name=".module.web.WebViewTestActivity" />
+        <activity android:name=".module.eventdispatch.NestedScrollViewTestActivity" />
 
         <service
             android:name=".module.ipc.messenger.MessengerService"

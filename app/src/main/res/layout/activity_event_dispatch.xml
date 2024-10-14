@@ -29,13 +29,13 @@
     </com.xht.androidnote.module.eventdispatch.MyViewGroup>
 
 
-    <com.xht.androidnote.module.eventdispatch.MyViewGroup
-        android:id="@+id/testCount"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:background="@color/colorPrimary"
-        android:padding="30dp">
+<!--    <com.xht.androidnote.module.eventdispatch.MyViewGroup-->
+<!--        android:id="@+id/testCount"-->
+<!--        android:layout_width="300dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:background="@color/colorPrimary"-->
+<!--        android:padding="30dp">-->
 
         <!--        <RelativeLayout-->
         <!--            android:layout_width="wrap_content"-->
@@ -72,7 +72,7 @@
         <!--        </RelativeLayout>-->
 
 
-    </com.xht.androidnote.module.eventdispatch.MyViewGroup>
+<!--    </com.xht.androidnote.module.eventdispatch.MyViewGroup>-->
 
     <com.xht.androidnote.module.eventdispatch.TestView
         android:layout_width="100dp"

@@ -1,5 +1,6 @@
 package com.xht.androidnote.module.eventdispatch;
 
+import android.content.Intent;
 import android.os.Looper;
 import android.os.MessageQueue;
 import android.util.Log;
@@ -22,8 +23,8 @@ import butterknife.OnClick;
 public class EventDispatchActivity extends BaseActivity {
     @BindView(R.id.viewgroup)
     MyViewGroup viewgroup;
-    @BindView(R.id.testCount)
-    MyViewGroup testCount;
+//    @BindView(R.id.testCount)
+//    MyViewGroup testCount;
 
     @BindView(R.id.view)
     MyView view;
@@ -66,19 +67,19 @@ public class EventDispatchActivity extends BaseActivity {
         //        int count = traversal3(testCount);
         //        L.i("count = " + count);
 
-        mButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                L.i("TestButton1------onClickListener---");
-            }
-        });
-
-        mButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                L.i("TestButton2------onClickListener---");
-            }
-        });
+//        mButton1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                L.i("TestButton1------onClickListener---");
+//            }
+//        });
+//
+//        mButton2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                L.i("TestButton2------onClickListener---");
+//            }
+//        });
 
         mTestView.setClickable(false);
         //setOnClickListener() 方法中会判断，如果 clickable 为 false，会主动设置为 true
@@ -185,6 +186,7 @@ public class EventDispatchActivity extends BaseActivity {
 
     @OnClick(R.id.btn_test_dispatch)
     public void onViewClicked() {
+        skip2Activity(NestedScrollViewTestActivity.class);
     }
 
     private int maxDeep(View view) {

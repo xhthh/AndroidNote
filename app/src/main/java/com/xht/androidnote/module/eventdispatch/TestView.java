@@ -50,7 +50,7 @@ public class TestView extends View {
                 break;
         }
         boolean result = super.dispatchTouchEvent(event);
-        L.i("TestView---dispatchTouchEvent()---result=" + result);
+//        L.i("TestView---dispatchTouchEvent()---result=" + result);
         return result;
 //        return false;
 //        return true;
@@ -63,8 +63,8 @@ public class TestView extends View {
             case MotionEvent.ACTION_DOWN:
                 L.i("TestView---onTouchEvent()---DOWN");
                 //                return true;
-                return false;
-//                break;
+//                return false;
+                break;
             case MotionEvent.ACTION_MOVE:
                 L.i("TestView---onTouchEvent()---MOVE");
                 break;
@@ -78,7 +78,7 @@ public class TestView extends View {
         boolean result = super.onTouchEvent(event);
 //        result = false;
 //        result = true;
-        L.i("TestView---onTouchEvent()---result=" + result);
+//        L.i("TestView---onTouchEvent()---result=" + result);
         return result;
     }
 

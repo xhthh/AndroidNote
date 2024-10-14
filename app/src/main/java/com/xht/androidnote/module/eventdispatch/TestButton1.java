@@ -6,6 +6,7 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.xht.androidnote.utils.L;
 
@@ -23,6 +24,12 @@ public class TestButton1 extends AppCompatButton {
 
     public TestButton1(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                L.i("TestButton1------onClickListener---");
+            }
+        });
     }
 
     @Override
@@ -41,9 +48,11 @@ public class TestButton1 extends AppCompatButton {
                 L.i("TestButton1---dispatchTouchEvent---CANCEL");
                 break;
         }
-        boolean result = super.dispatchTouchEvent(event);
-        L.i("TestButton1---dispatchTouchEvent()---result=" + result);
-        return result;
+//        boolean result = super.dispatchTouchEvent(event);
+//        L.i("TestButton1---dispatchTouchEvent()---result=" + result);
+//        return result;
+
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
@@ -62,10 +71,10 @@ public class TestButton1 extends AppCompatButton {
                 L.i("TestButton1---onTouchEvent()---CANCEL");
                 break;
         }
-        //return super.onTouchEvent(event);
+        return super.onTouchEvent(event);
 
-        boolean result = super.onTouchEvent(event);
-        L.i("TestButton1---onTouchEvent()---result=" + result);
-        return result;
+//        boolean result = super.onTouchEvent(event);
+//        L.i("TestButton1---onTouchEvent()---result=" + result);
+//        return result;
     }
 }
