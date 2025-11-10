@@ -86,7 +86,162 @@ Jetpack 只是让 MVVM 更简单、更安全
 
   - 当生命周期是活跃状态时，进行分发，最终走到 Observer#onChanged()；
 
+- 数据更新
+
+  ```java
+  protected void setValue(T value) {
+      assertMainThread("setValue");
+      mVersion++;//mVersion 更新
+      mData = value;
+      // 通知所有活跃观察者
+      dispatchingValue(null);
+  }
   
+  //最终通知所有观察者
+  private void considerNotify(ObserverWrapper observer) {
+      if (!observer.mActive) {
+          return;
+      }
+      if (!observer.shouldBeActive()) {
+          observer.activeStateChanged(false);
+          return;
+      }
+      //当 LiveData 的 mVersion 更新时，只有还没收到该版本的观察者会被通知；
+      if (observer.mLastVersion >= mVersion) {
+          return;
+      }
+      //每个 ObserverWrapper 保存它最后收到的版本号 mLastVersion；
+      observer.mLastVersion = mVersion;
+      //这里的mObserver即liveData.observe(owner, observer)中传入的观察者
+  	observer.mObserver.onChanged((T) mData);
+  }
+  ```
+
+- 调用流程
+
+  ```
+  observe() 被调用
+      ↓
+  LifecycleBoundObserver 注册到 Lifecycle
+      ↓
+  当 Lifecycle 变为 STARTED/RESUMED → active
+      ↓
+  setValue()/postValue() 改变数据
+      ↓
+  dispatchingValue() 遍历所有活跃 Observer
+      ↓
+  Observer.onChanged(data)
+  ```
+
+- 要点总结
+
+  | 环节         | 核心方法                 | 功能                                  |
+  | ------------ | ------------------------ | ------------------------------------- |
+  | 添加观察者   | `observe()`              | 绑定 LifecycleOwner，自动管理生命周期 |
+  | 设置数据     | `setValue()`             | 主线程更新数据并通知观察者            |
+  | 异步设置     | `postValue()`            | 子线程安全更新                        |
+  | 通知机制     | `dispatchingValue()`     | 判断版本号、活跃状态后触发回调        |
+  | 生命周期联动 | `LifecycleBoundObserver` | 页面销毁自动移除观察者                |
+
+
+
+高级用法：
+
+- Transformations.map()
+
+  - 源数据变 → 映射函数执行 → 新值发出
+  - 始终观察同一个源 LiveData
+  - 只是数据类型或结构的转换（X → Y）
+
+  对存储在 `LiveData` 对象中的值应用函数，并将结果传播到下游。
+
+  ```kotlin
+  val userLiveData: LiveData<User> = UserLiveData()
+  val userName: LiveData<String> = userLiveData.map {
+      user -> "${user.name} ${user.lastName}"
+  }
+  ```
+
+  > map 方法原理：创建并返回一个MediatorLiveData，即 userName，并且创建一个观察者对 userLiveData 进行观察，其实就是内部维护了一个 “source → observer” 映射表，当 userLiveData 数据改变时，通知观察者，然后MediatorLiveData修改值，最终通知 userName 的观察者。
+
+  ```java
+  @MainThread
+  @NonNull
+  public static <X, Y> LiveData<Y> map(
+      @NonNull LiveData<X> source,
+      @NonNull final Function<X, Y> mapFunction) {
+      final MediatorLiveData<Y> result = new MediatorLiveData<>();
+      result.addSource(source, new Observer<X>() {
+          @Override
+          public void onChanged(@Nullable X x) {
+              result.setValue(mapFunction.apply(x));
+          }
+      });
+      return result;
+  }
+  
+  @MainThread
+  public <S> void addSource(@NonNull LiveData<S> source, @NonNull Observer<? super S> onChanged) {
+      Source<S> e = new Source<>(source, onChanged);
+      Source<?> existing = mSources.putIfAbsent(source, e);
+      if (existing != null && existing.mObserver != onChanged) {
+          throw new IllegalArgumentException(
+              "This source was already added with the different observer");
+      }
+      if (existing != null) {
+          return;
+      }
+      if (hasActiveObservers()) {
+          e.plug();
+      }
+  }
+  
+  private static class Source<V> implements Observer<V> {
+      final LiveData<V> mLiveData;
+      final Observer<? super V> mObserver;
+      int mVersion = START_VERSION;
+  
+      Source(LiveData<V> liveData, final Observer<? super V> observer) {
+          mLiveData = liveData;
+          mObserver = observer;
+      }
+  
+      void plug() {
+          mLiveData.observeForever(this);
+      }
+  
+      void unplug() {
+          mLiveData.removeObserver(this);
+      }
+  
+      @Override
+      public void onChanged(@Nullable V v) {
+          if (mVersion != mLiveData.getVersion()) {
+              mVersion = mLiveData.getVersion();
+              mObserver.onChanged(v);
+          }
+      }
+  }
+  ```
+
+- Transformations.switchMap()
+
+  - 源数据变 → 动态“切换”要观察的 LiveData
+  - 自动取消旧源的观察，防止内存泄漏
+  - 典型应用：**根据条件切换数据流**（如用户ID、分页、搜索等）
+
+- 两者的区别：
+
+  | 特性                      | Transformations.map         | Transformations.switchMap                |
+  | ------------------------- | --------------------------- | ---------------------------------------- |
+  | 转换函数签名              | (X) → Y                     | (X) → LiveData                           |
+  | 源数量                    | 单个固定                    | 多个动态切换                             |
+  | 实现机制                  | MediatorLiveData + 映射函数 | MediatorLiveData + 动态 add/removeSource |
+  | 更新触发条件              | 源 LiveData 改变            | 源 LiveData 改变 或 目标 LiveData 改变   |
+  | 使用场景                  | 数据类型转换                | 根据条件切换数据源                       |
+  | 是否可能返回不同 LiveData | 否                          | 是 ✅                                     |
+
+
 
 #### 三、ViewModel
 
@@ -243,6 +398,73 @@ ViewModel，视图模型，即为界面准备数据的模型。
   > 销毁页面时, ViewModel 最终将被保存到 ActivityRecord 中.
   > 重建页面时, 使用了同一个 ActivityRecord 来进行数据的恢复, 从中可以获得销毁前页面上所有 ViewModel 的容器 ViewModelStore, 再次调用 ViewModelProviders.of(Activity.class).get(ViewModel.class) 根据类名从 HashMap 中获得已经创建过的 ViewModel.
   > 原文链接：https://blog.csdn.net/qijingwang/article/details/121521256
+
+
+
+###### 3.3.3 时序图总结
+
+- 第一次进入 Activity，创建 ViewModel
+
+  ```
+  用户 → ActivityThread → Activity(A1) → ViewModelProvider
+     |                        |              |
+     |---------- launch A1 -->|              |
+     |                        |--- getViewModelStore() ----> (null → new ViewModelStore S1)
+     |                        |
+     |                        |--- provider.get() -----> 创建 ViewModel V1 放入 S1
+  ```
+
+  > A1 执行中，S1 在 A1 里。
+
+- 屏幕旋转（配置变更）重建
+
+  **这个是关键**
+
+   看 **ActivityThread** 如何保存，然后再恢复
+
+  ```
+  旋转触发
+  ↓
+  ActivityThread
+       |
+       |-- performDestroyActivity(A1) --> 调用 A1.retainNonConfigurationInstances()
+       |
+       |-- 把返回 NonConfigurationInstances{viewModelStore=S1}
+       |     存入 r.lastNonConfigurationInstances   （r = ActivityClientRecord）
+       |
+    (A1被destroy, A1对象可以被GC，但 S1 依然被 r 持有)
+  
+  ----> 然后系统创建新 Activity A2（同一个 class）
+       |
+       |-- performLaunchActivity(r)
+               |
+               |-- new Activity() → A2.attach(... last=r.lastNonConfigurationInstances)
+               |
+               |-- A2.getLastNonConfigurationInstance() → 拿到 {viewModelStore=S1}
+               |
+               |-- A2.getViewModelStore() : 发现 last nonconfig 有 store，直接复用 S1
+               |
+               |-- ViewModelProvider(A2).get() : 在 S1 里找到 V1，返回同一个 V1
+  ```
+
+- 最终完整主线总结成一张“流”
+
+  ```
+  首次进入：      A1.getViewModelStore() -> new S1 -> V1
+  旋转销毁：      ActivityThread 把 S1 放到 ActivityClientRecord.lastNonConfig
+  新实例构建：    A2.attach(...last=S1)
+  获取VM：        A2.getViewModelStore() -> 复用 S1 -> provider.get() -> V1
+  ```
+
+  **所以：**
+
+  - Activity 实例换成 A2 了
+  - 但 A2 拿到的是 S1（同一个 ViewModelStore）
+  - 所以 get() 返回的 ViewModel也是同一个 V1
+
+这就是 **为什么屏幕旋转后 ViewModel 不会重建** 的完整链路。
+
+
 
 
 
