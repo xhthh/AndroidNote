@@ -355,18 +355,20 @@ ViewModel，视图模型，即为界面准备数据的模型。
 
       activityThread把这个ViewModeStore缓存到ActivityClientRecord对象中。而activityClientRecord对象是用户手动back键finish它，它才会销毁的，故viewmodel就能不会因为窗口配置改变或者系统回收内存而销毁。
 
-      > ActivityThread 中的 ActivityClientRecord 不受 activity 重建的影响，那么 ActivityClientRecord 中的 lastNonConfigurationInstances 也不受影响，其中的 Object activity 也不受影响，那么 ComponentActivity 中通过 getLastNonConfigurationInstance() 方法获取到的 NonConfigurationInstances 实例及其持有的 ViewModelStore 也不受影响；
 
 ###### 3.3.2 总结
 
 - ViewModel 是为界面准备数据的模型，分担 `Activity`/`Fragment` 的逻辑，同时会维护自己独立的生命周期，特点是配置更改界面销毁后依然存在、不持有UI的引用；
+
 - 用途：
   - 可以和 LiveData 搭配使用，代替 MVP 中的 Presenter；
   - 也可用于 Fragment 间的数据共享；
+  
 - 源码：
   - ViewModel 的存储和获取：
     - 通过 ViewModelStore 进行存储和获取，保存在 HashMap 中；
     - 提供了 clear() 方法，在 Activity 真正销毁后，进行清除；
+    
   - ViewModelStore 的存储和获取：
     - NonConfigurationInstances 与配置无关的类，通过它获取 ViewModelStore 的实例，追踪源码最终到 Activity#attach()--->ActivityThread#performLaunchActivity()--->ActivityClientRecord中的变量 lastNonConfigurationInstances；
     
@@ -386,83 +388,45 @@ ViewModel，视图模型，即为界面准备数据的模型。
       - handleLaunchActivity()重建新的页面；
     
         performLaunchActivity(r)，创建 activity，调用 attach(r.lastNonConfigurationInstances)；
+        
+        > ActivityClientRecord r 中保存了 Activity.NonConfigurationInstances.
+        >
+        > Activity.NonConfigurationInstances 中保存了 FragmentActivity.NonConfigurationInstances.
+        >
+        > FragmentActivity.NonConfigurationInstances 中保存了 ViewModelStore viewModelStore
+        >
+        > ViewModelStore viewModelStore 内部通过HashMap保存了 当前Activity的所有 ViewModel
+        >
+        > 销毁页面时, ViewModel 最终将被保存到 ActivityRecord 中.
+        > 重建页面时, 使用了同一个 ActivityRecord 来进行数据的恢复, 从中可以获得销毁前页面上所有 ViewModel 的容器 ViewModelStore, 再次调用 ViewModelProviders.of(Activity.class).get(ViewModel.class) 根据类名从 HashMap 中获得已经创建过的 ViewModel.
+        > 原文链接：https://blog.csdn.net/qijingwang/article/details/121521256
+    
+  - 另外一个点
   
-  > ActivityClientRecord r 中保存了 Activity.NonConfigurationInstances.
-  >
-  > Activity.NonConfigurationInstances 中保存了 FragmentActivity.NonConfigurationInstances.
-  >
-  > FragmentActivity.NonConfigurationInstances 中保存了 ViewModelStore viewModelStore
-  >
-  > ViewModelStore viewModelStore 内部通过HashMap保存了 当前Activity的所有 ViewModel
-  >
-  > 销毁页面时, ViewModel 最终将被保存到 ActivityRecord 中.
-  > 重建页面时, 使用了同一个 ActivityRecord 来进行数据的恢复, 从中可以获得销毁前页面上所有 ViewModel 的容器 ViewModelStore, 再次调用 ViewModelProviders.of(Activity.class).get(ViewModel.class) 根据类名从 HashMap 中获得已经创建过的 ViewModel.
-  > 原文链接：https://blog.csdn.net/qijingwang/article/details/121521256
-
-
-
-###### 3.3.3 时序图总结
-
-- 第一次进入 Activity，创建 ViewModel
-
-  ```
-  用户 → ActivityThread → Activity(A1) → ViewModelProvider
-     |                        |              |
-     |---------- launch A1 -->|              |
-     |                        |--- getViewModelStore() ----> (null → new ViewModelStore S1)
-     |                        |
-     |                        |--- provider.get() -----> 创建 ViewModel V1 放入 S1
-  ```
-
-  > A1 执行中，S1 在 A1 里。
-
-- 屏幕旋转（配置变更）重建
-
-  **这个是关键**
-
-   看 **ActivityThread** 如何保存，然后再恢复
-
-  ```
-  旋转触发
-  ↓
-  ActivityThread
-       |
-       |-- performDestroyActivity(A1) --> 调用 A1.retainNonConfigurationInstances()
-       |
-       |-- 把返回 NonConfigurationInstances{viewModelStore=S1}
-       |     存入 r.lastNonConfigurationInstances   （r = ActivityClientRecord）
-       |
-    (A1被destroy, A1对象可以被GC，但 S1 依然被 r 持有)
+    ```
+    #ComponentActivity
+    getLifecycle().addObserver(new LifecycleEventObserver() {
+            @Override
+            public void onStateChanged(@NonNull LifecycleOwner source,
+                    @NonNull Lifecycle.Event event) {
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    // Clear out the available context
+                    mContextAwareHelper.clearAvailableContext();
+                    // And clear the ViewModelStore
+                    if (!isChangingConfigurations()) {
+                        getViewModelStore().clear();
+                    }
+                }
+            }
+    });
+    ```
   
-  ----> 然后系统创建新 Activity A2（同一个 class）
-       |
-       |-- performLaunchActivity(r)
-               |
-               |-- new Activity() → A2.attach(... last=r.lastNonConfigurationInstances)
-               |
-               |-- A2.getLastNonConfigurationInstance() → 拿到 {viewModelStore=S1}
-               |
-               |-- A2.getViewModelStore() : 发现 last nonconfig 有 store，直接复用 S1
-               |
-               |-- ViewModelProvider(A2).get() : 在 S1 里找到 V1，返回同一个 V1
-  ```
-
-- 最终完整主线总结成一张“流”
-
-  ```
-  首次进入：      A1.getViewModelStore() -> new S1 -> V1
-  旋转销毁：      ActivityThread 把 S1 放到 ActivityClientRecord.lastNonConfig
-  新实例构建：    A2.attach(...last=S1)
-  获取VM：        A2.getViewModelStore() -> 复用 S1 -> provider.get() -> V1
-  ```
-
-  **所以：**
-
-  - Activity 实例换成 A2 了
-  - 但 A2 拿到的是 S1（同一个 ViewModelStore）
-  - 所以 get() 返回的 ViewModel也是同一个 V1
-
-这就是 **为什么屏幕旋转后 ViewModel 不会重建** 的完整链路。
+    这里的 isChangingConfigurations() 是 Activity 中的方法，默认为值 mChangingConfigurations 为 false。
+  
+    而这个值在 ActivityTrhead#handleRelaunchActivity() 中置为 true。
+  
+    > https://blog.csdn.net/l624547260/article/details/120087519
+  
 
 
 
