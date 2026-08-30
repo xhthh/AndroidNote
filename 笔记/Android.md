@@ -479,6 +479,7 @@ Activity---onDestroy()
 3. 在Activity中定义方法，fragment中getActivity()获取
 4. 通过EventBus之类
 5. 广播
+6. Shared ViewModel
 
 ##### 4、Fragment设置数据为什么使用setArguments的方式？
 
@@ -1096,6 +1097,16 @@ key如果不是WeakReference弱引用，则如果某个线程死循环，则Thre
 用于执行后台耗时的任务，当任务执行后它会自动停止，同时由于 IntentService 是服务的原因，它的优先级比单纯的线程要高很多，所以 IntentService 适合执行一些高优先级的后台任务，不容易被系统杀死。
 
 <font color='red'>若启动IntentService多次，那么每个耗时操作则以队列的方式在IntentService的onHandleIntent回调方法中依次执行，执行完自动结束。</font>
+
+> Android8.0 引入后台执行限制，应用退后台后普通 Service 会被系统限制、被杀。IntentService 基于普通 Service+HandlerThread，进程被杀任务直接丢失，没有持久化与重试，无法适配新版后台管控。
+>
+> 官方推荐 WorkManager 作为主要替代，WorkManager 是 Jetpack 库，任务持久化存入数据库，适配各个版本后台限制，底层根据版本选用 JobScheduler 或者 AlarmManager，支持约束条件、重试、任务链；但任务由系统调度，不能保证即时执行。
+>
+> 1. 如果任务要求可靠，进程被杀、重启手机仍然希望任务最终执行：**WorkManager OneTimeWorkRequest**。
+> 2. 如果只是 APP 进程存活前提下短时后台任务，不需要持久化：使用 Kotlin 协程 IO 调度器。
+> 3. 如果必须后台立刻执行不能被杀死：使用**前台服务 Foreground Service**（需要通知栏）。
+>
+> 
 
 #### 七、View 的事件分发
 
@@ -1946,8 +1957,7 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
   - ActivityStack#startActivityLocked()
   - 根据变量 mDoResume，决定是否调用 RootWindowContainer.resumeFocusedStacksTopActivities() 将其置于栈顶显示处于活动状态
 
-  > **ActivityStack**：`Activity`在`AMS`的栈管理类，`activity`的单个堆栈的状态和管理在这个类里。
-  >
+  > **ActivityStack**：`Activity`在`AMS`的栈管理类，`activity`的单个堆栈的状态和管理在这个类里。API 33 里已经没有了。
 - **RootWindowContainer#resumeFocusedStacksTopActivities()**
 
   > 在API29中这个方法位于`RootActivityContainer`类中。
@@ -2071,7 +2081,7 @@ View的绘制基本由measure()、layout()、draw()这个三个函数完成：
 - **ActivityThread#performLaunchActivity()**
 
   ```java
-
+  
   ```
 
 /**  activity 启动的核心实现. */
@@ -2192,7 +2202,7 @@ public void execute(ClientTransactionHandler client, IBinder token,
 - **设置视图可见，即activity.makeVisible()方法**
 
   ```java
-
+  
   ```
 
 //Activity
@@ -2560,3 +2570,30 @@ https://www.jianshu.com/p/ad567861bc0e
   java.lang.UnsatisfiedLinkError: No implementation found for long com.eth.litecommonlib.http.utils.JFSecurity.nativeJFInit(java.lang.String) (tried Java_com_eth_litecommonlib_http_utils_JFSecurity_nativeJFInit and Java_com_eth_litecommonlib_http_utils_JFSecurity_nativeJFInit__Ljava_lang_String_2)
   ```
 
+
+
+#### 七、ContentProvider
+
+##### 1、为什么很多第三方 SDK 都在 Manifest 中注册 ContentProvider？
+
+> **很多 SDK 注册 ContentProvider 并不是为了提供数据共享，而是利用 ContentProvider 会由 Android Framework 自动创建，并且通常早于 Application.onCreate() 完成初始化的特点，把 Provider 作为 SDK 的自动初始化入口。这样 SDK 不需要用户手动修改 Application 或调用 init 方法，只要依赖 SDK，SDK 的 Manifest 通过 Manifest Merger 合并到 App 后，系统启动进程时就会创建这个 Provider，在 Provider.onCreate() 中完成初始化。它的优点是接入简单、初始化可靠，但缺点是多个 SDK 都通过 Provider 初始化会增加 App 冷启动耗时，因此性能优化时需要关注这些 InitProvider。**
+
+执行顺序大概为：
+
+```
+system_server
+     ↓
+启动 App 进程
+     ↓
+ActivityThread.main()
+     ↓
+bindApplication()
+     ↓
+handleBindApplication()
+     ↓
+installContentProviders()
+     ↓
+ContentProvider.onCreate()
+     ↓
+Application.onCreate()
+```
