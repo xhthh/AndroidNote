@@ -814,7 +814,7 @@ Http 1.1 协议中默认支持获取文件的部分内容，这其中主要是�
 
   ```
   Content-Range: bytes (unit first byte pos) - [last byte pos]/[entity legth]
-
+  
   // 0－499 是指当前发送的数据的范围，而 22400 则是文件的总大小。
   Content-Range: bytes 0-499/22400
   ```
@@ -1043,7 +1043,7 @@ https://www.jianshu.com/p/b1c9259cb2bc
 
   ```java
   public static final String HEADER_ACT_NAME = "Activity-Name"; // 标记Activity界面名字
-
+  
   private Interceptor lifeInterceptor = new Interceptor() {
       @Override
       public Response intercept(Chain chain) throws IOException {

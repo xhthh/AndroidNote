@@ -477,6 +477,298 @@ MVP 中 Presenter 和 View 互相持有对方的引用；
 
 
 
+##### 4、ViewModel + LiveData 的方式实现 MVVM 的问题
+
+- 状态容易分散
+
+  比如一个登录页面，我们可能定义：
+
+  ```kotlin
+  val loading: LiveData<Boolean>
+  val user: LiveData<User>
+  val error: LiveData<String>
+  val loginSuccess: LiveData<Boolean>
+  ```
+
+  一个页面有十几个 LiveData。
+
+- 多个 LiveData 之间容易产生状态组合问题
+
+  所以后来复杂 UI State 经常会把：
+
+  ```
+  val loading: LiveData<Boolean>
+  val data: LiveData<List<User>>
+  val error: LiveData<String>
+  ```
+
+  合成：
+
+  ```
+  data class UiState(
+      val loading: Boolean = false,
+      val data: List<User> = emptyList(),
+      val error: String? = null
+  )
+  ```
+
+  然后：
+
+  ```
+  private val _uiState = MutableLiveData(UiState())
+  val uiState: LiveData<UiState> = _uiState
+  ```
+
+  UI：
+
+  ```
+  viewModel.uiState.observe(this) { state ->
+  
+      progressBar.isVisible = state.loading
+  
+      recyclerView.isVisible = state.data.isNotEmpty()
+  
+      state.error?.let {
+          showError(it)
+      }
+  }
+  ```
+
+  这样就比多个 LiveData 清晰很多。
+
+  实际上这已经开始接近：
+
+  ```
+  MVVM + 单一 UI State
+  ```
+
+  而这也是后来 **MVI** 非常重要的思想。
+
+- 一次性事件
+
+  例如：
+
+  ```
+  val loginSuccess = MutableLiveData<Boolean>()
+  ```
+
+  登录成功：
+
+  ```
+  loginSuccess.value = true
+  ```
+
+  Activity：
+
+  ```
+  viewModel.loginSuccess.observe(this) {
+      if (it) {
+          startActivity(...)
+      }
+  }
+  ```
+
+  问题来了。
+
+  假设：
+
+  ```
+  登录成功
+      ↓
+  loginSuccess = true
+      ↓
+  Activity跳转
+      ↓
+  屏幕旋转
+      ↓
+  Activity重新创建
+  ```
+
+  LiveData 会把当前最新值：
+
+  ```
+  true
+  ```
+
+  再次发送给新的 Observer。
+
+  于是可能出现：
+
+  ```
+  Activity重新创建
+          ↓
+  收到 true
+          ↓
+  再次执行跳转
+  ```
+
+  这就是所谓的：
+
+  > LiveData 的事件重复消费问题。
+  >
+  > 原因是：**LiveData 本质上是用来表示“状态”的，而不是专门用来表示“一次性事件”的。**
+  >
+  > 所以在老 Android 项目中可能会看到各种：
+  >
+  > ```
+  > SingleLiveEvent
+  > Event<T>
+  > EventWrapper
+  > ConsumableEvent
+  > ```
+
+  所以后来 Kotlin Flow 体系出现以后，更常见的设计是：
+
+  ```
+  StateFlow
+      ↓
+  持续状态
+  
+  SharedFlow
+      ↓
+  一次性事件
+  ```
+
+  例如：
+
+  ```
+  ViewModel
+   ├── StateFlow<UiState>
+   │       ↓
+   │      UI状态
+   │
+   └── SharedFlow<UiEvent>
+           ↓
+         Toast / Navigation
+  ```
+
+- LiveData 和 Kotlin 协程体系不够统一
+
+  比如网络层可能已经是：
+
+  ```
+  Flow<User>
+  ```
+
+  Repository：
+
+  ```
+  fun getUser(): Flow<User>
+  ```
+
+  但是到了 ViewModel：
+
+  ```
+  val user: LiveData<User>
+  ```
+
+  于是就需要：
+
+  ```
+  flow.asLiveData()
+  ```
+
+  例如：
+
+  ```
+  val user = repository.getUser()
+      .asLiveData()
+  ```
+
+  当然可以，但是你会发现：
+
+  ```
+  Repository
+     ↓
+  Flow
+     ↓
+  asLiveData()
+     ↓
+  LiveData
+     ↓
+  Activity
+  ```
+
+  数据流被转换了一次。
+
+  如果整个项目本身已经是 Coroutine + Flow，那么直接：
+
+  ```
+  Repository
+     ↓
+  Flow
+     ↓
+  ViewModel
+     ↓
+  StateFlow
+     ↓
+  UI
+  ```
+
+  会更加统一。
+
+- LiveData 的操作符也不如 Flow 丰富
+
+- 生命周期绑定太强
+
+  例如：
+
+  ```
+  liveData.observe(this) {
+  }
+  ```
+
+  它天然知道：
+
+  ```
+  STARTED
+  RESUMED
+  STOPPED
+  DESTROYED
+  ```
+
+  这对于 UI 非常方便。
+
+  但是如果你的数据层也大量使用 LiveData：
+
+  ```
+  Repository
+     ↓
+  LiveData
+     ↓
+  ViewModel
+     ↓
+  LiveData
+     ↓
+  Activity
+  ```
+
+  就会让 Android Lifecycle 的概念逐渐渗透到数据层。
+
+  而现代架构更倾向于：
+
+  ```
+  Repository
+     ↓
+  Flow
+  ```
+
+  Repository 不需要知道 Activity 的生命周期。
+
+  到了 UI 层再：
+
+  ```
+  repeatOnLifecycle {
+      flow.collect()
+  }
+  ```
+
+  把生命周期控制放在 UI 层。
+
+  这也是比较清晰的职责划分。
+
+- 
+
 #### 五、MVP
 
 MVP 的缺点：

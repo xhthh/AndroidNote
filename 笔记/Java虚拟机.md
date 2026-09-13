@@ -67,13 +67,7 @@ Java虚拟机管理的内存分为以下几个运行时数据区域：
 
 ##### 3、jvm的运行时数据结构。栈帧中会有什么异常？<font color='red'>方法区里面存放的是什么数据？</font>
 
-TODO
-
-##### 4、Java中进程间共享的数据是放在JVM那个分区的？Java中主进程和子进程间的通信，通过哪块内存区域？
-
-TODO
-
-##### 5、开线程影响哪块内存？
+##### 4、开线程影响哪块内存？
 
 <font color='red'>每当有线程被创建的时候，JVM 就需要为其在内存中分配虚拟机栈和本地方法栈来记录调用方法的内容，分配程序计数器记录指令执行的位置，这样的内存消耗就是创建线程的内存代价。</font>
 
@@ -553,7 +547,7 @@ optimizedDirectory this parameter is deprecated and has no effect since API leve
   ```java
   List<String> l1 = new ArrayList<String>();
   List<Integer> l2 = new ArrayList<Integer>();
-
+  
   System.out.println(l1.getClass() == l2.getClass());//true
   ```
 

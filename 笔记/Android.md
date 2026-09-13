@@ -552,17 +552,23 @@ public class MainActivity extends FragmentActivity implements Fragment3.BackHand
 ##### 6、Fragment之间怎样进行通信？
 
 1. 通过宿主 Activity
+
 2. getActivity() 根据 tag 找到对应的 Fragment，调用其方法
+
 3. 接口回调
+
 4. Eventbus
+
 5. 广播
+
 6. kotlin Fragment.kt 中的扩展函数 Fragment.setFragmentResult，通过 onFragmentResult() 回调接收返回信息
 
    Result API的原理非常简单，FragmentA 通过 Key 向 FragmentManager 注册 ResultListener，FragmentB 返回 result 时， FM 通过 Key 将结果回调给FragmentA 。需要特别注意的是只有当 FragmentB 返回时，result才会被真正回传，如果 setFragmentResult 多次，则只会保留最后一次结果。
+
 7. ViewModel
 
-> - ResultAPI 主要适用于那些一次性的通信场景（FragmentB返回结果后结束自己）。如果使用 ViewModel，需要上提到的 Fragment 共同的父级 Scope，而 Scope 的放大不利于数据的管理。
-> - 非一次性的通信场景，由于 FragmentA 和 FragmentB 在通信过程中共存，推荐通过共享 ViewModel 的方式，再借助 LiveData 等进行响应式通信。
+   - ResultAPI 主要适用于那些一次性的通信场景（FragmentB返回结果后结束自己）。如果使用 ViewModel，需要上提到的 Fragment 共同的父级 Scope，而 Scope 的放大不利于数据的管理。
+   - 非一次性的通信场景，由于 FragmentA 和 FragmentB 在通信过程中共存，推荐通过共享 ViewModel 的方式，再借助 LiveData 等进行响应式通信。
 
 ##### 7、ViewPager+三个Fragment的生命周期？加载第一个的时候，第一第二的生命周期，第三个会不会走？怎样实现懒加载？
 
@@ -570,6 +576,10 @@ public class MainActivity extends FragmentActivity implements Fragment3.BackHand
 
   切换到第三个时，第一个会onDestroyView()；
 - 懒加载，自定义一个基类，通过setUserVisibleHint()来实现
+
+ViewPager2 可以回答：
+
+> **要看 ViewPager 的实现和 FragmentAdapter 类型。以现代 ViewPager2 和 FragmentStateAdapter 为例，ViewPager 会根据缓存策略预加载相邻页面。当前页面通常会被提升到 RESUMED 状态，而已经创建但非当前的页面最大生命周期一般限制在 STARTED。比如当前在第一页时，第一个 Fragment 通常是 RESUMED，第二个相邻 Fragment 可能已经创建并处于 STARTED，第三个较远 Fragment 是否创建取决于缓存策略；切换到第二页后，第一个降到 STARTED，第二个升到 RESUMED，第三个通常会被创建并处于 STARTED。超出缓存范围的 Fragment 可能会经历 onStop 和 onDestroyView。**
 
 ##### 8、add与replace的区别
 
@@ -2597,3 +2607,20 @@ ContentProvider.onCreate()
      ↓
 Application.onCreate()
 ```
+
+
+
+#### 八、ViewPager
+
+| 对比项             | ViewPager                                            | ViewPager2                    |
+| ------------------ | ---------------------------------------------------- | ----------------------------- |
+| 底层实现           | 自定义 `ViewGroup`                                   | 基于 `RecyclerView`           |
+| Adapter            | `PagerAdapter`                                       | `RecyclerView.Adapter` 风格   |
+| Fragment Adapter   | `FragmentPagerAdapter` / `FragmentStatePagerAdapter` | `FragmentStateAdapter`        |
+| 垂直滑动           | ❌                                                    | ✅                             |
+| RTL 支持           | 较弱                                                 | ✅ 原生支持                    |
+| 数据动态更新       | `notifyDataSetChanged()` 能力有限                    | 更符合 RecyclerView 模型      |
+| 页面复用           | 自己实现                                             | RecyclerView 复用机制         |
+| Item 动画/更新能力 | 较弱                                                 | 相对更灵活                    |
+| Fragment 生命周期  | 老版本有兼容问题                                     | 基于 `setMaxLifecycle` 更合理 |
+| 官方推荐           | 维护模式                                             | 新项目推荐                    |

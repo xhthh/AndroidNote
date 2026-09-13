@@ -384,6 +384,8 @@ ListView 的缓存有两级，RecycleBin 有两个对象 mActiveViews 和 mScrap
 
 - diffUtil
 
+  > `DiffUtil` 用于计算新旧两个列表之间的差异，找出 Item 的新增、删除、移动以及内容变化，然后通过 `dispatchUpdatesTo()` 将这些差异转换成 RecyclerView 的精确更新操作，避免直接使用 `notifyDataSetChanged()` 进行全量刷新。它的核心算法基于 Myers 差分算法，通过计算两个序列之间的最小编辑路径得到 Diff 结果。使用时主要通过 `areItemsTheSame()` 判断是不是同一个业务 Item，通常比较唯一 ID，再通过 `areContentsTheSame()` 判断这个 Item 的内容是否发生变化。`DiffUtil` 本身不负责 ViewHolder 的创建和复用，这部分仍然由 RecyclerView 的 Recycler、CachedViews 和 RecycledViewPool 负责。
+
 - 视情况设置 imAnimator 动画
 
   RV 默认支持动画效果，在开启动画的情况下会额外处理很多的逻辑判断，notify 的增删改查操作都会对应相应的动画效果。如果不需要动画效果可以关闭，可以简化 RV 的内部处理逻辑。

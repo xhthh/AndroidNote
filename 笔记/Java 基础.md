@@ -572,7 +572,7 @@ Set、List、Queue 均继承自 Collection接口，Collection 继承自 Iterable
     public void add(int index, E element) {
         if (index > size || index < 0)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-
+    
         ensureCapacityInternal(size + 1);  // Increments modCount!!
         System.arraycopy(elementData, index, elementData, index + 1,
                          size - index);
@@ -602,7 +602,7 @@ Set、List、Queue 均继承自 Collection接口，Collection 继承自 Iterable
     public E set(int index, E element) {
         if (index >= size)
             throw new IndexOutOfBoundsException(outOfBoundsMsg(index));
-
+    
         E oldValue = (E) elementData[index];
         elementData[index] = element;
         return oldValue;
@@ -679,6 +679,18 @@ Set、List、Queue 均继承自 Collection接口，Collection 继承自 Iterable
 - **ArrayList 和 LinkedList 遍历性能比较？**
 
   论遍历ArrayList要比LinkedList快得多，ArrayList遍历最大的优势在于内存的连续性，CPU的内部缓存结构会缓存连续的内存片段，可以大幅降低读取内存的性能开销。
+  
+  |          | ArrayList | LinkedList      |
+  | -------- | --------- | --------------- |
+  | 底层     | 动态数组  | 双向链表        |
+  | 随机访问 | 快 O(1)   | 慢 O(n)         |
+  | 中间插入 | 慢 O(n)   | 找到节点后 O(1) |
+  | 中间删除 | 慢 O(n)   | 找到节点后 O(1) |
+  | 内存     | 相对少    | 相对多          |
+  
+  > LinkedList 插入删除一定比 ArrayList 快？✖
+  >
+  > 因为需要先通过下标找到节点，查找节点本身就可能需要O(n)
 
 
 
@@ -896,6 +908,8 @@ n 是数组长度。
 
 为了让元素分布更均匀
 
+因为 HashMap 的 `(n - 1) & hash` 计算下标主要使用 Hash 的低位，所以通过 `h ^ (h >>> 16)` 把高位信息混合到低位，让元素分布更加均匀，从而减少哈希冲突。
+
 
 
 ##### 5.5 HashMap 的链表是头插法还是尾插法？
@@ -977,7 +991,9 @@ JDK 1.8 之前是头插法，1.8 之后是尾插法。
 
 
 
-#### 6、ConcurrentHashMap 怎样保证线程安全的？
+#### 6、ConcurrentHashMap？
+
+##### 6.1 ConcurrentHashMap 怎样保证线程安全的？
 
 - JDK 1.7 中使用分段锁（ReentrantLock + Segment + HashEntry），相当于把一个 HashMap 分成多个段，每段分配一把锁，这样支持多线程访问。锁粒度：基于 Segment，包含多个 HashEntry。
 
@@ -1018,6 +1034,22 @@ JDK 1.8 之前是头插法，1.8 之后是尾插法。
 > 7、循环判断这个节点上的链表，决定做覆盖操作还是插入操作。
 > 8、循环结束，插入完毕。
 > 原文链接：https://blog.csdn.net/qq_42068856/article/details/126091526
+
+
+
+##### 6.2 ConcurrentHashMap 什么情况下会阻塞？
+
+> ConcurrentHashMap 不是完全无锁的，是否阻塞需要区分 JDK 版本。
+>
+> JDK 7 采用 Segment 分段锁，当多个线程竞争同一个 Segment 时可能发生阻塞。
+>
+> JDK 8 主要采用 CAS 和 synchronized。对于空桶的插入通常通过 CAS 完成，不需要阻塞；当发生哈希冲突，需要修改同一个桶中的链表或红黑树时，会对桶头节点加 synchronized 锁，因此多个线程同时竞争同一个桶时可能发生阻塞。
+>
+> 此外，在扩容期间，如果线程发现桶正在迁移，通常会协助扩容或进行重试，所以操作可能变慢，但不能简单理解为所有线程都会阻塞等待扩容。
+>
+> 另外，ConcurrentHashMap 的 get 操作通常是无锁的，不会阻塞。
+
+
 
 
 
